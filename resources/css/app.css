@@ -34,8 +34,6 @@ body{
 
     background:var(--background);
 
-    color:#1F2937;
-
 }
 
 .font-title{
@@ -55,63 +53,6 @@ body{
     font-family:"Battambang",sans-serif;
 
 }
-
-/* ==========================================
-   Application Theme
-========================================== */
-
-:root{
-
-    /* Primary */
-
-    --primary:#2F60E8;
-    --primary-dark:#214CC2;
-
-    /* Background */
-
-    --background:#F4F7FC;
-
-    /* Status */
-
-    --success:#22C55E;
-    --warning:#F59E0B;
-    --danger:#EF4444;
-
-}
-
-/* ==========================================
-   Typography
-========================================== */
-
-body{
-
-    font-family:"Siemreap",sans-serif;
-
-    background:var(--background);
-
-    color:#1F2937;
-
-}
-
-.font-title{
-
-    font-family:"Moul",sans-serif;
-
-}
-
-.font-body{
-
-    font-family:"Siemreap",sans-serif;
-
-}
-
-.font-table{
-
-    font-family:"Battambang",sans-serif;
-
-}
-
-
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
@@ -121,4 +62,47 @@ body{
 @theme {
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
+}
+
+/* ==========================================
+   Sidebar Collapse
+========================================== */
+
+.sidebar {
+    transition: width .3s ease;
+}
+
+.sidebar.collapsed {
+    width: 90px;
+}
+
+/* Hide text */
+.sidebar.collapsed .sidebar-text,
+.sidebar.collapsed .sidebar-title {
+
+    display: none;
+
+}
+
+/* Center icons */
+.sidebar.collapsed .sidebar-item {
+
+    justify-content: center;
+    padding-left: 0;
+    padding-right: 0;
+
+}
+
+/* Remove gap when collapsed */
+.sidebar.collapsed .sidebar-item {
+
+    gap: 0;
+
+}
+
+/* Hide divider */
+.sidebar.collapsed hr {
+
+    display: none;
+
 }
