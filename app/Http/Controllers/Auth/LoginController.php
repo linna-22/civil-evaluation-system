@@ -4,8 +4,9 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
-use Illuminate\Http\Request;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class LoginController extends Controller
 {
@@ -22,28 +23,79 @@ class LoginController extends Controller
      */
     public function authenticate(LoginRequest $request)
     {
-        $login = $request->login;
+        $login = trim($request->login);
 
         $field = filter_var($login, FILTER_VALIDATE_EMAIL)
             ? 'email'
             : 'username';
 
-        if (
-            Auth::attempt([
-                $field => $login,
-                'password' => $request->password,
-                'status' => 'active',
-            ])
-        ) {
-            $request->session()->regenerate();
+        $user = User::where($field, $login)->first();
 
-            return redirect()->intended('/dashboard');
+        /*
+        |--------------------------------------------------------------------------
+        | User Not Found
+        |--------------------------------------------------------------------------
+        */
+
+        if (!$user) {
+
+            return back()
+                ->withInput()
+                ->withErrors([
+                    'login' => 'ឈ្មោះអ្នកប្រើប្រាស់ ឬ អ៊ីមែល មិនត្រឹមត្រូវ។',
+                ]);
+
         }
 
-        return back()
-            ->withInput()
-            ->withErrors([
-                'login' => 'Invalid username/email or password.',
-            ]);
+        /*
+        |--------------------------------------------------------------------------
+        | Account Inactive
+        |--------------------------------------------------------------------------
+        */
+
+        if ($user->status !== 'active') {
+
+            return back()
+                ->withInput()
+                ->withErrors([
+                    'login' => 'គណនីនេះត្រូវបានបិទ។ សូមទាក់ទងអ្នកគ្រប់គ្រង។',
+                ]);
+
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Password Incorrect
+        |--------------------------------------------------------------------------
+        */
+
+        if (!Hash::check($request->password, $user->password)) {
+
+            return back()
+                ->withInput()
+                ->withErrors([
+                    'password' => 'ពាក្យសម្ងាត់មិនត្រឹមត្រូវ។',
+                ]);
+
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Login Success
+        |--------------------------------------------------------------------------
+        */
+
+        Auth::login($user);
+
+        $request->session()->regenerate();
+
+        $user->update([
+
+            'last_login' => now(),
+            'last_login_ip' => $request->ip(),
+
+        ]);
+
+        return redirect()->route('dashboard');
     }
 }

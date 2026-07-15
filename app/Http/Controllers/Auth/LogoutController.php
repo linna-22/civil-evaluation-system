@@ -8,6 +8,9 @@ use Illuminate\Support\Facades\Auth;
 
 class LogoutController extends Controller
 {
+    /**
+     * Logout User
+     */
     public function logout(Request $request)
     {
         Auth::logout();

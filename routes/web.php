@@ -18,7 +18,21 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/dashboard', function () {
 
-        return '<h1>Welcome to Dashboard</h1>';
+        return '
+                <h1>Welcome to Dashboard</h1>
+
+                <form action="'.route('logout').'" method="POST">
+
+                '.csrf_field().'
+
+                <button type="submit">
+
+                Logout
+
+                </button>
+
+                </form>
+                ';
 
     })->name('dashboard');
 
