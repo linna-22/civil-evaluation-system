@@ -1,7 +1,28 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\LogoutController;
 
-Route::get('/', function () {
-    return view('welcome');
+Route::middleware('guest')->group(function () {
+
+    Route::get('/login', [LoginController::class, 'index'])
+        ->name('login');
+
+    Route::post('/login', [LoginController::class, 'authenticate'])
+        ->name('login.authenticate');
+
+});
+
+Route::middleware('auth')->group(function () {
+
+    Route::get('/dashboard', function () {
+
+        return '<h1>Welcome to Dashboard</h1>';
+
+    })->name('dashboard');
+
+    Route::post('/logout', [LogoutController::class, 'logout'])
+        ->name('logout');
+
 });

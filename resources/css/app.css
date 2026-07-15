@@ -1,4 +1,117 @@
-@import 'tailwindcss';
+@import "./fonts.css";
+
+@import "tailwindcss";
+/* ==========================================
+   Application Theme
+========================================== */
+
+:root{
+
+    /* Primary */
+
+    --primary:#2F60E8;
+    --primary-dark:#214CC2;
+
+    /* Background */
+
+    --background:#F4F7FC;
+
+    /* Status */
+
+    --success:#22C55E;
+    --warning:#F59E0B;
+    --danger:#EF4444;
+
+}
+
+/* ==========================================
+   Typography
+========================================== */
+
+body{
+
+    font-family:"Siemreap",sans-serif;
+
+    background:var(--background);
+
+    color:#1F2937;
+
+}
+
+.font-title{
+
+    font-family:"Moul",sans-serif;
+
+}
+
+.font-body{
+
+    font-family:"Siemreap",sans-serif;
+
+}
+
+.font-table{
+
+    font-family:"Battambang",sans-serif;
+
+}
+
+/* ==========================================
+   Application Theme
+========================================== */
+
+:root{
+
+    /* Primary */
+
+    --primary:#2F60E8;
+    --primary-dark:#214CC2;
+
+    /* Background */
+
+    --background:#F4F7FC;
+
+    /* Status */
+
+    --success:#22C55E;
+    --warning:#F59E0B;
+    --danger:#EF4444;
+
+}
+
+/* ==========================================
+   Typography
+========================================== */
+
+body{
+
+    font-family:"Siemreap",sans-serif;
+
+    background:var(--background);
+
+    color:#1F2937;
+
+}
+
+.font-title{
+
+    font-family:"Moul",sans-serif;
+
+}
+
+.font-body{
+
+    font-family:"Siemreap",sans-serif;
+
+}
+
+.font-table{
+
+    font-family:"Battambang",sans-serif;
+
+}
+
+
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
