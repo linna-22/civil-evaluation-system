@@ -4,32 +4,64 @@
 
 @section('content')
 
-<div
-    class="bg-white
-           rounded-[30px]
-           shadow-sm
-           p-8
-           min-h-[calc(100vh-120px)]">
+<div class="space-y-6">
 
-    <h1
-        class="font-title
-               text-3xl
-               text-primary
-               text-center">
+    {{-- Greeting --}}
+    <div>
 
-        ផ្ទាំងគ្រប់គ្រង
+        <h1
+            class="font-title
+                   text-3xl
+                   text-primary">
 
-    </h1>
+            ផ្ទាំងគ្រប់គ្រង
 
-    <p
-        class="font-body
-               text-center
-               text-gray-500
-               mt-4">
+        </h1>
 
-        សូមស្វាគមន៍មកកាន់ប្រព័ន្ធវាយតម្លៃផ្អែកលើសមិទ្ធកម្មមន្ត្រីរាជការ។
+        <p
+            class="font-body
+                   text-gray-500
+                   mt-2">
 
-    </p>
+            សូមស្វាគមន៍ <span class="font-title text-blue-500">{{ auth()->user()->name_kh }}</span> មកកាន់<span class="font-title text-blue-500"> ប្រព័ន្ធវាយតម្លៃផ្អែកលើសមិទ្ធកម្មមន្ត្រី</span>
+
+        </p>
+
+    </div>
+
+    {{-- Statistics --}}
+    <div
+        class="grid
+               grid-cols-1
+               md:grid-cols-2
+               xl:grid-cols-4
+               gap-6">
+
+        <x-stat-card
+            title="មន្ត្រីរាជការ"
+            value="{{ number_format($statistics['users']) }}"
+            icon="users"
+            color="blue"/>
+
+        <x-stat-card
+            title="អង្គភាព"
+            value="{{ number_format($statistics['organizations']) }}"
+            icon="building-2"
+            color="orange"/>
+
+        <x-stat-card
+            title="នាយកដ្ឋាន"
+            value="{{ number_format($statistics['departments']) }}"
+            icon="building"
+            color="green"/>
+
+        <x-stat-card
+            title="ការវាយតម្លៃ"
+            value="{{ number_format($statistics['evaluations']) }}"
+            icon="clipboard-check"
+            color="purple"/>
+
+    </div>
 
 </div>
 

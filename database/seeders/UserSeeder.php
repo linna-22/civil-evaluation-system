@@ -35,7 +35,8 @@ class UserSeeder extends Seeder
 
                 'employee_code' => 'SYS-0001',
 
-                'full_name' => 'Oeu Lina',
+                'name_kh' => 'អឿ លីណា',
+                'name_en' => 'Oeu Lina',
 
                 'username' => 'admin',
 

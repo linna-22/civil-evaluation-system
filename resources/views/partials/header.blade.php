@@ -29,7 +29,7 @@
     </div>
 
     {{-- Right Side --}}
-    <div class="flex items-center gap-6">
+    <!-- <div class="flex items-center gap-6">
 
         {{-- Notification --}}
         <button
@@ -76,6 +76,22 @@
 
         </button>
 
-    </div>
+    </div> -->
 
+    <div class="flex items-center gap-6">
+
+    {{-- Notification --}}
+    <button
+        class="text-white hover:opacity-80 transition">
+
+        <i
+            data-lucide="bell"
+            class="w-6 h-6">
+        </i>
+
+    </button>
+
+    <x-navbar-user />
+
+</div>
 </header>

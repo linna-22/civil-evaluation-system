@@ -36,7 +36,8 @@ return new class extends Migration {
 
             // Employee Information
             $table->string('employee_code', 30)->nullable();
-            $table->string('full_name', 150);
+            $table->string('name_en', 150);
+            $table->string('name_kh', 150);
             $table->string('username', 50)->nullable();
             $table->enum('gender', ['male', 'female']);
             $table->string('phone', 20)->nullable();
