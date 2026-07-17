@@ -26,7 +26,9 @@ return new class extends Migration {
 
             // Main Information
             $table->string('department_code', 20);
-            $table->string('department_name', 150);
+            $table->string('department_name_kh', 150);
+            $table->string('department_name_en', 150)->nullable();
+            $table->string('desc', 350)->nullable();
 
             // System Fields
             $table->enum('status', ['active', 'inactive'])

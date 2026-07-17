@@ -15,13 +15,13 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         $organization = Organization::where(
-            'organization_code',
-            'MLVT'
+            'org_code',
+            'GDAF'
         )->first();
 
         $department = Department::where(
             'department_code',
-            'ADMIN'
+            'SGAF'
         )->first();
 
         User::updateOrCreate(

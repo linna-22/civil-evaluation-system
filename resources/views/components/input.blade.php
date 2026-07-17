@@ -2,7 +2,9 @@
     'label',
     'name',
     'type' => 'text',
+    'value' => '',
     'placeholder' => '',
+    'required' => false,
 ])
 
 <div>
@@ -22,7 +24,7 @@
         placeholder="{{ $placeholder }}"
 
         {{ $attributes->merge([
-            'class' => 'w-full h-14 rounded-2xl border border-gray-300 px-5 outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600 transition'
+            'class' => 'w-full h-14 rounded-2xl border border-gray-300 px-5 outline-none focus:ring-1 focus:ring-blue-300 focus:border-blue-400 transition'
         ]) }}>
 
     @error($name)

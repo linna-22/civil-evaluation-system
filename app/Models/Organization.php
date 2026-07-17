@@ -13,8 +13,10 @@ class Organization extends Model
     protected $primaryKey = 'organization_id';
 
     protected $fillable = [
-        'organization_code',
-        'organization_name',
+        'org_code',
+        'org_name_kh',
+        'org_name_en',
+        'desc',
         'status',
     ];
 

@@ -14,10 +14,12 @@ class OrganizationSeeder extends Seeder
     {
         Organization::updateOrCreate(
             [
-                'organization_code' => 'MLVT',
+                'org_code' => 'GDAF',
             ],
             [
-                'organization_name' => 'Ministry of Labour and Vocational Training',
+                'org_name_kh' => 'អគ្គនាយកដ្ឋានរដ្ឋបាល និងហិរញ្ញវត្ថុ',
+                'org_name_en' => 'General Department of Administration and Finance',
+                'desc' => null,
                 'status' => 'active',
             ]
         );

@@ -1,9 +1,13 @@
 import './bootstrap';
 import './sidebar';
 import './dropdown';
-
+import './modal';
+import './validation';
+import "./pages/organizations/index";
 import { createIcons, icons } from 'lucide';
 
-document.addEventListener('DOMContentLoaded', () => {
-    createIcons({ icons });
+import { refreshIcons } from "./utils/lucide";
+
+document.addEventListener("DOMContentLoaded", () => {
+    refreshIcons();
 });

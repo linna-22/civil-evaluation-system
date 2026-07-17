@@ -16,8 +16,10 @@ return new class extends Migration {
             $table->id('organization_id');
 
             // Main Information
-            $table->string('organization_code', 20)->unique();
-            $table->string('organization_name', 150);
+            $table->string('org_code', 20)->unique();
+            $table->string('org_name_kh', 150);
+            $table->string('org_name_en', 150)->nullable();
+            $table->string('desc', 350)->nullable();
 
             // System Fields
             $table->enum('status', ['active', 'inactive'])

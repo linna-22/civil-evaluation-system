@@ -1,0 +1,47 @@
+<?php
+
+namespace App\Services;
+
+use App\Models\Organization;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Http\Request;
+
+class OrganizationService
+{
+    public function store(array $data): Organization
+    {
+        return Organization::create([
+
+            'org_code' => strtoupper($data['code']),
+            'org_name_kh' => $data['name_kh'],
+            'org_name_en' => $data['name_en'],
+            'desc' => $data['description'],
+            'status' => $data['status'],
+            'created_by' => auth()->id(),
+
+        ]);
+    }
+
+    public function getData(Request $request)
+    {
+        $query = Organization::query();
+
+        if ($request->filled('search')) {
+
+            $search = $request->search;
+
+            $query->where(function ($q) use ($search) {
+
+                $q->where('org_code', 'like', "%{$search}%")
+                    ->orWhere('org_name_kh', 'like', "%{$search}%")
+                    ->orWhere('org_name_en', 'like', "%{$search}%");
+
+            });
+
+        }
+
+        return $query
+            ->latest()
+            ->paginate($request->get('per_page', 10));
+    }
+}

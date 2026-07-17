@@ -14,17 +14,19 @@ class DepartmentSeeder extends Seeder
     public function run(): void
     {
         $organization = Organization::where(
-            'organization_code',
-            'MLVT'
+            'org_code',
+            'GDAF'
         )->first();
 
         Department::updateOrCreate(
             [
                 'organization_id' => $organization->organization_id,
-                'department_code' => 'ADMIN',
+                'department_code' => 'SGAF',
             ],
             [
-                'department_name' => 'System Administration',
+                'department_name_kh' => 'លេខាធិការដ្ឋាននៃអគ្គនាយកដ្ឋានរដ្ឋបាល និងហិរញ្ញវត្ថុ',
+                'department_name_en' => 'Secretariat of the General Department of Administration and Finance',
+                'desc' => null,
                 'status' => 'active',
             ]
         );

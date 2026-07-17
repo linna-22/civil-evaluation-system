@@ -40,7 +40,7 @@ return [
                 'icon'  => 'building-2',
                 'title' => 'អង្គភាព',
                 'route' => 'organizations.*',
-                'url'   => '#',
+                'url' => 'organizations.index',
             ],
 
             [
