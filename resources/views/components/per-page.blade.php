@@ -5,7 +5,7 @@
 
 <select
     id="{{ $id }}"
-    class="h-12 rounded-xl border border-gray-200 px-4 bg-white">
+    class="h-10 rounded-2xl border border-gray-200 px-2 bg-white">
 
     <option value="5" @selected($value == 5)>5</option>
     <option value="10" @selected($value == 10)>10</option>

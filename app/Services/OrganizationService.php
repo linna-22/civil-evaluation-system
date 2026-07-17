@@ -42,6 +42,31 @@ class OrganizationService
 
         return $query
             ->latest()
-            ->paginate($request->get('per_page', 10));
+            ->paginate($request->get('per_page', 5));
     }
+
+        public function find(Organization $organization): Organization
+    {
+        return $organization;
+    }
+    public function update(
+        Organization $organization,
+        array $data
+    ): Organization {
+
+        $organization->update([
+
+            'org_code'     => strtoupper($data['code']),
+            'org_name_kh'  => $data['name_kh'],
+            'org_name_en'  => $data['name_en'],
+            'desc'         => $data['description'],
+            'status'       => $data['status'],
+            'updated_by'   => auth()->id(),
+
+        ]);
+
+        return $organization->refresh();
+
+    }
+    
 }

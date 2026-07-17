@@ -18,6 +18,8 @@ class Organization extends Model
         'org_name_en',
         'desc',
         'status',
+        'created_by',
+        'updated_by'
     ];
 
     /*

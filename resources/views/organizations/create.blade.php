@@ -46,7 +46,9 @@
         description="សូមបំពេញព័ត៌មានអង្គភាពឱ្យបានត្រឹមត្រូវ"
         icon="clipboard-list">
 
-        @include('organizations._form')
+        @include('organizations._form', [
+            'organization' => null,
+        ])
 
     </x-layout.page-card>
 

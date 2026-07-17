@@ -20,7 +20,7 @@
         id="{{ $name }}"
         name="{{ $name }}"
         type="{{ $type }}"
-        value="{{ old($name) }}"
+        value="{{ $value }}"
         placeholder="{{ $placeholder }}"
 
         {{ $attributes->merge([

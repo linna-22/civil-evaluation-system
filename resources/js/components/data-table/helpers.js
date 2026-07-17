@@ -35,31 +35,15 @@ export function actionButtons(id) {
                     justify-center
                     h-9
                     w-9
+                    cursor-pointer
                     rounded-lg
                     bg-amber-100
                     text-amber-600
                     hover:bg-amber-200"
-                data-id="${id}">
+                data-id="${id}"
+                data-url="/organizations/${id}/edit">
 
                 <i data-lucide="square-pen" class="w-4 h-4"></i>
-
-            </button>
-
-            <button
-                type="button"
-                class="btn-delete
-                        flex
-                        items-center
-                        justify-center
-                        h-9
-                        w-9
-                        rounded-lg
-                        bg-red-100
-                        text-red-600
-                        hover:bg-red-200"
-                data-id="${id}">
-
-                <i data-lucide="trash-2" class="w-4 h-4"></i>
 
             </button>
 

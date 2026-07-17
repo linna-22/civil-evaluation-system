@@ -68,10 +68,6 @@ Route::middleware('auth')->group(function () {
             Route::put('/{organization}', [OrganizationController::class, 'update'])
                 ->name('update');
 
-            // Delete
-            Route::delete('/{organization}', [OrganizationController::class, 'destroy'])
-                ->name('destroy');
-
         });
 
     Route::get('/dashboard', [DashboardController::class, 'index'])

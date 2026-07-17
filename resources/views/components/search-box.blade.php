@@ -30,7 +30,7 @@
     placeholder="{{ $placeholder }}"
 
     class="w-80
-           h-12
+           h-10
            pl-12
            pr-4
            rounded-2xl

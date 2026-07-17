@@ -21,7 +21,7 @@
         </x-page-header>
 
         {{-- Search Card --}}
-        <div class="bg-white rounded-3xl shadow-sm p-6">
+        <div class="bg-white rounded-2xl shadow-sm p-3">
 
             <div class="flex justify-between items-center">
 
