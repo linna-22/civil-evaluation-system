@@ -47,7 +47,7 @@ return [
                 'icon'  => 'building',
                 'title' => 'នាយកដ្ឋាន',
                 'route' => 'departments.*',
-                'url'   => '#',
+                'url'   => 'departments.index',
             ],
 
             [

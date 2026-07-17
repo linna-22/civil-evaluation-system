@@ -14,12 +14,6 @@ class OrganizationController extends Controller
         return view('organizations.index');
     }
 
-    // public function data(Request $request, OrganizationService $service) 
-    // {
-    //     return response()->json(
-    //         $service->getData($request)
-    //     );
-    // }
     public function data(Request $request, OrganizationService $service)
     {
         $organizations = $service->getData($request);

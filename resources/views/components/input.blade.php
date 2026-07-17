@@ -24,7 +24,7 @@
         placeholder="{{ $placeholder }}"
 
         {{ $attributes->merge([
-            'class' => 'w-full h-14 rounded-2xl border border-gray-300 px-5 outline-none focus:ring-1 focus:ring-blue-300 focus:border-blue-400 transition'
+            'class' => 'w-full h-10 rounded-xl border border-gray-300 px-5 outline-none focus:ring-1 focus:ring-blue-300 focus:border-blue-400 transition'
         ]) }}>
 
     @error($name)

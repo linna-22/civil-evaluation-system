@@ -36,7 +36,7 @@
 
             'class' => '
                 w-full
-                h-11
+                h-10
                 rounded-xl
                 border
                 border-gray-300

@@ -41,11 +41,11 @@ class OrganizationService
         }
 
         return $query
-            ->latest()
+            ->orderBy('organization_id', 'asc')
             ->paginate($request->get('per_page', 5));
     }
 
-        public function find(Organization $organization): Organization
+    public function find(Organization $organization): Organization
     {
         return $organization;
     }
@@ -56,17 +56,23 @@ class OrganizationService
 
         $organization->update([
 
-            'org_code'     => strtoupper($data['code']),
-            'org_name_kh'  => $data['name_kh'],
-            'org_name_en'  => $data['name_en'],
-            'desc'         => $data['description'],
-            'status'       => $data['status'],
-            'updated_by'   => auth()->id(),
+            'org_code' => strtoupper($data['code']),
+            'org_name_kh' => $data['name_kh'],
+            'org_name_en' => $data['name_en'],
+            'desc' => $data['description'],
+            'status' => $data['status'],
+            'updated_by' => auth()->id(),
 
         ]);
 
         return $organization->refresh();
 
     }
-    
+    public function getActiveOrganizations()
+    {
+        return Organization::where('status', 'active')
+            ->orderBy('org_name_kh')
+            ->get();
+    }
+
 }

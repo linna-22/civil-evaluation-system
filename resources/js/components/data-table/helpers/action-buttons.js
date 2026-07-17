@@ -14,7 +14,8 @@ export function actionButtons(id) {
                     rounded-lg
                     bg-amber-100
                     text-amber-600
-                    hover:bg-amber-200"
+                    hover:bg-amber-200
+                    cursor-pointer"
                 data-id="${id}">
 
                 <i data-lucide="square-pen" class="w-4 h-4"></i>

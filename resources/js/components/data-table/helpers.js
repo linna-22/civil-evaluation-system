@@ -22,32 +22,53 @@ export function statusBadge(status) {
     `;
 
 }
-export function actionButtons(id) {
 
-    return `
+export function actionButtons(id, showDelete = false) {
+
+    let html = `
         <div class="flex items-center justify-center gap-2">
 
             <button
                 type="button"
                 class="btn-edit
-                    flex
-                    items-center
-                    justify-center
-                    h-9
-                    w-9
-                    cursor-pointer
+                    flex items-center justify-center
+                    h-9 w-9
                     rounded-lg
                     bg-amber-100
                     text-amber-600
-                    hover:bg-amber-200"
-                data-id="${id}"
-                data-url="/organizations/${id}/edit">
+                    hover:bg-amber-200
+                    cursor-pointer"
+                data-id="${id}">
 
                 <i data-lucide="square-pen" class="w-4 h-4"></i>
 
             </button>
-
-        </div>
     `;
+
+    if (showDelete) {
+
+        html += `
+            <button
+                type="button"
+                class="btn-delete
+                    flex items-center justify-center
+                    h-9 w-9
+                    rounded-lg
+                    bg-red-100
+                    text-red-600
+                    hover:bg-red-200
+                    cursor-pointer"
+                data-id="${id}">
+
+                <i data-lucide="trash-2" class="w-4 h-4"></i>
+
+            </button>
+        `;
+
+    }
+
+    html += `</div>`;
+
+    return html;
 
 }
