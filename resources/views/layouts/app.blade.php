@@ -5,9 +5,7 @@
 
     <meta charset="UTF-8">
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <title>
 
@@ -15,9 +13,7 @@
 
     </title>
 
-    <link
-        rel="icon"
-        href="{{ asset('images/circle_logo.png') }}">
+    <link rel="icon" href="{{ asset('images/circle_logo.png') }}">
 
     @vite([
         'resources/css/app.css',
@@ -26,25 +22,22 @@
 
 </head>
 
-<body
-    class="h-screen
+<body class="h-screen
            overflow-hidden
            bg-[#EDF2F7]
-           font-body">
+           font-body" data-success="{{ session('success') }}" data-error="{{ session('error') }}">
 
     {{-- Navbar --}}
     @include('partials.header')
 
-    <div
-        class="flex
+    <div class="flex
                h-[calc(100vh-80px)]">
 
         {{-- Sidebar --}}
         @include('partials.sidebar')
 
         {{-- Content --}}
-        <main
-            class="flex-1
+        <main class="flex-1
                    overflow-y-auto
                    p-5">
 
@@ -55,4 +48,5 @@
     </div>
 
 </body>
+
 </html>
