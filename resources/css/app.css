@@ -1,11 +1,12 @@
 @import "./fonts.css";
-
 @import "tailwindcss";
+@import "tom-select/dist/css/tom-select.css";
+
 /* ==========================================
    Application Theme
 ========================================== */
 
-:root{
+:root{ 
 
     /* Primary */
 
@@ -104,5 +105,76 @@ body{
 .sidebar.collapsed hr {
 
     display: none;
+
+}
+
+/* ==========================================
+   Tom Select Custom Theme
+========================================== */
+
+.ts-wrapper{
+    width:100%;
+}
+
+.ts-control{
+
+    min-height:40px !important;
+    border:1px solid #D1D5DB !important;
+    border-radius:12px !important;
+    padding:7px 14px !important;
+
+    font-size:14px;
+    font-family: inherit;
+
+    box-shadow:none !important;
+
+    transition:all .2s;
+}
+
+.ts-control input{
+
+    font-size:14px;
+
+}
+
+.ts-wrapper.focus .ts-control{
+
+    border-color:#3B82F6 !important;
+
+    box-shadow:0 0 0 4px rgb(59 130 246 / .15) !important;
+
+}
+
+.ts-dropdown{
+
+    margin-top:6px;
+
+    border-radius:12px;
+
+    border:1px solid #E5E7EB;
+
+    overflow:hidden;
+
+}
+
+.ts-dropdown .option{
+
+    padding:10px 14px;
+
+    font-size:14px;
+
+}
+
+.ts-dropdown .active{
+
+    background:#EFF6FF;
+
+    color:#2563EB;
+
+}
+
+.ts-control>.item{
+
+    font-size:14px;
 
 }

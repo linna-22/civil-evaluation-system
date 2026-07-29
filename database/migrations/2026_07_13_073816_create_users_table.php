@@ -35,7 +35,7 @@ return new class extends Migration {
                 ->restrictOnDelete();
 
             // Employee Information
-            $table->string('employee_code', 30)->nullable();
+            $table->string('id_code', 30)->nullable();
             $table->string('name_en', 150);
             $table->string('name_kh', 150);
             $table->string('username', 50)->nullable();
@@ -52,7 +52,7 @@ return new class extends Migration {
                 'super_admin',
                 'organization_admin',
                 'department_admin',
-                'employee'
+                'user'
             ]);
 
             // Account

@@ -33,7 +33,7 @@ class UserSeeder extends Seeder
 
                 'department_id' => $department->department_id,
 
-                'employee_code' => 'SYS-0001',
+                'id_code' => 'SYS-0001',
 
                 'name_kh' => 'អឿ លីណា',
                 'name_en' => 'Oeu Lina',

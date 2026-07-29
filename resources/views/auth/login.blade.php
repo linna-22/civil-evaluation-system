@@ -67,12 +67,10 @@
         {{-- Footer --}}
 
         <div class="text-white text-center mt-8">
-            <p>
-                Version 1.0.0
-            </p>
+            
             <p class="opacity-80 mt-1">
                 © {{ date('Y') }}
-                Ministry of Labour and Vocational Training
+                ក្រសួងការងារនិងបណ្ដុះបណ្ដាលវិជ្ជាជីវៈ
             </p>
         </div>
     </div>

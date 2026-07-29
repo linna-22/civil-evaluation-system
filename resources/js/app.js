@@ -5,7 +5,11 @@ import './modal';
 import './validation';
 import "./pages/organizations/index";
 import "./pages/departments/index";
+import "./pages/users/index";
+import "./pages/users/create";
 import "./session-flash";
+import "./plugins/tom-select";
+
 import { createIcons, icons } from 'lucide';
 
 import { refreshIcons } from "./utils/lucide";

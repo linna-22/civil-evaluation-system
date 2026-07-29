@@ -54,7 +54,7 @@ return [
                 'icon'  => 'users',
                 'title' => 'អ្នកប្រើប្រាស់',
                 'route' => 'users.*',
-                'url'   => '#',
+                'url'   => 'users.index',
             ],
 
         ],

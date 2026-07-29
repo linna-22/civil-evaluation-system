@@ -1,5 +1,4 @@
-<header
-    class="h-20
+<header class="h-20
            bg-blue-500
            flex
            items-center
@@ -10,13 +9,9 @@
     {{-- Left Side --}}
     <div class="flex items-center gap-4">
 
-        <img
-            src="{{ asset('images/circle_logo.png') }}"
-            alt="Logo"
-            class="w-14 h-14 object-contain">
+        <img src="{{ asset('images/circle_logo.png') }}" alt="Logo" class="w-14 h-14 object-contain">
 
-        <h1
-            class="font-title
+        <h1 class="font-title
             sidebar-logo-text
                    text-white
                    text-xl
@@ -80,18 +75,15 @@
 
     <div class="flex items-center gap-6">
 
-    {{-- Notification --}}
-    <button
-        class="text-white hover:opacity-80 transition">
+        {{-- Notification --}}
+        <button class="text-white hover:opacity-80 transition">
 
-        <i
-            data-lucide="bell"
-            class="w-6 h-6">
-        </i>
+            <i data-lucide="bell" class="w-6 h-6">
+            </i>
 
-    </button>
+        </button>
 
-    <x-navbar-user />
+        <x-navbar-user />
 
-</div>
+    </div>
 </header>

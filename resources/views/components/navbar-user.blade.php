@@ -77,7 +77,7 @@
 
         {{-- Menu --}}
         <a
-            href="#"
+            href="{{ route('users.profile') }}"
             class="flex items-center gap-3 px-5 py-3 hover:bg-gray-100 ">
 
             <i data-lucide="user" class="w-5 h-5 text-blue-600"></i>
@@ -90,18 +90,14 @@
 
         </a>
 
-        <a
-            href="#"
+       <a
+            href="{{ route('users.change-password') }}"
             class="flex items-center gap-3 px-5 py-3 hover:bg-gray-100">
-
             <i data-lucide="key-round" class="w-5 h-5 text-blue-600"></i>
 
             <span class="font-body text-blue-600">
-
                 ប្ដូរពាក្យសម្ងាត់
-
             </span>
-
         </a>
 
         <hr>
