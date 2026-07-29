@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\DepartmentRequest;
 use App\Models\Department;
+use App\Models\Organization;
 use App\Services\DepartmentService;
 use App\Services\OrganizationService;
 use Illuminate\Http\Request;
@@ -76,11 +77,19 @@ class DepartmentController extends Controller
                 'នាយកដ្ឋានត្រូវបានកែប្រែដោយជោគជ័យ'
             );
     }
-    public function destroy(Department $department, DepartmentService $service) {
+    public function byOrganization(Organization $organization, DepartmentService $service) 
+    {
+        return response()->json(
+            $service->getByOrganization($organization->organization_id)
+        );
+    }
+    public function destroy(Department $department, DepartmentService $service)
+    {
         $service->delete($department);
         return response()->json([
             'success' => true,
             'message' => 'នាយកដ្ឋានត្រូវបានលុបដោយជោគជ័យ',
         ]);
     }
+
 }

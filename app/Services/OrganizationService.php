@@ -68,6 +68,16 @@ class OrganizationService
         return $organization->refresh();
 
     }
+    public function getActive()
+    {
+        return Organization::query()
+            ->where('status', 'active')
+            ->orderBy('org_name_kh')
+            ->get([
+                'organization_id',
+                'org_name_kh'
+            ]);
+    }
     public function getActiveOrganizations()
     {
         return Organization::where('status', 'active')

@@ -48,7 +48,8 @@ class DepartmentService
     {
         return $department;
     }
-    public function update(Department $department, array $data): Department {
+    public function update(Department $department, array $data): Department
+    {
 
         $department->update([
 
@@ -70,4 +71,25 @@ class DepartmentService
         $department->delete();
     }
 
+    public function getByOrganization($organizationId)
+{
+    return Department::query()
+
+        ->where(
+            'organization_id',
+            $organizationId
+        )
+
+        ->where(
+            'status',
+            'active'
+        )
+
+        ->orderBy('department_name_kh')
+
+        ->get([
+            'department_id',
+            'department_name_kh'
+        ]);
+}
 }

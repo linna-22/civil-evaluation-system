@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\OrganizationController;
+use App\Http\Controllers\UserController;
 
 Route::middleware('guest')->group(function () {
 
@@ -52,7 +53,7 @@ Route::middleware('auth')->group(function () {
             Route::get('/{organization}/edit', [OrganizationController::class, 'edit'])->name('edit');
             Route::put('/{organization}', [OrganizationController::class, 'update'])->name('update');
         });
-    
+
     // Department
     Route::prefix('departments')
         ->name('departments.')
@@ -61,11 +62,30 @@ Route::middleware('auth')->group(function () {
 
             Route::get('/', [DepartmentController::class, 'index'])->name('index');
             Route::get('/data', [DepartmentController::class, 'data'])->name('data');
+            Route::get('/by-organization/{organization}', [DepartmentController::class, 'byOrganization'])->name('byOrganization');
             Route::get('/create', [DepartmentController::class, 'create'])->name('create');
             Route::post('/', [DepartmentController::class, 'store'])->name('store');
             Route::get('/{department}/edit', [DepartmentController::class, 'edit'])->name('edit');
             Route::put('/{department}', [DepartmentController::class, 'update'])->name('update');
             Route::delete('/{department}', [DepartmentController::class, 'destroy'])->name('destroy');
+        });
+
+    // User
+    Route::prefix('users')
+        ->name('users.')
+        ->middleware('auth')
+        ->group(function () {
+
+            Route::get('/', [UserController::class, 'index'])->name('index');
+            Route::get('/data', [UserController::class, 'data'])->name('data');
+            Route::get('/create', [UserController::class, 'create'])->name('create');
+            Route::post('/', [UserController::class, 'store'])->name('store');
+            Route::get('/change-password', [UserController::class, 'changePassword'])->name('change-password');
+            Route::put('/update-password', [UserController::class, 'updatePassword'])->name('update-password');
+            Route::get('/{user}/edit', [UserController::class, 'edit'])->name('edit');
+            Route::put('/{user}', [UserController::class, 'update'])->name('update');
+            Route::get('/profile', [UserController::class, 'profile'])->name('profile');
+
         });
 
     Route::get('/dashboard', [DashboardController::class, 'index'])
