@@ -116,7 +116,7 @@
 
                     <x-info-item label="មុខតំណែង" :value="$user->position" />
 
-                    <x-info-item label="តួនាទី" :value="ucfirst($user->role)" />
+                    {{-- <x-info-item label="តួនាទី" :value="ucfirst($user->role)" /> --}}
 
                     <x-info-item label="ស្ថានភាព" :value="$user->status == 'active' ? 'សកម្ម' : 'អសកម្ម'" />
 

@@ -90,7 +90,7 @@
 
                 <a
                     href="{{ route('users.index') }}"
-                    class="px-5 py-2 rounded-lg border border-gray-300 hover:bg-gray-100"
+                    class="px-5 py-2 rounded-lg border border-gray-300 hover:bg-gray-100 cursor-pointer"
                 >
                     ត្រឡប់
                 </a>

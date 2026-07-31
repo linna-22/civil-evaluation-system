@@ -5,6 +5,9 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DepartmentController;
+use App\Http\Controllers\Employee\EmployeeDashboardController;
+use App\Http\Controllers\Employee\MyEvaluationController;
+use App\Http\Controllers\EvaluationController;
 use App\Http\Controllers\OrganizationController;
 use App\Http\Controllers\UserController;
 
@@ -88,11 +91,37 @@ Route::middleware('auth')->group(function () {
 
         });
 
+    Route::prefix('my-evaluation')->name('my-evaluation.')->middleware('auth')->group(function () {
+
+        Route::get('/', [MyEvaluationController::class, 'index'])
+            ->name('index');
+
+    });
+
+    // Evaluation 
+    Route::prefix('evaluations')
+        ->name('evaluations.')
+        ->group(function () {
+
+            Route::get('/', [EvaluationController::class, 'index'])
+                ->name('index');
+            Route::get('/create', [EvaluationController::class, 'create'])
+                ->name('evaluations.create');
+
+        });
+
+
+    // Employee
+    Route::get('/   ', [EmployeeDashboardController::class, 'index'])
+        ->name('employee.dashboard');
+
     Route::get('/dashboard', [DashboardController::class, 'index'])
         ->name('dashboard');
 
     Route::post('/logout', [LogoutController::class, 'logout'])
         ->name('logout');
+
+
 
 
 });

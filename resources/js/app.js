@@ -9,8 +9,7 @@ import "./pages/users/index";
 import "./pages/users/create";
 import "./session-flash";
 import "./plugins/tom-select";
-
-import { createIcons, icons } from 'lucide';
+import "./evaluation/performance-table";
 
 import { refreshIcons } from "./utils/lucide";
 

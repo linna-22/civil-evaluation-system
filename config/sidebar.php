@@ -17,8 +17,8 @@ return [
             [
                 'icon'  => 'clipboard-check',
                 'title' => 'ការវាយតម្លៃ',
-                'route' => 'evaluations.*',
-                'url'   => '#',
+                'route' => 'evaluations',
+                'url'   => 'evaluations.index',
             ],
 
             [
@@ -69,14 +69,14 @@ return [
                 'icon'  => 'user-circle',
                 'title' => 'ព័ត៌មានផ្ទាល់ខ្លួន',
                 'route' => 'profile',
-                'url'   => '#',
+                'url'   => 'users.profile',
             ],
 
             [
                 'icon'  => 'log-out',
                 'title' => 'ចាកចេញ',
-                'route' => '',
-                'url'   => '#',
+                'route' => 'logout',
+                'url'   => 'logout',
             ],
 
         ],

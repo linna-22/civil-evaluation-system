@@ -93,7 +93,37 @@
 
     <div class="flex-1 overflow-y-auto">
 
-    @foreach(config('sidebar') as $section)
+    @php
+        $user = auth()->user();
+        $sidebar = config('sidebar');
+
+        if ($user->role === 'user') {
+            $sidebar = collect($sidebar)
+                ->map(function ($section) {
+
+                    $section['items'] = collect($section['items'])
+                        ->filter(function ($item) {
+                            return in_array($item['route'], [
+                                'dashboard',
+                                'profile',
+                                'evaluations',
+                                'logout',
+                            ]);
+                        })
+                        ->values()
+                        ->toArray();
+
+                    return $section;
+                })
+                ->filter(function ($section) {
+                    return !empty($section['items']);
+                })
+                ->values()
+                ->toArray();
+        }
+    @endphp
+
+    @foreach($sidebar as $section)
 
         <x-sidebar-section :title="$section['title']">
 
