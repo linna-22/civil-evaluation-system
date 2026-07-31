@@ -105,8 +105,10 @@
                         ->filter(function ($item) {
                             return in_array($item['route'], [
                                 'dashboard',
-                                'profile',
-                                'evaluations',
+                                'users.profile',
+                                'evaluations.index',
+                                'evaluations.history',
+                                'evaluations.evaluations.create',
                                 'logout',
                             ]);
                         })

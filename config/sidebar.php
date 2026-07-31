@@ -17,8 +17,14 @@ return [
             [
                 'icon'  => 'clipboard-check',
                 'title' => 'ការវាយតម្លៃ',
-                'route' => 'evaluations',
+                'route' => 'evaluations.index',
                 'url'   => 'evaluations.index',
+            ],
+            [
+                'icon'  => 'history',
+                'title' => 'ប្រវត្តិការវាយតម្លៃ',
+                'route' => 'evaluations.history',
+                'url'   => 'evaluations.history',
             ],
 
             [
@@ -53,7 +59,7 @@ return [
             [
                 'icon'  => 'users',
                 'title' => 'អ្នកប្រើប្រាស់',
-                'route' => 'users.*',
+                'route' => 'users.index',
                 'url'   => 'users.index',
             ],
 
@@ -68,16 +74,16 @@ return [
             [
                 'icon'  => 'user-circle',
                 'title' => 'ព័ត៌មានផ្ទាល់ខ្លួន',
-                'route' => 'profile',
+                'route' => 'users.profile',
                 'url'   => 'users.profile',
             ],
 
-            [
-                'icon'  => 'log-out',
-                'title' => 'ចាកចេញ',
-                'route' => 'logout',
-                'url'   => 'logout',
-            ],
+            // [
+            //     'icon'  => 'log-out',
+            //     'title' => 'ចាកចេញ',
+            //     'route' => 'logout',
+            //     'url'   => 'logout',
+            // ],
 
         ],
     ],

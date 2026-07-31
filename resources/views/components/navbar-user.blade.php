@@ -1,18 +1,11 @@
 <div class="relative">
 
-    <button
-        id="userDropdownToggle"
-        class="flex items-center gap-3 px-3 py-2 rounded-2xl hover:bg-white/10 transition">
+    <button id="userDropdownToggle" class="flex items-center gap-3 px-3 py-2 rounded-2xl hover:bg-white/10 transition">
 
         {{-- Avatar --}}
-        <div
-            class="w-11 h-11 rounded-full bg-white flex items-center justify-center">
-
-            <i
-                data-lucide="user"
-                class="w-5 h-5 text-primary">
-            </i>
-
+        <div class="w-10 h-10 rounded-full overflow-hidden bg-white">
+            <img src="https://ui-avatars.com/api/?name={{ urlencode(auth()->user()->name_en) }}&background=ffffff&color=2563eb&size=256"
+                alt="{{ auth()->user()->name_en }}" class="w-full h-full object-cover">
         </div>
 
         {{-- User Info --}}
@@ -32,16 +25,13 @@
 
         </div>
 
-        <i
-            data-lucide="chevron-down"
-            class="w-4 h-4 text-white">
+        <i data-lucide="chevron-down" class="w-4 h-4 text-white">
         </i>
 
     </button>
 
     {{-- Dropdown --}}
-    <div
-        id="userDropdownMenu"
+    <div id="userDropdownMenu"
         class="hidden
                opacity-0
                scale-95
@@ -76,9 +66,7 @@
         </div> -->
 
         {{-- Menu --}}
-        <a
-            href="{{ route('users.profile') }}"
-            class="flex items-center gap-3 px-5 py-3 hover:bg-gray-100 ">
+        <a href="{{ route('users.profile') }}" class="flex items-center gap-3 px-5 py-3 hover:bg-gray-100 ">
 
             <i data-lucide="user" class="w-5 h-5 text-blue-600"></i>
 
@@ -90,9 +78,7 @@
 
         </a>
 
-       <a
-            href="{{ route('users.change-password') }}"
-            class="flex items-center gap-3 px-5 py-3 hover:bg-gray-100">
+        <a href="{{ route('users.change-password') }}" class="flex items-center gap-3 px-5 py-3 hover:bg-gray-100">
             <i data-lucide="key-round" class="w-5 h-5 text-blue-600"></i>
 
             <span class="font-body text-blue-600">
@@ -117,9 +103,7 @@
                        text-red-600
                        cursor-pointer">
 
-                <i
-                    data-lucide="log-out"
-                    class="w-5 h-5">
+                <i data-lucide="log-out" class="w-5 h-5">
                 </i>
 
                 <span class="font-body">
