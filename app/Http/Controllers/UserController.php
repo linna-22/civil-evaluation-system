@@ -49,7 +49,7 @@ class UserController extends Controller
 
             ->with(
                 'success',
-                'អង្គភាពត្រូវបានបង្កើតដោយជោគជ័យ'
+                'អ្នកប្រើប្រាស់ត្រូវបានបង្កើតដោយជោគជ័យ'
             );
     }
     public function edit(User $user, OrganizationService $organizationService)

@@ -57,6 +57,29 @@ class StoreEvaluationRequest extends FormRequest
                 'numeric',
                 'between:0,100',
             ],
+            'approved_leave_days' => [
+                'required',
+                'integer',
+                'min:0',
+            ],
+
+            'unapproved_leave_days' => [
+                'required',
+                'integer',
+                'min:0',
+            ],
+
+            'late_hours' => [
+                'required',
+                'numeric',
+                'min:0',
+            ],
+
+            'leave_early_hours' => [
+                'required',
+                'numeric',
+                'min:0',
+            ],
 
         ];
     }

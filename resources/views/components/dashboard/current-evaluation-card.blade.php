@@ -47,7 +47,7 @@
     }
 @endphp
 
-    <div class="space-y-5">
+    <div class="space-y-6">
 
         {{-- Current Month --}}
         <div>

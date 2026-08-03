@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Evaluation;
+use App\Models\EvaluationAttendance;
 use App\Models\EvaluationWorkPerformance;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -36,6 +37,11 @@ class EvaluationService
 
             // Step 3
             // Attendance (Next)
+            $this->storeAttendance(
+                $evaluation,
+                $data
+            );
+            Log::info('Attendance stored successfully for evaluation ID: ' . $evaluation->evaluation_id);
 
             // Step 4
             // Behavior (Next)
@@ -80,6 +86,60 @@ class EvaluationService
             'work_performance_score' => $this->calculateWorkPerformanceScore(
                 $totalScore
             )
+
+        ]);
+
+    }
+    /**
+     * Store Attendance
+     */
+    private function storeAttendance(
+        Evaluation $evaluation,
+        array $data
+    ): void {
+
+        // Perfect attendance
+        if (
+            $data['approved_leave_days'] == 0 &&
+            $data['unapproved_leave_days'] == 0 &&
+            $data['late_hours'] == 0 &&
+            $data['leave_early_hours'] == 0
+        ) {
+
+            $attendancePercent = 100;
+            $attendanceScore = 20;
+
+        } else {
+
+            $attendancePercent = $this->calculateAttendancePercent($data);
+
+            $attendanceScore = $this->calculateAttendanceScore(
+                $attendancePercent
+            );
+
+        }
+
+        EvaluationAttendance::create([
+
+            'evaluation_id' => $evaluation->evaluation_id,
+
+            'approved_leave_count' => $data['approved_leave_days'],
+
+            'unapproved_leave_count' => $data['unapproved_leave_days'],
+
+            'late_hours' => $data['late_hours'],
+
+            'leave_early_hours' => $data['leave_early_hours'],
+
+            'attendance_percent' => $attendancePercent,
+
+            'attendance_score' => $attendanceScore,
+
+        ]);
+
+        $evaluation->update([
+
+            'attendance_score' => $attendanceScore
 
         ]);
 
@@ -137,6 +197,47 @@ class EvaluationService
         }
 
         return 0;
+
+    }
+
+    /**
+     * Calculate Attendance Percent
+     */
+    private function calculateAttendancePercent(
+        array $data
+    ): float {
+
+        $totalHours =
+
+            ($data['approved_leave_days'] * 8)
+
+            + ($data['unapproved_leave_days'] * 8)
+
+            + $data['late_hours']
+
+            + $data['leave_early_hours'];
+
+        $deduction = $totalHours * 1.76;
+
+        $percent = 100 - $deduction;
+
+        return max(0, round($percent, 2));
+
+    }
+    /**
+     * Calculate Attendance Score
+     */
+    private function calculateAttendanceScore(
+        float $attendancePercent
+    ): float {
+
+        return round(
+
+            ($attendancePercent * 20) / 100,
+
+            2
+
+        );
 
     }
 }

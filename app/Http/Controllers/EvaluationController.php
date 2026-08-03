@@ -50,7 +50,6 @@ class EvaluationController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'ការវាយតម្លៃត្រូវបានរក្សាទុកដោយជោគជ័យ។',
-            'data' => $evaluation,
             'redirect_url' => route('evaluations.index'),
             
         ]); 

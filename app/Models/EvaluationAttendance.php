@@ -9,13 +9,15 @@ class EvaluationAttendance extends Model
 {
     use HasFactory;
 
+    protected $table = 'evaluation_attendance';
     protected $primaryKey = 'attendance_id';
 
     protected $fillable = [
         'evaluation_id',
-        'permission_days',
-        'absent_days',
+        'approved_leave_count',
+        'unapproved_leave_count',
         'late_hours',
+        'leave_early_hours',
         'attendance_percent',
         'attendance_score',
     ];

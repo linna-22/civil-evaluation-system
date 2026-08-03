@@ -6,7 +6,7 @@
     {{-- Profile --}}
     <div class="flex flex-col items-center">
 
-        <h3 class="mt-4 text-xl font-title text-gray-800">
+        <h3 class="mt-2 text-xl font-bold text-gray-800">
 
             {{ $user->name_kh }}
 
@@ -27,8 +27,12 @@
     <div class="divide-y divide-gray-100">
 
         <x-dashboard.info-item
-            label="អត្តលេខមន្ត្រី"
-            :value="$user->id_code ?? '-'" />
+            label="ភេទ"
+            :value="match($user->gender) {
+                'male' => 'ប្រុស',
+                'female' => 'ស្រី',
+                default => '-',
+            }" />
 
         <x-dashboard.info-item
             label="នាយកដ្ឋាន"

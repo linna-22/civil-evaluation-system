@@ -12,7 +12,6 @@
     </div> --}}
 
     <!-- Perfect Attendance -->
-    <!-- Perfect Attendance -->
     <div id="attendanceCard" class="rounded-xl border border-green-200 bg-green-50 p-5 transition-all duration-300">
 
         <div class="flex items-start justify-between">
@@ -74,7 +73,7 @@
                         ឈប់មានច្បាប់ (ថ្ងៃ)
                     </label>
 
-                    <input type="number" min="0" step="0.5" name="approved_leave_days" value="0"
+                    <input type="number" min="0" step="1" name="approved_leave_days" value="0"
                         class="w-full rounded-lg border-gray-300 focus:border-indigo-500 focus:ring-indigo-500">
 
                     <p class="mt-2 text-xs text-gray-500">
@@ -90,7 +89,7 @@
                         ឈប់អត់ច្បាប់ (ថ្ងៃ)
                     </label>
 
-                    <input type="number" min="0" step="0.5" name="unapproved_leave_days" value="0"
+                    <input type="number" min="0" step="1" name="unapproved_leave_days" value="0"
                         class="w-full rounded-lg border-gray-300 focus:border-indigo-500 focus:ring-indigo-500">
 
                     <p class="mt-2 text-xs text-gray-500">
@@ -119,7 +118,7 @@
                         មកយឺត (ម៉ោង)
                     </label>
 
-                    <input type="number" min="0" step="0.5" name="late_hours" value="0"
+                    <input type="number" min="0" step="1" name="late_hours" value="0"
                         class="w-full rounded-lg border-gray-300 focus:border-indigo-500 focus:ring-indigo-500">
 
                     <p class="mt-2 text-xs text-gray-500">
@@ -135,7 +134,7 @@
                         ចេញមុន (ម៉ោង)
                     </label>
 
-                    <input type="number" min="0" step="0.5" name="leave_early_hours" value="0"
+                    <input type="number" min="0" step="1" name="leave_early_hours" value="0"
                         class="w-full rounded-lg border-gray-300 focus:border-indigo-500 focus:ring-indigo-500">
 
                     <p class="mt-2 text-xs text-gray-500">
@@ -260,11 +259,9 @@
                     "សូមបំពេញព័ត៌មានការឈប់សម្រាកខាងក្រោម។";
 
             }
-
         }
 
         updateAttendanceUI();
-
         toggle.addEventListener("change", updateAttendanceUI);
 
     });

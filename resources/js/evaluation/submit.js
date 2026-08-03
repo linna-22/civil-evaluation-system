@@ -1,61 +1,93 @@
 import axios from "axios";
 import Swal from "sweetalert2";
 
-export function submitEvaluation() {
+export async function submitEvaluation() {
 
     const form = document.getElementById("evaluationForm");
+
+    if (!form) {
+        console.error("Evaluation form not found.");
+        return;
+    }
+
     const formData = new FormData(form);
 
-    Swal.fire({
+    // Confirm before submit
+    const result = await Swal.fire({
         title: "បញ្ជាក់ការដាក់បញ្ជូន",
-        text: "តើអ្នកពិតជាចង់ដាក់បញ្ជូនការវាយតម្លៃនេះមែនទេ? បន្ទាប់ពីដាក់បញ្ជូន អ្នកនឹងមិនអាចកែប្រែបានទៀតទេ។",
+        text: "តើអ្នកពិតជាចង់ដាក់បញ្ជូនការវាយតម្លៃនេះមែនទេ?",
         icon: "question",
         showCancelButton: true,
-        confirmButtonText: "បាទ/ចាស, ដាក់បញ្ជូន",
+        confirmButtonText: "ដាក់បញ្ជូន",
         cancelButtonText: "បោះបង់",
         confirmButtonColor: "#2563eb",
         cancelButtonColor: "#6b7280",
         reverseButtons: true,
-    }).then((result) => {
+    });
 
-        if (!result.isConfirmed) {
-            return;
+    if (!result.isConfirmed) {
+        return;
+    }
+
+    try {
+
+        // Prevent duplicate submit
+        Swal.fire({
+            title: "កំពុងដំណើរការ...",
+            text: "សូមរង់ចាំបន្តិច",
+            allowOutsideClick: false,
+            allowEscapeKey: false,
+            didOpen: () => {
+                Swal.showLoading();
+            }
+        });
+
+        const response = await axios.post("/evaluations", formData);
+
+        await Swal.fire({
+            icon: "success",
+            title: "ជោគជ័យ",
+            text: response.data.message,
+            confirmButtonText: "យល់ព្រម",
+            confirmButtonColor: "#2563eb"
+        });
+
+        if (response.data.redirect_url) {
+            window.location.href = response.data.redirect_url;
         }
 
-        axios.post("/evaluations", formData)
+    } catch (error) {
 
-            .then((response) => {
+        console.error(error);
 
-                Swal.fire({
-                    icon: "success",
-                    title: "ជោគជ័យ",
-                    text: response.data.message,
-                    confirmButtonText: "យល់ព្រម",
-                    confirmButtonColor: "#2563eb"
-                }).then(() => {
+        let message = "មានបញ្ហាក្នុងការបញ្ជូនការវាយតម្លៃ។";
 
-                    if (response.data.redirect_url) {
-                        window.location.href = response.data.redirect_url;
-                    }
+        // Laravel validation error
+        if (error.response?.status === 422) {
 
-                });
+            const errors = error.response.data.errors;
 
-            })
+            if (errors) {
+                message = Object.values(errors)
+                    .flat()
+                    .join("\n");
+            }
 
-            .catch((error) => {
+        }
 
-                console.error(error);
+        // Server error
+        if (error.response?.status === 500) {
+            message = "មានបញ្ហាពីម៉ាស៊ីនមេ។ សូមព្យាយាមម្តងទៀត។";
+        }
 
-                Swal.fire({
-                    icon: "error",
-                    title: "បរាជ័យ",
-                    text: "មានបញ្ហាក្នុងការបញ្ជូនការវាយតម្លៃ។",
-                    confirmButtonText: "យល់ព្រម",
-                    confirmButtonColor: "#dc2626"
-                });
+        await Swal.fire({
+            icon: "error",
+            title: "បរាជ័យ",
+            text: message,
+            confirmButtonText: "យល់ព្រម",
+            confirmButtonColor: "#dc2626"
+        });
 
-            });
-
-    });
+    }
 
 }
