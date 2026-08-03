@@ -12,7 +12,7 @@
 ])
 
 @php
-    $status = $evaluation?->evaluation_status ?? 'submitted';
+    $status = $evaluation?->evaluation_status ?? 'null';
 
     if ($status === 'draft') {
 

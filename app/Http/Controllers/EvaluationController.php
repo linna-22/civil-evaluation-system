@@ -38,8 +38,7 @@ class EvaluationController extends Controller
     {
         $behaviorSections = BehaviorCriteria::SECTIONS;
         return view('evaluations.create', compact(
-            'behaviorSections',
-            'status'
+            'behaviorSections'
         ));
     }
 
