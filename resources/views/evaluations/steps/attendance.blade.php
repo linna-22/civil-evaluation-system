@@ -151,7 +151,7 @@
     </div>
 
     <!-- Attendance Summary -->
-    <div>
+    {{-- <div>
 
         <h3 class="mb-5 border-b pb-2 text-lg font-semibold text-gray-700">
             លទ្ធផលវត្តមាន
@@ -191,7 +191,7 @@
 
         </div>
 
-    </div>
+    </div> --}}
 
 </div>
 <script>

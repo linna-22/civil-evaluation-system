@@ -20,8 +20,13 @@ class EvaluationAttendance extends Model
         'attendance_score',
     ];
 
+
     public function evaluation()
     {
-        return $this->belongsTo(Evaluation::class);
+        return $this->belongsTo(
+            Evaluation::class,
+            'evaluation_id',
+            'evaluation_id'
+        );
     }
 }

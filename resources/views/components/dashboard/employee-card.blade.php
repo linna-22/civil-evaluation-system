@@ -1,5 +1,5 @@
 <x-layout.page-card
-    title="ព័ត៌មានបុគ្គលិក"
+    title="ព័ត៌មានមន្ត្រី"
     description="ព័ត៌មានផ្ទាល់ខ្លួនរបស់មន្ត្រី"
     icon="user-round">
 
@@ -21,7 +21,7 @@
     </div>
 
     {{-- Divider --}}
-    <div class="my-4 border-t border-gray-200"></div>
+    <div class="my-5 border-t border-gray-200"></div>
 
     {{-- Employee Information --}}
     <div class="divide-y divide-gray-100">

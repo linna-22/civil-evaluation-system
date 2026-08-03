@@ -12,7 +12,7 @@
 ])
 
 @php
-    $status = $evaluation?->evaluation_status ?? 'pending';
+    $status = $evaluation?->evaluation_status ?? 'submitted';
 
     if ($status === 'draft') {
 
@@ -42,7 +42,7 @@
 
         $buttonText = 'ចាប់ផ្តើមការវាយតម្លៃ';
         $buttonIcon = 'play';
-        $buttonUrl = '#'; // route('evaluations.create');
+        $buttonUrl =  route('evaluations.evaluations.create');
 
     }
 @endphp

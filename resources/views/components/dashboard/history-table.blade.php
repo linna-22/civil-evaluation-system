@@ -13,13 +13,13 @@
             </p>
         </div>
 
-        <button
+        {{-- <button
             type="button"
             class="px-4 py-2 rounded-xl border border-gray-300 text-sm hover:bg-gray-50 transition">
 
             មើលទាំងអស់
 
-        </button>
+        </button> --}}
 
     </div>
 

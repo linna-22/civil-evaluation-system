@@ -91,29 +91,22 @@ Route::middleware('auth')->group(function () {
 
         });
 
-    Route::prefix('my-evaluation')->name('my-evaluation.')->middleware('auth')->group(function () {
-
-        Route::get('/', [MyEvaluationController::class, 'index'])
-            ->name('index');
-
-    });
-
     // Evaluation 
     Route::prefix('evaluations')
         ->name('evaluations.')
         ->group(function () {
 
-            Route::get('/', [EvaluationController::class, 'index'])
-                ->name('index');
-            Route::get('/create', [EvaluationController::class, 'create'])
-                ->name('evaluations.create');
+            Route::get('/', [EvaluationController::class, 'index'])->name('index');
+            Route::get('/create', [EvaluationController::class, 'create'])->name('evaluations.create');
+            Route::get('/history', [EvaluationController::class, 'history'])->name('history');
+            Route::post('/', [EvaluationController::class, 'store'])->name('store');
 
         });
 
 
     // Employee
-    Route::get('/   ', [EmployeeDashboardController::class, 'index'])
-        ->name('employee.dashboard');
+    // Route::get('/   ', [EmployeeDashboardController::class, 'index'])
+    //     ->name('employee.dashboard');
 
     Route::get('/dashboard', [DashboardController::class, 'index'])
         ->name('dashboard');

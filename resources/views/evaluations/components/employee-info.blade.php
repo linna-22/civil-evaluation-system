@@ -1,7 +1,4 @@
-<x-layout.page-card
-    title="ព័ត៌មានបុគ្គលិក"
-    description="ព័ត៌មានមូលដ្ឋានរបស់បុគ្គលិក និងខែវាយតម្លៃ"
-    icon="user-round"
+<x-layout.page-card title="ព័ត៌មានបុគ្គលិក" description="ព័ត៌មានមូលដ្ឋានរបស់បុគ្គលិក និងខែវាយតម្លៃ" icon="user-round"
     class="mb-6">
 
     <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
@@ -49,19 +46,14 @@
                 ខែវាយតម្លៃ
             </label>
 
-            <select
-                name="month"
-                id="month"
-                class="w-full rounded-xl border-gray-300">
+            <select name="evaluation_month" id="month" class="w-full rounded-xl border-gray-300">
 
-                @foreach(range(1,12) as $month)
-
-                    <option value="{{ $month }}">
+                @foreach (range(1, 12) as $month)
+                    <option value="{{ $month }}" {{ $month == now()->month ? 'selected' : '' }}>
 
                         {{ \Carbon\Carbon::create()->month($month)->translatedFormat('F') }}
 
                     </option>
-
                 @endforeach
 
             </select>
@@ -73,19 +65,14 @@
                 ឆ្នាំវាយតម្លៃ
             </label>
 
-            <select
-                name="year"
-                id="year"
-                class="w-full rounded-xl border-gray-300">
+            <select name="evaluation_year" id="year" class="w-full rounded-xl border-gray-300">
 
-                @for($year = now()->year; $year >= now()->year-5; $year--)
-
+                @for ($year = now()->year; $year >= now()->year - 5; $year--)
                     <option value="{{ $year }}">
 
                         {{ $year }}
 
                     </option>
-
                 @endfor
 
             </select>

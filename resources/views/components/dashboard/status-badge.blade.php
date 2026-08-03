@@ -7,7 +7,7 @@
     $statuses = [
 
         'pending' => [
-            'text' => 'មិនទាន់ចាប់ផ្តើម',
+            'text' => 'មិនទាន់ធ្វើការវាយតម្លៃ',
             'class' => 'bg-amber-100 text-amber-700',
             'icon' => 'circle-alert',
         ],
@@ -19,7 +19,7 @@
         ],
 
         'submitted' => [
-            'text' => 'បានបញ្ជូន',
+            'text' => 'បានបញ្ចប់ការវាយតម្លៃ',
             'class' => 'bg-green-100 text-green-700',
             'icon' => 'badge-check',
         ],

@@ -86,7 +86,7 @@
     </div>
 
     <!-- Notice -->
-    <div class="mt-8 rounded-xl border border-blue-200 bg-blue-50 p-6">
+    {{-- <div class="mt-8 rounded-xl border border-blue-200 bg-blue-50 p-6">
 
         <h4 class="font-semibold text-blue-700">
             ចំណាំ
@@ -98,7 +98,7 @@
             សូមពិនិត្យម្តងទៀត មុនពេលបញ្ជូន។
         </p>
 
-    </div>
+    </div> --}}
 
     <!-- Confirmation -->
     {{-- <div class="mt-8 rounded-xl border border-yellow-300 bg-yellow-50 p-6">

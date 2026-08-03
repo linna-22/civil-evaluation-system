@@ -35,21 +35,25 @@ class Evaluation extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class,'user_id','user_id');
+        return $this->belongsTo(User::class, 'user_id', 'user_id');
     }
 
     public function workPerformance()
     {
-        return $this->hasMany(EvaluationWorkPerformance::class,'evaluation_id','evaluation_id');
+        return $this->hasMany(EvaluationWorkPerformance::class, 'evaluation_id', 'evaluation_id');
     }
 
     public function attendance()
     {
-        return $this->hasOne(EvaluationAttendance::class,'evaluation_id','evaluation_id');
+        return $this->hasOne(EvaluationAttendance::class, 'evaluation_id', 'evaluation_id');
     }
 
-    public function behaviors()
+    public function behavior()
     {
-        return $this->hasMany(EvaluationBehavior::class,'evaluation_id','evaluation_id');
-    }
+        return $this->hasOne(
+            EvaluationBehavior::class,
+            'evaluation_id',
+            'evaluation_id'
+        );
+    }   
 }

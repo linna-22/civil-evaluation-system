@@ -3,33 +3,24 @@
 @section('title', 'Dashboard')
 
 @section('content')
-
 <div class="space-y-6">
 
     {{-- Greeting --}}
-    <div>
+    <div class="text-center">
 
-        <h1
-            class="font-title
-                   text-3xl
-                   text-primary">
-
-            ផ្ទាំងគ្រប់គ្រង
-
-        </h1>
-
-        <p
+        <h2
             class="font-body
                    text-gray-500
-                   mt-2">
+                   mt-4 text-2xl align-middle">
 
             សូមស្វាគមន៍ <span class="font-title text-blue-500">{{ auth()->user()->name_kh }}</span> មកកាន់<span class="font-title text-blue-500"> ប្រព័ន្ធវាយតម្លៃផ្អែកលើសមិទ្ធកម្មមន្ត្រី</span>
 
-        </p>
+        </h2>
 
     </div>
-
+    @if(auth()->user()->role === 'super_admin')
     {{-- Statistics --}}
+    
     <div
         class="grid
                grid-cols-1
@@ -63,6 +54,9 @@
 
     </div>
 
+@endif
+
 </div>
+
 
 @endsection

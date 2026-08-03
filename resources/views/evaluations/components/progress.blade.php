@@ -12,7 +12,7 @@
             </div>
 
             <span class="mt-3 text-sm">
-                សមិទ្ធកម្ម
+                សមិទ្ធកម្មការងារ
             </span>
 
         </div>
@@ -46,7 +46,7 @@
             </div>
 
             <span class="mt-3 text-sm">
-                វិនិច្ឆ័យ
+                លក្ខណៈវិនិច្ឆ័យ
             </span>
 
         </div>

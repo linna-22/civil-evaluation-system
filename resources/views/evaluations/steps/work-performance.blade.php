@@ -7,7 +7,7 @@
     @include('evaluations.components.performance-table')
 
     {{-- Performance Summary --}}
-    {{-- @include('evaluations.components.performance-summary') --}}
+    @include('evaluations.components.performance-summary')
 
     {{-- Notes --}}
     {{-- @include('evaluations.components.notes') --}}

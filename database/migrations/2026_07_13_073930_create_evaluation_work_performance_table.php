@@ -22,9 +22,9 @@ return new class extends Migration {
               ->cascadeOnDelete()
               ->cascadeOnUpdate();
 
-        $table->text('expected_result');
+        $table->text('activity');
 
-        $table->text('actual_result');
+        $table->text('indicator');
 
         $table->decimal('achievement_percent',5,2)
               ->default(0);

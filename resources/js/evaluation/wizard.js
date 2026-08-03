@@ -1,4 +1,7 @@
+import Swal from "sweetalert2";
+import { validateWorkPerformance } from "./validation";
 import { refreshIcons } from "../utils/lucide";
+import { submitEvaluation } from "./submit";
 // ========================================
 // Evaluation Wizard
 // ========================================
@@ -95,7 +98,7 @@ function updateButtons() {
     if (currentStep === totalSteps) {
 
         nextBtn.innerHTML = `
-            <i data-lucide="check" class="w-5 h-5"></i>
+            <i data-lucide="check" class="w-5 h-5 cursor-pointer"></i>
             បញ្ជូនការវាយតម្លៃ
         `;
 
@@ -103,14 +106,14 @@ function updateButtons() {
 
         nextBtn.innerHTML = `
             មើលលទ្ធផលសរុប
-            <i data-lucide="arrow-right" class="w-5 h-5"></i>
+            <i data-lucide="arrow-right" class="w-5 h-5 cursor-pointer"></i>
         `;
 
     } else {
 
         nextBtn.innerHTML = `
             បន្ទាប់
-            <i data-lucide="arrow-right" class="w-5 h-5"></i>
+            <i data-lucide="arrow-right" class="w-5 h-5 cursor-pointer"></i>
         `;
 
     }
@@ -139,7 +142,7 @@ nextBtn.addEventListener("click", () => {
 
     } else {
 
-        submitEvaluation();
+         submitEvaluation();
 
     }
 
@@ -239,7 +242,9 @@ function validateStep(step) {
         case 1:
 
             // Validate Work Performance
-            return true;
+            // return true;
+
+            return validateWorkPerformance();
 
         case 2:
 
@@ -255,7 +260,7 @@ function validateStep(step) {
             // Preview
 
             return true;
-            
+
         case 5:
             // result
             return true;
@@ -271,44 +276,30 @@ function validateStep(step) {
 // ========================================
 // Submit
 // ========================================
+// function submitEvaluation() {
 
-function submitEvaluation() {
+//     Swal.fire({
 
-    Swal.fire({
+//         title: "ដាក់បញ្ជូនការវាយតម្លៃ?",
+//         text: "អ្នកនឹងមិនអាចកែប្រែបានទេ បន្ទាប់ពីដាក់បញ្ជូនរួច។",
+//         icon: "question",
+//         showCancelButton: true,
+//         confirmButtonText: "ដាក់បញ្ជូន",
+//         cancelButtonText: "បោះបង់",
+//         confirmButtonColor: "#2563EB"
 
-        title: "ដាក់ស្នើការវាយតម្លៃ?",
+//     }).then((result) => {
 
-        text: "អ្នកនឹងមិនអាចកែប្រែបានទេ បន្ទាប់ពីដាក់ស្នើ។",
+//         if (result.isConfirmed) {
 
-        icon: "question",
+//             // TODO:
+//             // Submit Form / AJAX
+            
 
-        showCancelButton: true,
+           
 
-        confirmButtonText: "ដាក់ស្នើ",
+//         }
 
-        cancelButtonText: "បោះបង់",
+//     });
 
-        confirmButtonColor: "#2563EB"
-
-    }).then((result) => {
-
-        if (result.isConfirmed) {
-
-            // TODO:
-            // Submit Form / AJAX
-
-            Swal.fire({
-
-                icon: "success",
-
-                title: "ជោគជ័យ",
-
-                text: "ការវាយតម្លៃត្រូវបានដាក់ស្នើ។"
-
-            });
-
-        }
-
-    });
-
-}
+// }

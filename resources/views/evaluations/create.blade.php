@@ -4,72 +4,64 @@
 
 @section('content')
 
-<div class="max-w-7xl mx-auto">
+    <div class="max-w-7xl mx-auto">
 
-    {{-- Breadcrumb --}}
-    <x-layout.breadcrumb>
-        <x-layout.breadcrumb-item
-            title="ការវាយតម្លៃ"
-            :url="route('evaluations.index')" />
+        {{-- Breadcrumb --}}
+        <x-layout.breadcrumb>
+            <x-layout.breadcrumb-item title="ការវាយតម្លៃ" :url="route('evaluations.index')" />
 
-        <x-layout.breadcrumb-item
-            title="/ បង្កើតការវាយតម្លៃ" />
-    </x-layout.breadcrumb>
-    <div class="mb-3"></div>
-    {{-- Progress --}}
-    {{-- <x-evaluations.components.progress
+            <x-layout.breadcrumb-item title="/ បង្កើតការវាយតម្លៃ" />
+        </x-layout.breadcrumb>
+        <div class="mb-3"></div>
+        {{-- Progress --}}
+        {{-- <x-evaluations.components.progress
         :currentStep="1" /> --}}
         @include('evaluations.components.progress')
 
-    {{-- Wizard --}}
-    <x-layout.page-card class="mt-6">
+        <form id="evaluationForm" action="{{ route('evaluations.store') }}" method="POST">
+            @csrf
+            {{-- Wizard --}}
+            <x-layout.page-card class="mt-6">
 
-        <div class="wizard-step" data-step="1">
+                <div class="wizard-step" data-step="1">
 
-            @include('evaluations.steps.work-performance')
+                    @include('evaluations.steps.work-performance')
 
-        </div>
+                </div>
 
-        <div
-            class="wizard-step hidden"
-            data-step="2">
+                <div class="wizard-step hidden" data-step="2">
 
-            @include('evaluations.steps.attendance')
+                    @include('evaluations.steps.attendance')
 
-        </div>
+                </div>
 
-        <div
-            class="wizard-step hidden"
-            data-step="3">
+                <div class="wizard-step hidden" data-step="3">
 
-            @include('evaluations.steps.behavior')
+                    @include('evaluations.steps.behavior')
 
-        </div>
+                </div>
 
-        <div
-            class="wizard-step hidden"
-            data-step="4">
+                <div class="wizard-step hidden" data-step="4">
 
-            @include('evaluations.steps.preview')
+                    @include('evaluations.steps.preview')
 
-        </div>
-        <div
-            class="wizard-step hidden"
-            data-step="5">
+                </div>
+                <div class="wizard-step hidden" data-step="5">
 
-            @include('evaluations.steps.evaulation_result')
+                    @include('evaluations.steps.evaulation_result')
 
-        </div>
+                </div>
 
-        <div class="mt-8">
+                <div class="mt-8">
 
-            @include('evaluations.components.navigation')
+                    @include('evaluations.components.navigation')
 
-        </div>
+                </div>
 
-    </x-layout.page-card>
+            </x-layout.page-card>
+        </form>
 
-</div>
+    </div>
 
 @endsection
 @vite('resources/js/evaluation/wizard.js')

@@ -15,7 +15,7 @@
                     id="{{ $sectionKey }}-score"
                     class="px-3 py-1 text-sm font-semibold rounded-full bg-blue-100 text-blue-700">
 
-                    0 / {{ $section['max_score'] }}
+                    {{ $section['max_score'] }} ពិន្ទុ
 
                 </span>
 
