@@ -24,6 +24,7 @@ export function validateWorkPerformance() {
         const indicator = row.querySelector("textarea[name*='indicator']").value.trim();
 
         const achievement = row.querySelector("input[name*='achievement_percent']").value;
+        
 
         if (!activity) {
 

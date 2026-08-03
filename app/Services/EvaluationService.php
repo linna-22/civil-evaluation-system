@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Evaluation;
 use App\Models\EvaluationAttendance;
+use App\Models\EvaluationBehavior;
 use App\Models\EvaluationWorkPerformance;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -26,7 +27,7 @@ class EvaluationService
                 'created_by' => Auth::id(),
 
             ]);
-            // Log::info($evaluation->toArray());
+            Log::info($evaluation->toArray());
 
             // Step 2
             // Store Work Performance
@@ -45,6 +46,11 @@ class EvaluationService
 
             // Step 4
             // Behavior (Next)
+            $this->storeBehavior(
+                $evaluation,
+                $data
+            );
+            Log::info('Behavior stored successfully for evaluation ID: ' . $evaluation->evaluation_id);
 
             return $evaluation;
 
@@ -143,6 +149,49 @@ class EvaluationService
 
         ]);
 
+    }
+    private function storeBehavior(
+        Evaluation $evaluation,
+        array $data
+    ): void {
+        $totalScore =
+            $data['discipline']
+            + $data['responsibility']
+            + $data['professional_ethics']
+            + $data['work_performance']
+            + $data['self_development']
+            + $data['initiative_creativity']
+            + $data['teamwork']
+            + $data['interpersonal_skill']
+            + $data['work_under_pressure']
+            + $data['leadership'];
+
+        EvaluationBehavior::create([
+
+            'evaluation_id' => $evaluation->evaluation_id,
+
+            'discipline' => $data['discipline'],
+            'responsibility' => $data['responsibility'],
+            'professional_ethics' => $data['professional_ethics'],
+
+            'work_performance' => $data['work_performance'],
+            'self_development' => $data['self_development'],
+            'initiative_creativity' => $data['initiative_creativity'],
+
+            'teamwork' => $data['teamwork'],
+            'interpersonal_skill' => $data['interpersonal_skill'],
+            'work_under_pressure' => $data['work_under_pressure'],
+            'leadership' => $data['leadership'],
+
+            'total_score' => $totalScore,
+
+        ]);
+
+        $evaluation->update([
+
+            'behavior_score' => $totalScore,
+
+        ]);
     }
 
     /**

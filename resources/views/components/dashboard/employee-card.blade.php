@@ -6,7 +6,7 @@
     {{-- Profile --}}
     <div class="flex flex-col items-center">
 
-        <h3 class="mt-2 text-xl font-bold text-gray-800">
+        <h3 class="mt-2 font-title text-xl text-gray-800">
 
             {{ $user->name_kh }}
 

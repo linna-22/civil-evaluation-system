@@ -80,6 +80,18 @@ class StoreEvaluationRequest extends FormRequest
                 'numeric',
                 'min:0',
             ],
+            'discipline' => ['required', 'integer', 'between:0,2'],
+            'responsibility' => ['required', 'integer', 'between:0,2'],
+            'professional_ethics' => ['required', 'integer', 'between:0,2'],
+
+            'work_performance' => ['required', 'integer', 'between:0,2'],
+            'self_development' => ['required', 'integer', 'between:0,2'],
+            'initiative_creativity' => ['required', 'integer', 'between:0,2'],
+
+            'teamwork' => ['required', 'integer', 'between:0,2'],
+            'interpersonal_skill' => ['required', 'integer', 'between:0,2'],
+            'work_under_pressure' => ['required', 'integer', 'between:0,2'],
+            'leadership' => ['required', 'integer', 'between:0,2'],
 
         ];
     }
