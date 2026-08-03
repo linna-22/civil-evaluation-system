@@ -56,7 +56,8 @@
                                             type="radio"
                                             name="{{ $field }}"
                                             value="{{ $i }}"
-                                            class="behavior-radio">
+                                            class="behavior-radio"
+                                            {{ $i === 0 ? 'checked' : '' }}>
 
                                         <span>{{ $i }}</span>
 
