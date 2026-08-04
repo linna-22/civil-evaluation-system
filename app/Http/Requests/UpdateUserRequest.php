@@ -56,6 +56,13 @@ class UpdateUserRequest extends FormRequest
             'status' => [
                 'required',
             ],
+            'id_code' => [
+                'required',
+                'max:255',
+            ],
+            'is_leader' => [
+                'required',
+            ],
 
         ];
     }

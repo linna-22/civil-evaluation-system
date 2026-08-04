@@ -25,6 +25,7 @@ class User extends Authenticatable
         'phone',
         'email',
         'position',
+        'is_leader',
         'password',
         'role',
         'status',

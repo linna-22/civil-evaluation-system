@@ -115,42 +115,29 @@
                     {{ $evaluation->evaluation_year }}
 
                 </p>
-
             </div>
-
             {{-- Submitted At --}}
             <div>
-
                 <p class="text-sm text-gray-500">
                     កាលបរិច្ឆេទដាក់បញ្ជូនការវាយតម្លៃ
                 </p>
-
                 <p class="mt-1 font-semibold text-gray-800">
 
                     {{ $evaluation->submitted_at
                         ? \App\Helpers\DateHelper::khmerDateTime($evaluation->submitted_at)
                         : '-' }}
                 </p>
-
             </div>
 
             {{-- Total Score --}}
             <div>
-
                 <p class="text-sm text-gray-500">
                     ពិន្ទុសរុប
                 </p>
-
                 <p class="mt-1 text-lg font-bold text-blue-600">
-
                     {{ number_format($evaluation->total_score, 2) }} / 100
-
                 </p>
-
             </div>
-
         </div>
-
     </div>
-
 </div>
