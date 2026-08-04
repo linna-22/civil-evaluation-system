@@ -36,9 +36,14 @@ class EvaluationController extends Controller
     }
     public function create()
     {
+        $user = Auth::user()->load([
+            'department',
+            'organization',
+        ]);
         $behaviorSections = BehaviorCriteria::SECTIONS;
         return view('evaluations.create', compact(
-            'behaviorSections'
+            'behaviorSections',
+            'user'
         ));
     }
 

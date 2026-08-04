@@ -76,6 +76,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     name="performances[${index}][score]"
                     value="0"
                     readonly
+                    data-score
                     class="w-full rounded-lg bg-gray-100 text-center border-0">
             </td>
 

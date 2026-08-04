@@ -52,6 +52,9 @@ class EvaluationService
             );
             Log::info('Behavior stored successfully for evaluation ID: ' . $evaluation->evaluation_id);
 
+            // Step 5
+            $this->updateTotalScore($evaluation);
+
             return $evaluation;
 
         });
@@ -252,41 +255,47 @@ class EvaluationService
     /**
      * Calculate Attendance Percent
      */
-    private function calculateAttendancePercent(
-        array $data
-    ): float {
+    private function calculateAttendancePercent(array $data): float 
+    {
+        // Approved leave only deducts 50%
+        $approvedHours = $data['approved_leave_days'] * 8 * 0.5;
+        // Full deduction
+        $unapprovedHours = $data['unapproved_leave_days'] * 8;
+        $lateHours = $data['late_hours'];
+        $leaveEarlyHours = $data['leave_early_hours'];
+        $deductionHours = $approvedHours + $unapprovedHours + $lateHours + $leaveEarlyHours;
+        // 1% = 1.76 hours
+        $deductionPercent =$deductionHours / 1.76;
 
-        $totalHours =
+        $attendancePercent =
+            100 - $deductionPercent;
 
-            ($data['approved_leave_days'] * 8)
-
-            + ($data['unapproved_leave_days'] * 8)
-
-            + $data['late_hours']
-
-            + $data['leave_early_hours'];
-
-        $deduction = $totalHours * 1.76;
-
-        $percent = 100 - $deduction;
-
-        return max(0, round($percent, 2));
+        return max(
+            0,
+            round($attendancePercent, 2)
+        );
 
     }
     /**
      * Calculate Attendance Score
      */
-    private function calculateAttendanceScore(
-        float $attendancePercent
-    ): float {
+    private function calculateAttendanceScore(float $attendancePercent): float 
+    {
+        return round(($attendancePercent * 20) / 100, 2);
+    }
+    
+    /**
+     * Update Evaluation Total Score
+     */
+    private function updateTotalScore(Evaluation $evaluation): void 
+    {
 
-        return round(
+        $totalScore =
+            (float) $evaluation->work_performance_score +
+            (float) $evaluation->attendance_score +
+            (float) $evaluation->behavior_score;
 
-            ($attendancePercent * 20) / 100,
-
-            2
-
-        );
-
+        $evaluation->total_score = $totalScore;
+        $evaluation->save();
     }
 }

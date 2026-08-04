@@ -10,6 +10,8 @@
     </p>
 
 </div>
+
+<!-- Employee Information -->
 <div class="bg-white rounded-xl shadow-sm border border-gray-200">
 
     <div class="px-6 py-4 border-b">
@@ -26,44 +28,32 @@
 
             <div>
                 <p class="text-sm text-gray-500">ឈ្មោះ</p>
-                <p class="font-semibold">
-                    {{ $employee->khmer_name ?? 'ឈ្មោះមន្ត្រី' }}
-                </p>
+                <p id="previewEmployeeName" class="font-semibold"></p>
             </div>
 
             <div>
                 <p class="text-sm text-gray-500">ភេទ</p>
-                <p class="font-semibold">
-                    {{ $employee->gender ?? '-' }}
-                </p>
+                <p id="previewGender" class="font-semibold"></p>
             </div>
 
             <div>
                 <p class="text-sm text-gray-500">មុខតំណែង</p>
-                <p class="font-semibold">
-                    {{ $employee->position->position_name ?? '-' }}
-                </p>
+                <p id="previewPosition" class="font-semibold"></p>
             </div>
 
             <div>
                 <p class="text-sm text-gray-500">អង្គភាព</p>
-                <p class="font-semibold">
-                    {{ $employee->organization->organization_name ?? '-' }}
-                </p>
+                <p id="previewOrganization" class="font-semibold"></p>
             </div>
 
             <div>
                 <p class="text-sm text-gray-500">នាយកដ្ឋាន</p>
-                <p class="font-semibold">
-                    {{ $employee->department->department_name ?? '-' }}
-                </p>
+                <p id="previewDepartment" class="font-semibold"></p>
             </div>
 
             <div>
-                <p class="text-sm text-gray-500">ខែវាយតម្លៃ</p>
-                <p class="font-semibold">
-                    កក្កដា ២០២៦
-                </p>
+                <p class="text-sm text-gray-500">វាយតម្លៃសម្រាប់</p>
+                <p id="previewEvaluationMonth" class="font-semibold"></p>
             </div>
 
         </div>
@@ -71,12 +61,14 @@
     </div>
 
 </div>
+
 <!-- Work Performance -->
 <div class="mt-6 bg-white rounded-xl border border-gray-200 shadow-sm">
 
     <div class="flex items-center justify-between px-6 py-4 border-b">
 
         <div>
+
             <h3 class="text-lg font-semibold text-gray-800">
                 📊 សមិទ្ធផលការងារ
             </h3>
@@ -84,12 +76,14 @@
             <p class="text-sm text-gray-500">
                 សង្ខេបលទ្ធផលការងារប្រចាំខែ
             </p>
+
         </div>
 
         <span
+            id="previewWorkPerformanceScore"
             class="inline-flex items-center rounded-full bg-blue-100 px-4 py-2 text-sm font-semibold text-blue-700">
 
-            56 / 60 ពិន្ទុ
+            0 / 60 ពិន្ទុ
 
         </span>
 
@@ -111,6 +105,10 @@
                         សកម្មភាពការងារ
                     </th>
 
+                    <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">
+                        សូចនាករ
+                    </th>
+
                     <th class="px-6 py-3 text-center text-sm font-semibold text-gray-700">
                         ភាគរយ
                     </th>
@@ -123,43 +121,9 @@
 
             </thead>
 
-            <tbody class="divide-y divide-gray-200">
-
-                <tr>
-
-                    <td class="px-6 py-4">១</td>
-
-                    <td class="px-6 py-4">
-                        សកម្មភាពការងារទី១
-                    </td>
-
-                    <td class="px-6 py-4 text-center">
-                        100%
-                    </td>
-
-                    <td class="px-6 py-4 text-center font-semibold">
-                        10
-                    </td>
-
-                </tr>
-
-                <tr>
-
-                    <td class="px-6 py-4">២</td>
-
-                    <td class="px-6 py-4">
-                        សកម្មភាពការងារទី២
-                    </td>
-
-                    <td class="px-6 py-4 text-center">
-                        95%
-                    </td>
-
-                    <td class="px-6 py-4 text-center font-semibold">
-                        9
-                    </td>
-
-                </tr>
+            <tbody
+                id="previewPerformanceTable"
+                class="divide-y divide-gray-200">
 
             </tbody>
 
@@ -168,8 +132,9 @@
     </div>
 
 </div>
+
 <!-- Attendance -->
-<div class="mt-6 bg-white rounded-xl border border-gray-200 shadow-sm">
+{{-- <div class="mt-6 bg-white rounded-xl border border-gray-200 shadow-sm">
 
     <div class="flex items-center justify-between px-6 py-4 border-b">
 
@@ -185,9 +150,11 @@
 
         </div>
 
-        <span class="rounded-full bg-green-100 px-4 py-2 font-semibold text-green-700">
+        <span
+            id="previewAttendanceScore"
+            class="rounded-full bg-green-100 px-4 py-2 font-semibold text-green-700">
 
-            19 / 20 ពិន្ទុ
+            0 / 20 ពិន្ទុ
 
         </span>
 
@@ -196,32 +163,230 @@
     <div class="grid md:grid-cols-4 gap-5 p-6">
 
         <div class="rounded-lg bg-gray-50 p-4 text-center">
-            <p class="text-sm text-gray-500">ច្បាប់ឈប់សម្រាក</p>
-            <h4 class="mt-2 text-2xl font-bold">១</h4>
-            <p class="text-xs text-gray-500">ថ្ងៃ</p>
+
+            <p class="text-sm text-gray-500">
+                ច្បាប់ឈប់សម្រាក
+            </p>
+
+            <h4
+                id="previewApprovedLeave"
+                class="mt-2 text-2xl font-bold">
+
+                0
+
+            </h4>
+
+            <p class="text-xs text-gray-500">
+                ថ្ងៃ
+            </p>
+
         </div>
 
         <div class="rounded-lg bg-gray-50 p-4 text-center">
-            <p class="text-sm text-gray-500">អវត្តមាន</p>
-            <h4 class="mt-2 text-2xl font-bold">០</h4>
-            <p class="text-xs text-gray-500">ថ្ងៃ</p>
+
+            <p class="text-sm text-gray-500">
+                អវត្តមាន
+            </p>
+
+            <h4
+                id="previewUnapprovedLeave"
+                class="mt-2 text-2xl font-bold">
+
+                0
+
+            </h4>
+
+            <p class="text-xs text-gray-500">
+                ថ្ងៃ
+            </p>
+
         </div>
 
         <div class="rounded-lg bg-gray-50 p-4 text-center">
-            <p class="text-sm text-gray-500">មកយឺត</p>
-            <h4 class="mt-2 text-2xl font-bold">១</h4>
-            <p class="text-xs text-gray-500">ម៉ោង</p>
+
+            <p class="text-sm text-gray-500">
+                មកយឺត
+            </p>
+
+            <h4
+                id="previewLateHours"
+                class="mt-2 text-2xl font-bold">
+
+                0
+
+            </h4>
+
+            <p class="text-xs text-gray-500">
+                ម៉ោង
+            </p>
+
         </div>
 
         <div class="rounded-lg bg-gray-50 p-4 text-center">
-            <p class="text-sm text-gray-500">ចេញមុន</p>
-            <h4 class="mt-2 text-2xl font-bold">០</h4>
-            <p class="text-xs text-gray-500">ម៉ោង</p>
+
+            <p class="text-sm text-gray-500">
+                ចេញមុន
+            </p>
+
+            <h4
+                id="previewLeaveEarlyHours"
+                class="mt-2 text-2xl font-bold">
+
+                0
+
+            </h4>
+
+            <p class="text-xs text-gray-500">
+                ម៉ោង
+            </p>
+
+        </div>
+
+    </div>
+
+</div> --}}
+<div class="mt-6 bg-white rounded-xl border border-gray-200 shadow-sm">
+
+    {{-- Header --}}
+    <div class="flex items-center justify-between px-6 py-4 border-b">
+
+        <div>
+
+            <h3 class="text-lg font-semibold text-gray-800">
+                📅 វត្តមានការងារ
+            </h3>
+
+            <p class="text-sm text-gray-500">
+                សង្ខេបវត្តមានប្រចាំខែ
+            </p>
+
+        </div>
+
+        <span
+            id="previewAttendanceScore"
+            class="rounded-full bg-green-100 px-4 py-2 font-semibold text-green-700">
+
+            0 / 20 ពិន្ទុ
+
+        </span>
+
+    </div>
+
+    {{-- Perfect Attendance --}}
+    <div
+        id="perfectAttendanceMessage"
+        class="hidden p-8 text-center">
+
+        <div
+            class="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-green-100">
+
+            <span class="text-4xl">
+                ✅
+            </span>
+
+        </div>
+
+        <h3 class="mt-5 text-2xl font-bold text-green-700">
+            វត្តមានល្អឥតខ្ចោះ
+        </h3>
+
+        <p class="mt-3 text-gray-600 leading-7">
+
+            មិនមានការឈប់សម្រាកទេក្នុងខែវាយតម្លៃនេះ។
+
+        </p>
+
+    </div>
+
+    {{-- Attendance Detail --}}
+    <div
+        id="attendanceDetails"
+        class="grid md:grid-cols-4 gap-5 p-6">
+
+        <div class="rounded-lg bg-gray-50 p-4 text-center">
+
+            <p class="text-sm text-gray-500">
+                ច្បាប់ឈប់សម្រាក
+            </p>
+
+            <h4
+                id="previewApprovedLeave"
+                class="mt-2 text-2xl font-bold">
+
+                0
+
+            </h4>
+
+            <p class="text-xs text-gray-500">
+                ថ្ងៃ
+            </p>
+
+        </div>
+
+        <div class="rounded-lg bg-gray-50 p-4 text-center">
+
+            <p class="text-sm text-gray-500">
+                អវត្តមាន
+            </p>
+
+            <h4
+                id="previewUnapprovedLeave"
+                class="mt-2 text-2xl font-bold">
+
+                0
+
+            </h4>
+
+            <p class="text-xs text-gray-500">
+                ថ្ងៃ
+            </p>
+
+        </div>
+
+        <div class="rounded-lg bg-gray-50 p-4 text-center">
+
+            <p class="text-sm text-gray-500">
+                មកយឺត
+            </p>
+
+            <h4
+                id="previewLateHours"
+                class="mt-2 text-2xl font-bold">
+
+                0
+
+            </h4>
+
+            <p class="text-xs text-gray-500">
+                ម៉ោង
+            </p>
+
+        </div>
+
+        <div class="rounded-lg bg-gray-50 p-4 text-center">
+
+            <p class="text-sm text-gray-500">
+                ចេញមុន
+            </p>
+
+            <h4
+                id="previewLeaveEarlyHours"
+                class="mt-2 text-2xl font-bold">
+
+                0
+
+            </h4>
+
+            <p class="text-xs text-gray-500">
+                ម៉ោង
+            </p>
+
         </div>
 
     </div>
 
 </div>
+
 <!-- Behavior -->
 <div class="mt-6 bg-white rounded-xl border border-gray-200 shadow-sm">
 
@@ -239,9 +404,11 @@
 
         </div>
 
-        <span class="rounded-full bg-yellow-100 px-4 py-2 font-semibold text-yellow-700">
+        <span
+            id="previewBehaviorScore"
+            class="rounded-full bg-yellow-100 px-4 py-2 font-semibold text-yellow-700">
 
-            18 / 20 ពិន្ទុ
+            0 / 20 ពិន្ទុ
 
         </span>
 
@@ -253,7 +420,13 @@
 
             <span>ឥរិយាបថ និងវិន័យ</span>
 
-            <span class="font-semibold">6 / 6</span>
+            <span
+                id="previewDisciplineScore"
+                class="font-semibold">
+
+                0 / 6
+
+            </span>
 
         </div>
 
@@ -261,7 +434,13 @@
 
             <span>សមត្ថភាពវិជ្ជាជីវៈ</span>
 
-            <span class="font-semibold">5 / 6</span>
+            <span
+                id="previewProfessionalScore"
+                class="font-semibold">
+
+                0 / 6
+
+            </span>
 
         </div>
 
@@ -269,7 +448,13 @@
 
             <span>ភាពជាអ្នកដឹកនាំ</span>
 
-            <span class="font-semibold">7 / 8</span>
+            <span
+                id="previewLeadershipScore"
+                class="font-semibold">
+
+                0 / 8
+
+            </span>
 
         </div>
 

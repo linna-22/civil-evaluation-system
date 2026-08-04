@@ -2,6 +2,8 @@ import Swal from "sweetalert2";
 import { validateWorkPerformance } from "./validation";
 import { refreshIcons } from "../utils/lucide";
 import { submitEvaluation } from "./submit";
+import { loadPreview } from "./preview";
+import { loadResult } from "./result";
 // ========================================
 // Evaluation Wizard
 // ========================================
@@ -139,6 +141,14 @@ nextBtn.addEventListener("click", () => {
         currentStep++;
 
         showStep(currentStep);
+         if (currentStep === 4) {
+            loadPreview();
+        }
+        if (currentStep === 5) {
+
+        loadResult();
+
+    }
 
     } else {
 
@@ -258,7 +268,6 @@ function validateStep(step) {
 
         case 4:
             // Preview
-
             return true;
 
         case 5:

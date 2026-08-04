@@ -41,12 +41,13 @@
         </div>
 
         {{-- Month --}}
+        {{-- Month --}}
         <div>
             <label class="block text-sm font-medium text-gray-700 mb-2">
                 ខែវាយតម្លៃ
             </label>
 
-            <select name="evaluation_month" id="month" class="w-full rounded-xl border-gray-300">
+            <select disabled class="w-full rounded-xl border-gray-300 bg-gray-100 cursor-not-allowed">
 
                 @foreach (range(1, 12) as $month)
                     <option value="{{ $month }}" {{ $month == now()->month ? 'selected' : '' }}>
@@ -57,6 +58,8 @@
                 @endforeach
 
             </select>
+
+            <input type="hidden" name="evaluation_month" value="{{ now()->month }}">
         </div>
 
         {{-- Year --}}
@@ -65,10 +68,10 @@
                 ឆ្នាំវាយតម្លៃ
             </label>
 
-            <select name="evaluation_year" id="year" class="w-full rounded-xl border-gray-300">
+            <select disabled class="w-full rounded-xl border-gray-300 bg-gray-100 cursor-not-allowed">
 
                 @for ($year = now()->year; $year >= now()->year - 5; $year--)
-                    <option value="{{ $year }}">
+                    <option value="{{ $year }}" {{ $year == now()->year ? 'selected' : '' }}>
 
                         {{ $year }}
 
@@ -77,6 +80,7 @@
 
             </select>
 
+            <input type="hidden" name="evaluation_year" value="{{ now()->year }}">
         </div>
 
     </div>

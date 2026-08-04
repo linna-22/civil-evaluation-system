@@ -18,7 +18,10 @@
         :currentStep="1" /> --}}
         @include('evaluations.components.progress')
 
-        <form id="evaluationForm" action="{{ route('evaluations.store') }}" method="POST">
+        <form id="evaluationForm" action="{{ route('evaluations.store') }}" method="POST" data-name="{{ $user->name_kh }}"
+            data-gender="{{ $user->gender }}" data-position="{{ $user->position }}"
+            data-organization="{{ $user->organization->org_name_kh }}"
+            data-department="{{ $user->department->department_name_kh }}" data-month="{{ now()->translatedFormat('F Y') }}">
             @csrf
             {{-- Wizard --}}
             <x-layout.page-card class="mt-6">
