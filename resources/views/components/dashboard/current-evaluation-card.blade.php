@@ -14,29 +14,11 @@
 @php
     $status = $evaluation?->evaluation_status ?? 'null';
 
-    if ($status === 'draft') {
-
-        $buttonText = 'បន្តការវាយតម្លៃ';
-        $buttonIcon = 'pencil';
-        $buttonUrl = '#'; // route('evaluations.edit', $evaluation);
-
-    } elseif ($status === 'submitted') {
+ if ($status === 'submitted') {
 
         $buttonText = 'មើលការវាយតម្លៃ';
         $buttonIcon = 'eye';
-        $buttonUrl = '#'; // route('evaluations.show', $evaluation);
-
-    } elseif ($status === 'approved') {
-
-        $buttonText = 'មើលលទ្ធផល';
-        $buttonIcon = 'badge-check';
-        $buttonUrl = '#'; // route('evaluations.show', $evaluation);
-
-    } elseif ($status === 'rejected') {
-
-        $buttonText = 'កែប្រែ និងដាក់ស្នើឡើងវិញ';
-        $buttonIcon = 'rotate-ccw';
-        $buttonUrl = '#'; // route('evaluations.edit', $evaluation);
+        $buttonUrl = route('evaluations.show', $evaluation);
 
     } else {
 

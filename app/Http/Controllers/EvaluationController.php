@@ -56,8 +56,20 @@ class EvaluationController extends Controller
             'success' => true,
             'message' => 'ការវាយតម្លៃត្រូវបានរក្សាទុកដោយជោគជ័យ។',
             'redirect_url' => route('evaluations.index'),
-            
-        ]); 
+
+        ]);
+    }
+    public function show(Evaluation $evaluation)
+    {
+        $evaluation->load([
+            'user.organization',
+            'user.department',
+            'workPerformance',
+            'attendance',
+            'behavior',
+        ]);
+
+        return view('evaluations.show', compact('evaluation'));
     }
     public function history()
     {

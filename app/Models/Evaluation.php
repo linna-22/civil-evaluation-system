@@ -55,5 +55,10 @@ class Evaluation extends Model
             'evaluation_id',
             'evaluation_id'
         );
-    }   
+    }
+
+    public function getRouteKeyName(): string
+    {
+        return 'evaluation_id';
+    }
 }
