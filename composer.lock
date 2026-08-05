@@ -4,8 +4,78 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "53b5d56b3b7e3cbac1713e68c8850f6c",
+    "content-hash": "49ad156f30b43f9544ac7b19011f7c5b",
     "packages": [
+        {
+            "name": "asorasoft/chhankitek",
+            "version": "2.2.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/HELMAB/chhankitek.git",
+                "reference": "f91c13f432dd971a12d4739b73caacdd5d6a5b01"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/HELMAB/chhankitek/zipball/f91c13f432dd971a12d4739b73caacdd5d6a5b01",
+                "reference": "f91c13f432dd971a12d4739b73caacdd5d6a5b01",
+                "shasum": ""
+            },
+            "require": {
+                "nesbot/carbon": "^2.0|^3.0",
+                "php": "^8.2"
+            },
+            "require-dev": {
+                "illuminate/support": "^10.0|^11.0|^12.0|^13.0",
+                "laravel/pint": "^1.0",
+                "orchestra/testbench": "^8.0|^9.0|^10.0|^11.0",
+                "pestphp/pest": "^3.0",
+                "phpunit/phpunit": "^10.0|^11.0|^12.0"
+            },
+            "suggest": {
+                "illuminate/support": "Enables the Laravel facade, service provider, and persistent cache (LaravelCache)."
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "aliases": {
+                        "Chhankitek": "Asorasoft\\Chhankitek\\ChhankitekFacade"
+                    },
+                    "providers": [
+                        "Asorasoft\\Chhankitek\\ChhankitekServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "files": [
+                    "src/helpers.php"
+                ],
+                "psr-4": {
+                    "Asorasoft\\Chhankitek\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Mab Hel",
+                    "email": "mabhelitc@gmail.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Convert from AD (Anno Domini) to Lunar (Chhankitek) format.",
+            "homepage": "https://github.com/HELMAB/chhankitek",
+            "keywords": [
+                "asorasoft",
+                "chhankitek"
+            ],
+            "support": {
+                "issues": "https://github.com/HELMAB/chhankitek/issues",
+                "source": "https://github.com/HELMAB/chhankitek/tree/2.2.1"
+            },
+            "time": "2026-06-08T15:30:14+00:00"
+        },
         {
             "name": "brick/math",
             "version": "0.14.8",
