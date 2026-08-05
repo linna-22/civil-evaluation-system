@@ -112,10 +112,17 @@ body{
    Tom Select Custom Theme
 ========================================== */
 
-.ts-wrapper{
-    width:100%;
-}
+.ts-wrapper {
 
+    width: 100%;
+
+    border: none !important;
+
+    outline: none !important;
+
+    box-shadow: none !important;
+
+}
 .ts-control{
 
     min-height:40px !important;
