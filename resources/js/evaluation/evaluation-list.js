@@ -18,6 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
     initSearch();
     initFilters();
     initReset();
+    initReportPreview();
 
 });
 
@@ -156,4 +157,27 @@ function initReset() {
         });
         loadEvaluations();
     });
+}
+// Report Preview
+function initReportPreview() {
+
+    const previewBtn = document.getElementById("previewReport");
+
+    if (!previewBtn) return;
+
+    previewBtn.addEventListener("click", function (e) {
+
+        e.preventDefault();
+
+        const params = new URLSearchParams(
+            new FormData(form)
+        );
+
+        window.open(
+            `/reports/evaluation/preview?${params.toString()}`,
+            "_blank"
+        );
+
+    });
+
 }

@@ -298,8 +298,155 @@ class EvaluationService
             ->toArray();
     }
 
-    public function getEvaluationList(array $filters, User $user): LengthAwarePaginator
-    {
+    // public function getEvaluationList(array $filters, User $user): LengthAwarePaginator
+    // {
+    //     $query = Evaluation::query()
+    //         ->with([
+    //             'user.organization',
+    //             'user.department',
+    //         ]);
+
+    //     // ============================================
+    //     // Role Permission
+    //     // ============================================
+
+    //     if ($user->role === 'organization_admin') {
+
+    //         $query->whereHas('user', function ($q) use ($user) {
+
+    //             $q->where(
+    //                 'organization_id',
+    //                 $user->organization_id
+    //             );
+
+    //         });
+
+    //     } elseif ($user->role === 'department_admin') {
+
+    //         $query->whereHas('user', function ($q) use ($user) {
+
+    //             $q->where(
+    //                 'department_id',
+    //                 $user->department_id
+    //             );
+
+    //         });
+
+    //     }
+
+    //     // ============================================
+    //     // Search
+    //     // ============================================
+
+    //     if (!empty($filters['search'])) {
+
+    //         $search = trim($filters['search']);
+
+    //         $query->whereHas('user', function ($q) use ($search) {
+
+    //             $q->where('id_code', 'like', "%{$search}%")
+    //                 ->orWhere('name_kh', 'like', "%{$search}%")
+    //                 ->orWhere('name_en', 'like', "%{$search}%")
+    //                 ->orWhere('username', 'like', "%{$search}%");
+
+    //         });
+
+    //     }
+
+    //     // ============================================
+    //     // Organization (Super Admin Only)
+    //     // ============================================
+
+    //     if (
+    //         $user->role === 'super_admin' &&
+    //         !empty($filters['organization'])
+    //     ) {
+
+    //         $query->whereHas('user', function ($q) use ($filters) {
+
+    //             $q->where(
+    //                 'organization_id',
+    //                 $filters['organization']
+    //             );
+
+    //         });
+
+    //     }
+
+    //     // ============================================
+    //     // Department
+    //     // ============================================
+
+    //     if (!empty($filters['department'])) {
+
+    //         $query->whereHas('user', function ($q) use ($filters) {
+
+    //             $q->where(
+    //                 'department_id',
+    //                 $filters['department']
+    //             );
+
+
+    //         });
+
+    //     }
+
+    //     // ============================================
+    //     // Month
+    //     // ============================================
+
+    //     if (!empty($filters['month'])) {
+
+    //         $query->where(
+    //             'evaluation_month',
+    //             $filters['month']
+    //         );
+
+    //     }
+
+    //     // ============================================
+    //     // Year
+    //     // ============================================
+
+    //     if (!empty($filters['year'])) {
+
+    //         $query->where(
+    //             'evaluation_year',
+    //             $filters['year']
+    //         );
+
+    //     }
+
+    //     // ============================================
+    //     // Sort
+    //     // ============================================
+
+    //     return $query
+    //         ->latest('submitted_at')
+    //         ->paginate(10)
+    //         ->withQueryString();
+    // }
+
+
+    public function getEvaluationList(
+        array $filters,
+        User $user
+    ): LengthAwarePaginator {
+
+        return $this
+            ->buildEvaluationQuery(
+                $filters,
+                $user
+            )
+            ->latest('submitted_at')
+            ->paginate(10)
+            ->withQueryString();
+
+    }
+    public function buildEvaluationQuery(
+        array $filters,
+        User $user
+    ) {
         $query = Evaluation::query()
             ->with([
                 'user.organization',
@@ -354,7 +501,7 @@ class EvaluationService
         }
 
         // ============================================
-        // Organization (Super Admin Only)
+        // Organization
         // ============================================
 
         if (
@@ -385,7 +532,6 @@ class EvaluationService
                     'department_id',
                     $filters['department']
                 );
-                
 
             });
 
@@ -417,14 +563,9 @@ class EvaluationService
 
         }
 
-        // ============================================
-        // Sort
-        // ============================================
-
-        return $query
-            ->latest('submitted_at')
-            ->paginate(10)
-            ->withQueryString();
+        return $query;
     }
 
 }
+
+

@@ -1,5 +1,6 @@
 <?php
 
+use Asorasoft\Chhankitek\Chhankitek;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\LogoutController;
@@ -8,8 +9,12 @@ use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\Employee\EmployeeDashboardController;
 use App\Http\Controllers\Employee\MyEvaluationController;
 use App\Http\Controllers\EvaluationController;
+use App\Http\Controllers\EvaluationReportController;
 use App\Http\Controllers\OrganizationController;
 use App\Http\Controllers\UserController;
+use Carbon\CarbonImmutable;
+
+
 
 Route::middleware('guest')->group(function () {
 
@@ -108,6 +113,17 @@ Route::middleware('auth')->group(function () {
 
         });
 
+        // Evaluation Report
+        Route::prefix('reports')
+    ->name('reports.')
+    ->middleware(['role:super_admin,organization_admin,department_admin'
+    ])
+    ->group(function () {
+
+        Route::get('/evaluation/preview', [EvaluationReportController::class, 'preview'])->name('evaluation.preview');
+
+    });
+
 
     // Employee
     // Route::get('/   ', [EmployeeDashboardController::class, 'index'])
@@ -119,6 +135,14 @@ Route::middleware('auth')->group(function () {
     Route::post('/logout', [LogoutController::class, 'logout'])
         ->name('logout');
 
+
+Route::get('/test-lunar', function () {
+
+    return toLunarDate(
+        CarbonImmutable::now()->setTimezone('Asia/Phnom_Penh')
+    )->toString();
+
+});
 
 
 
