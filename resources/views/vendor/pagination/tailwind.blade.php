@@ -33,35 +33,25 @@
 
             {{-- Left --}}
             <div class="text-sm text-gray-500">
-
                 កំពុងបង្ហាញ
-
                 <span class="font-semibold text-gray-800">
                     {{ $paginator->firstItem() }}
                 </span>
-
                 ដល់
-
                 <span class="font-semibold text-gray-800">
                     {{ $paginator->lastItem() }}
                 </span>
-
                 នៃ
-
                 <span class="font-semibold text-gray-800">
                     {{ $paginator->total() }}
                 </span>
-
                 ទិន្នន័យ
-
             </div>
 
             {{-- Right --}}
             <div class="flex items-center gap-2">
-
                 {{-- Previous --}}
                 @if ($paginator->onFirstPage())
-
                     <span class="w-10 h-10
                                rounded-xl
                                border
@@ -70,14 +60,9 @@
                                items-center
                                justify-center
                                text-gray-300">
-
-                        <i data-lucide="chevron-left" class="w-5 h-5">
-                        </i>
-
+                        <i data-lucide="chevron-left" class="w-5 h-5"></i>
                     </span>
-
                 @else
-
                     <a href="{{ $paginator->previousPageUrl() }}" class="w-10
                                h-10
                                rounded-xl
@@ -89,38 +74,24 @@
                                hover:bg-blue-50
                                hover:border-blue-300
                                transition">
-
-                        <i data-lucide="chevron-left" class="w-5 h-5">
-                        </i>
-
+                        <i data-lucide="chevron-left" class="w-5 h-5"></i>
                     </a>
-
                 @endif
-
                 {{-- Numbers --}}
                 @foreach ($elements as $element)
-
                     @if (is_string($element))
-
                         <span class="w-10
                                        h-10
                                        flex
                                        items-center
                                        justify-center
                                        text-gray-400">
-
                             {{ $element }}
-
                         </span>
-
                     @endif
-
                     @if (is_array($element))
-
                         @foreach ($element as $page => $url)
-
                             @if ($page == $paginator->currentPage())
-
                                 <span class="w-10
                                                        h-10
                                                        rounded-xl
@@ -131,13 +102,9 @@
                                                        items-center
                                                        justify-center
                                                        font-semibold">
-
                                     {{ $page }}
-
                                 </span>
-
                             @else
-
                                 <a href="{{ $url }}" class="w-10
                                                        h-10
                                                        rounded-xl
@@ -149,22 +116,14 @@
                                                        flex
                                                        items-center
                                                        justify-center">
-
                                     {{ $page }}
-
                                 </a>
-
                             @endif
-
                         @endforeach
-
                     @endif
-
                 @endforeach
-
                 {{-- Next --}}
                 @if ($paginator->hasMorePages())
-
                     <a href="{{ $paginator->nextPageUrl() }}" class="w-10
                                h-10
                                rounded-xl
@@ -176,14 +135,9 @@
                                hover:bg-blue-50
                                hover:border-blue-300
                                transition">
-
-                        <i data-lucide="chevron-right" class="w-5 h-5">
-                        </i>
-
+                        <i data-lucide="chevron-right" class="w-5 h-5"></i>
                     </a>
-
                 @else
-
                     <span class="w-10
                                h-10
                                rounded-xl
@@ -194,15 +148,10 @@
                                justify-center
                                text-gray-300">
 
-                        <i data-lucide="chevron-right" class="w-5 h-5">
-                        </i>
-
+                        <i data-lucide="chevron-right" class="w-5 h-5"></i>
                     </span>
-
                 @endif
-
             </div>
-
         </div>
     </nav>
 @endif

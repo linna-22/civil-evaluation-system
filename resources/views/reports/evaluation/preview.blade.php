@@ -110,8 +110,8 @@
                     {{-- Position --}}
                     <p class="mt-6 font-body" style="font-size: 14px">
 
-                        ប្រធានអង្គភាព
-
+                        អ្នកវាយតម្លៃ
+                        
                     </p>
 
                     {{-- Signature Space --}}

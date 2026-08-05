@@ -20,18 +20,13 @@
 
 <div class="mt-4 flex flex-wrap items-center justify-between gap-3">
 
-    <div class="flex gap-3">
+    <div class="flex gap-2">
 
-        <div class="w-42">
-
+        <div class="w-45">
             <x-filters.select name="month" :options="$months" :selected="request('month', now()->month)" />
-
         </div>
-
-        <div class="w-42">
-
+        <div class="w-45">
             <x-filters.select name="year" :options="$years" :selected="request('year', now()->year)" />
-
         </div>
 
     </div>
