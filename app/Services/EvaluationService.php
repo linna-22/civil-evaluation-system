@@ -2,13 +2,17 @@
 
 namespace App\Services;
 
+use App\Models\Department;
 use App\Models\Evaluation;
 use App\Models\EvaluationAttendance;
 use App\Models\EvaluationBehavior;
 use App\Models\EvaluationWorkPerformance;
+use App\Models\Organization;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class EvaluationService
 {
@@ -121,7 +125,6 @@ class EvaluationService
         } else {
 
             $attendancePercent = $this->calculateAttendancePercent($data);
-
             $attendanceScore = $this->calculateAttendanceScore(
                 $attendancePercent
             );
@@ -129,25 +132,16 @@ class EvaluationService
         }
 
         EvaluationAttendance::create([
-
             'evaluation_id' => $evaluation->evaluation_id,
-
             'approved_leave_count' => $data['approved_leave_days'],
-
             'unapproved_leave_count' => $data['unapproved_leave_days'],
-
             'late_hours' => $data['late_hours'],
-
             'leave_early_hours' => $data['leave_early_hours'],
-
             'attendance_percent' => $attendancePercent,
-
             'attendance_score' => $attendanceScore,
-
         ]);
 
         $evaluation->update([
-
             'attendance_score' => $attendanceScore
 
         ]);
@@ -170,30 +164,21 @@ class EvaluationService
             + $data['leadership'];
 
         EvaluationBehavior::create([
-
             'evaluation_id' => $evaluation->evaluation_id,
-
             'discipline' => $data['discipline'],
             'responsibility' => $data['responsibility'],
             'professional_ethics' => $data['professional_ethics'],
-
             'work_performance' => $data['work_performance'],
             'self_development' => $data['self_development'],
             'initiative_creativity' => $data['initiative_creativity'],
-
             'teamwork' => $data['teamwork'],
             'interpersonal_skill' => $data['interpersonal_skill'],
             'work_under_pressure' => $data['work_under_pressure'],
             'leadership' => $data['leadership'],
-
             'total_score' => $totalScore,
-
         ]);
-
         $evaluation->update([
-
             'behavior_score' => $totalScore,
-
         ]);
     }
 
@@ -208,7 +193,6 @@ class EvaluationService
             ($achievementPercent * 20) / 100,
             2
         );
-
     }
 
     /**
@@ -217,45 +201,28 @@ class EvaluationService
     private function calculateWorkPerformanceScore(
         float $totalScore
     ): float {
-
         if ($totalScore > 0 && $totalScore <= 60) {
-
             return 0;
-
         }
-
         if ($totalScore > 60 && $totalScore <= 70) {
-
             return 15;
-
         }
-
         if ($totalScore > 70 && $totalScore <= 80) {
-
             return 30;
-
         }
-
         if ($totalScore > 80 && $totalScore <= 90) {
-
             return 45;
-
         }
-
         if ($totalScore > 90 && $totalScore <= 100) {
-
             return 60;
-
         }
-
         return 0;
-
     }
 
     /**
      * Calculate Attendance Percent
      */
-    private function calculateAttendancePercent(array $data): float 
+    private function calculateAttendancePercent(array $data): float
     {
         // Approved leave only deducts 50%
         $approvedHours = $data['approved_leave_days'] * 8 * 0.5;
@@ -265,7 +232,7 @@ class EvaluationService
         $leaveEarlyHours = $data['leave_early_hours'];
         $deductionHours = $approvedHours + $unapprovedHours + $lateHours + $leaveEarlyHours;
         // 1% = 1.76 hours
-        $deductionPercent =$deductionHours / 1.76;
+        $deductionPercent = $deductionHours / 1.76;
 
         $attendancePercent =
             100 - $deductionPercent;
@@ -279,15 +246,15 @@ class EvaluationService
     /**
      * Calculate Attendance Score
      */
-    private function calculateAttendanceScore(float $attendancePercent): float 
+    private function calculateAttendanceScore(float $attendancePercent): float
     {
         return round(($attendancePercent * 20) / 100, 2);
     }
-    
+
     /**
      * Update Evaluation Total Score
      */
-    private function updateTotalScore(Evaluation $evaluation): void 
+    private function updateTotalScore(Evaluation $evaluation): void
     {
 
         $totalScore =
@@ -298,4 +265,166 @@ class EvaluationService
         $evaluation->total_score = $totalScore;
         $evaluation->save();
     }
+    // Get org
+    public function getOrganizations(): array
+    {
+        return Organization::query()
+            ->orderBy('org_name_kh')
+            ->pluck('org_name_kh', 'organization_id')
+            ->toArray();
+    }
+    public function getDepartmentsByOrganization($organizationId): array
+    {
+        return Department::query()
+            ->where('organization_id', $organizationId)
+            ->orderBy('department_name_kh')
+            ->pluck('department_name_kh', 'department_id')
+            ->toArray();
+    }
+    // Get department by org
+    public function getDepartments($user): array
+    {
+        $query = Department::query();
+
+        if ($user->role === 'organization_admin') {
+
+            $query->where('organization_id', $user->organization_id);
+
+        }
+
+        return $query
+            ->orderBy('department_name_kh')
+            ->pluck('department_name_kh', 'department_id')
+            ->toArray();
+    }
+
+    public function getEvaluationList(array $filters, User $user): LengthAwarePaginator
+    {
+        $query = Evaluation::query()
+            ->with([
+                'user.organization',
+                'user.department',
+            ]);
+
+        // ============================================
+        // Role Permission
+        // ============================================
+
+        if ($user->role === 'organization_admin') {
+
+            $query->whereHas('user', function ($q) use ($user) {
+
+                $q->where(
+                    'organization_id',
+                    $user->organization_id
+                );
+
+            });
+
+        } elseif ($user->role === 'department_admin') {
+
+            $query->whereHas('user', function ($q) use ($user) {
+
+                $q->where(
+                    'department_id',
+                    $user->department_id
+                );
+
+            });
+
+        }
+
+        // ============================================
+        // Search
+        // ============================================
+
+        if (!empty($filters['search'])) {
+
+            $search = trim($filters['search']);
+
+            $query->whereHas('user', function ($q) use ($search) {
+
+                $q->where('id_code', 'like', "%{$search}%")
+                    ->orWhere('name_kh', 'like', "%{$search}%")
+                    ->orWhere('name_en', 'like', "%{$search}%")
+                    ->orWhere('username', 'like', "%{$search}%");
+
+            });
+
+        }
+
+        // ============================================
+        // Organization (Super Admin Only)
+        // ============================================
+
+        if (
+            $user->role === 'super_admin' &&
+            !empty($filters['organization'])
+        ) {
+
+            $query->whereHas('user', function ($q) use ($filters) {
+
+                $q->where(
+                    'organization_id',
+                    $filters['organization']
+                );
+
+            });
+
+        }
+
+        // ============================================
+        // Department
+        // ============================================
+
+        if (!empty($filters['department'])) {
+
+            $query->whereHas('user', function ($q) use ($filters) {
+
+                $q->where(
+                    'department_id',
+                    $filters['department']
+                );
+                
+
+            });
+
+        }
+
+        // ============================================
+        // Month
+        // ============================================
+
+        if (!empty($filters['month'])) {
+
+            $query->where(
+                'evaluation_month',
+                $filters['month']
+            );
+
+        }
+
+        // ============================================
+        // Year
+        // ============================================
+
+        if (!empty($filters['year'])) {
+
+            $query->where(
+                'evaluation_year',
+                $filters['year']
+            );
+
+        }
+
+        // ============================================
+        // Sort
+        // ============================================
+
+        return $query
+            ->latest('submitted_at')
+            ->paginate(10)
+            ->withQueryString();
+    }
+
 }

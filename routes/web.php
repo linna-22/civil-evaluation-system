@@ -99,8 +99,12 @@ Route::middleware('auth')->group(function () {
             Route::get('/', [EvaluationController::class, 'index'])->name('index');
             Route::get('/create', [EvaluationController::class, 'create'])->name('evaluations.create');
             Route::get('/history', [EvaluationController::class, 'history'])->name('history');
+            Route::get('/list', [EvaluationController::class, 'list'])
+                ->middleware('role:super_admin,organization_admin,department_admin')
+                ->name('list');
             Route::get('/{evaluation}', [EvaluationController::class, 'show'])->name('show');
             Route::post('/', [EvaluationController::class, 'store'])->name('store');
+            Route::get('/departments', [EvaluationController::class, 'departments'])->name('departments');
 
         });
 

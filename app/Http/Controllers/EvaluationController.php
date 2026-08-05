@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Constants\BehaviorCriteria;
 use App\Http\Requests\StoreEvaluationRequest;
+use App\Models\Department;
 use App\Models\Evaluation;
+use App\Models\Organization;
 use App\Services\EvaluationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -75,5 +77,45 @@ class EvaluationController extends Controller
     {
         return view('evaluations.history');
 
+    }
+    public function list(Request $request)
+    {
+        $user = auth()->user();
+
+        $filters = $request->only([
+            'search',
+            'organization',
+            'department',
+            'month',
+            'year',
+        ]);
+
+        $evaluations = $this->evaluationService->getEvaluationList($filters, $user);
+
+        $organizations = $this->evaluationService->getOrganizations();
+
+        $departments = $this->evaluationService->getDepartments($user);
+
+        if ($request->ajax()) {
+            return response()->json([
+                'tbody' => view('evaluations.partials.table-body', compact('evaluations'))->render(),
+                'pagination' => view('evaluations.partials.pagination', compact('evaluations'))->render(),
+            ]);
+        }
+
+        return view('evaluations.list', compact(
+            'evaluations',
+            'organizations',
+            'departments'
+        ));
+    }
+    public function departments(Request $request)
+    {
+        $departments = $this->evaluationService
+            ->getDepartmentsByOrganization(
+                $request->organization
+            );
+
+        return response()->json($departments);
     }
 }

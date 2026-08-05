@@ -178,3 +178,15 @@ body{
     font-size:14px;
 
 }
+.filter-toolbar .ts-wrapper {
+    width: 100%;
+}
+
+.filter-toolbar .ts-control {
+    min-height: 44px !important;
+    border-radius: 12px !important;
+}
+
+.filter-toolbar .ts-dropdown {
+    border-radius: 12px;
+}

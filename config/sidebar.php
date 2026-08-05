@@ -13,7 +13,6 @@ return [
                 'route' => 'dashboard',
                 'url'   => 'dashboard',
             ],
-
             [
                 'icon'  => 'clipboard-check',
                 'title' => 'ការវាយតម្លៃ',
@@ -26,12 +25,11 @@ return [
                 'route' => 'evaluations.history',
                 'url'   => 'evaluations.history',
             ],
-
             [
-                'icon'  => 'bar-chart-3',
-                'title' => 'របាយការណ៍',
-                'route' => 'reports.*',
-                'url'   => '#',
+                'icon'  => 'clipboard-list',
+                'title' => 'បញ្ជីការវាយតម្លៃ',
+                'route' => 'evaluations.list',
+                'url'   => 'evaluations.list',
             ],
 
         ],
