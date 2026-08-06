@@ -22,10 +22,11 @@ return new class extends Migration {
                 ->cascadeOnDelete()
                 ->cascadeOnUpdate();
 
-            $table->integer('permission_days')->default(0);
-            $table->integer('absent_days')->default(0);
+            $table->integer('approved_leave_count')->default(0);
+            $table->integer('unapproved_leave_count')->default(0);
 
             $table->decimal('late_hours', 5, 2)->default(0);
+            $table->decimal('leave_early_hours', 5, 2)->default(0);
 
             $table->decimal('attendance_percent', 5, 2)
                 ->default(100);

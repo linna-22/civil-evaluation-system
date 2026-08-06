@@ -47,6 +47,7 @@ class UserSeeder extends Seeder
                 'email' => 'linaoeu567556@gmail.com',
 
                 'position' => 'Administrator',
+                'is_leader' => '0',
 
                 'password' => 'admin123',
 

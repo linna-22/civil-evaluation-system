@@ -23,7 +23,7 @@ class DepartmentRequest extends FormRequest
             'code' => [
                 'required',
                 'max:50',
-                'unique:departments,department_code',
+                // 'unique:departments,department_code',
             ],
 
             'name_kh' => [

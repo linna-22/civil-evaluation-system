@@ -85,15 +85,15 @@
                 colspan="{{ auth()->user()->role === 'super_admin' ? 10 : (auth()->user()->role === 'organization_admin' ? 9 : 8) }}"
                 class="px-6 py-20 text-center">
                 <div class="flex flex-col items-center">
-                    <div class="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gray-100">
-                        <i data-lucide="clipboard-list" class="h-8 w-8 text-gray-400"></i>
+                    <div class="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-red-200">
+                        <i data-lucide="clipboard-list" class="h-8 w-8 text-red-400"></i>
                     </div>
-                    <h4 class="font-semibold text-gray-700">
+                    <h4 class="font-semibold text-red-400">
                         មិនមានទិន្នន័យ
                     </h4>
-                    <p class="mt-2 text-sm text-gray-500">
-                        មិនទាន់មានការវាយតម្លៃដែលបានបញ្ជូន។
-                    </p>
+                    {{-- <p class="mt-2 text-sm text-gray-500">
+                        មិនទាន់មានការវាយតម្លៃ
+                    </p> --}}
                 </div>
             </td>
         </tr>

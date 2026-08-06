@@ -28,7 +28,6 @@ class OrganizationRequest extends FormRequest
             'code' => [
                 'required',
                 'max:50',
-                'unique:organizations,org_code',
             ],
 
             'description' => [

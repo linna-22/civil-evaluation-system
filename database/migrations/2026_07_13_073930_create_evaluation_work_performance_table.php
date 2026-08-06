@@ -28,6 +28,9 @@ return new class extends Migration {
 
         $table->decimal('achievement_percent',5,2)
               ->default(0);
+        $table->decimal('score',5,2)
+              ->default(0);
+        
 
         $table->timestamps();
 

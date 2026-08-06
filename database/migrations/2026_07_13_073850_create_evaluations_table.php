@@ -37,6 +37,8 @@ return new class extends Migration {
             $table->decimal('attendance_score', 5, 2)->default(0);
             $table->decimal('behavior_score', 5, 2)->default(0);
             $table->decimal('total_score', 5, 2)->default(0);
+            $table->unsignedBigInteger('created_by');
+            $table->unsignedBigInteger('updated_by')->nullable();
 
             $table->timestamps();
 

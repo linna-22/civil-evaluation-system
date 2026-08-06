@@ -33,7 +33,7 @@ return new class extends Migration {
             // System Fields
             $table->enum('status', ['active', 'inactive'])
                 ->default('active');
-            $table->unsignedBigInteger('created_by');
+            $table->unsignedBigInteger('created_by')->nullable();
             $table->unsignedBigInteger('updated_by')->nullable();
 
             // Timestamps

@@ -27,7 +27,7 @@ class UserService
             'id_code' => $data['id_code'],
             'is_leader' => $data['is_leader'],
             'password' => $data['password'],
-            'role' => 'user',
+            'role' => $data['role'],
             'created_by' => auth()->id(),
 
         ]);
