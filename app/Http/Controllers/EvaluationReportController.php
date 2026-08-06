@@ -9,7 +9,8 @@ class EvaluationReportController extends Controller
 {
     public function __construct(
         protected EvaluationReportService $reportService
-    ) {}
+    ) {
+    }
 
     public function preview(Request $request)
     {

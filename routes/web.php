@@ -28,26 +28,6 @@ Route::middleware('guest')->group(function () {
 
 Route::middleware('auth')->group(function () {
 
-    // Route::get('/dashboard', function () {
-
-    //     return '
-    //             <h1>Welcome to Dashboard</h1>
-
-    //             <form action="'.route('logout').'" method="POST">
-
-    //             '.csrf_field().'
-
-    //             <button type="submit">
-
-    //             Logout
-
-    //             </button>
-
-    //             </form>
-    //             ';
-
-    // })->name('dashboard');
-
     // Organization 
     Route::prefix('organizations')
         ->name('organizations.')
@@ -104,46 +84,25 @@ Route::middleware('auth')->group(function () {
             Route::get('/', [EvaluationController::class, 'index'])->name('index');
             Route::get('/create', [EvaluationController::class, 'create'])->name('evaluations.create');
             Route::get('/history', [EvaluationController::class, 'history'])->name('history');
-            Route::get('/list', [EvaluationController::class, 'list'])
-                ->middleware('role:super_admin,organization_admin,department_admin')
-                ->name('list');
+            Route::get('/list', [EvaluationController::class, 'list'])->middleware('role:super_admin,organization_admin,department_admin')->name('list');
             Route::get('/{evaluation}', [EvaluationController::class, 'show'])->name('show');
             Route::post('/', [EvaluationController::class, 'store'])->name('store');
             Route::get('/departments', [EvaluationController::class, 'departments'])->name('departments');
 
         });
 
-        // Evaluation Report
-        Route::prefix('reports')
-    ->name('reports.')
-    ->middleware(['role:super_admin,organization_admin,department_admin'
-    ])
-    ->group(function () {
-
-        Route::get('/evaluation/preview', [EvaluationReportController::class, 'preview'])->name('evaluation.preview');
-
-    });
-
-
-    // Employee
-    // Route::get('/   ', [EmployeeDashboardController::class, 'index'])
-    //     ->name('employee.dashboard');
-
-    Route::get('/dashboard', [DashboardController::class, 'index'])
-        ->name('dashboard');
-
-    Route::post('/logout', [LogoutController::class, 'logout'])
-        ->name('logout');
-
-
-Route::get('/test-lunar', function () {
-
-    return toLunarDate(
-        CarbonImmutable::now()->setTimezone('Asia/Phnom_Penh')
-    )->toString();
-
-});
-
+    // Evaluation Report
+    Route::prefix('reports')->name('reports.')->middleware(['role:super_admin,organization_admin,department_admin'])
+        ->group(function () {
+            Route::get('/evaluation/preview', [EvaluationReportController::class, 'preview'])->name('evaluation.preview');
+        });
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::post('/logout', [LogoutController::class, 'logout'])->name('logout');
+    // Route::get('/test-lunar', function () {
+    //     return toLunarDate(
+    //         CarbonImmutable::now()->setTimezone('Asia/Phnom_Penh')
+    //     )->toString();
+    // });
 
 
 });

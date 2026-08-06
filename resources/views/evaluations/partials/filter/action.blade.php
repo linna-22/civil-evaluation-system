@@ -56,31 +56,13 @@
             <div id="reportDropdownMenu"
                 class="hidden absolute right-0 mt-3 w-72 origin-top-right overflow-hidden rounded-2xl bg-white shadow-xl opacity-0 scale-95 transition-all duration-200 z-50">
 
-                <a id="previewReport" href="{{ route('reports.evaluation.preview') }}"
+                <a id="previewReport" data-url="{{ route('reports.evaluation.preview') }}"
                     class="flex items-center gap-3 px-5 py-3 hover:bg-gray-100">
-
                     <i data-lucide="eye" class="w-5 h-5 text-blue-600"></i>
-
                     <span class="font-body text-blue-600">
-
                         មើលរបាយការណ៍
-
                     </span>
-
                 </a>
-
-                <a id="downloadPdf" href="#" class="flex items-center gap-3 px-5 py-3 hover:bg-gray-100">
-
-                    <i data-lucide="file-down" class="w-5 h-5 text-red-600"></i>
-
-                    <span class="font-body text-red-600">
-
-                        ទាញយករបាយការណ៍ជា PDF
-
-                    </span>
-
-                </a>
-
                 <a id="downloadWord" href="#" class="flex items-center gap-3 px-5 py-3 hover:bg-gray-100">
 
                     <i data-lucide="file-text" class="w-5 h-5 text-blue-600"></i>

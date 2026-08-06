@@ -76,7 +76,7 @@
                     <td class="px-6 py-4">
 
                         <x-dashboard.status-badge
-                            status="approved" />
+                            status="submitted" />
 
                     </td>
 
