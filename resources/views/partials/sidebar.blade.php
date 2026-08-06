@@ -93,7 +93,7 @@
 
     <div class="flex-1 overflow-y-auto">
 
-    @php
+    {{-- @php
         $user = auth()->user();
         $sidebar = config('sidebar');
 
@@ -119,6 +119,64 @@
                 })
                 ->filter(function ($section) {
                     return !empty($section['items']);
+                })
+                ->values()
+                ->toArray();
+        }
+    @endphp --}}
+    @php
+        $user = auth()->user();
+        $sidebar = config('sidebar');
+
+        switch ($user->role) {
+            case 'user':
+                $allowedRoutes = [
+                    'dashboard',
+                    'users.profile',
+                    'evaluations.index',
+                    'evaluations.history',
+                    'evaluations.evaluations.create',
+                    'logout',
+                ];
+                break;
+            case 'organization_admin':
+                $allowedRoutes = [
+                    'dashboard',
+                    'evaluations.index',
+                    'evaluations.history',
+                    'evaluations.list',
+                    'users.profile',
+                ];
+                break;
+            default:
+
+                // super_admin & department_admin
+                $allowedRoutes = null;
+
+                break;
+        }
+
+        if ($allowedRoutes !== null) {
+
+            $sidebar = collect($sidebar)
+                ->map(function ($section) use ($allowedRoutes) {
+
+                    $section['items'] = collect($section['items'])
+                        ->filter(function ($item) use ($allowedRoutes) {
+
+                            return in_array($item['route'], $allowedRoutes);
+
+                        })
+                        ->values()
+                        ->toArray();
+
+                    return $section;
+
+                })
+                ->filter(function ($section) {
+
+                    return !empty($section['items']);
+
                 })
                 ->values()
                 ->toArray();
