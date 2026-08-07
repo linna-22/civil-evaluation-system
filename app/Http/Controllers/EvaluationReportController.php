@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Services\EvaluationReportService;
+use App\Services\WordExportService;
 use Illuminate\Http\Request;
 
 class EvaluationReportController extends Controller
@@ -24,5 +25,17 @@ class EvaluationReportController extends Controller
             'reports.evaluation.preview',
             $data
         );
+    }
+    public function exportWord(
+        Request $request,
+        WordExportService $wordExportService
+    ) {
+        $data = $this->reportService
+            ->getReportData(
+                $request->all(),
+                auth()->user()
+            );
+
+        return $wordExportService->download($data);
     }
 }

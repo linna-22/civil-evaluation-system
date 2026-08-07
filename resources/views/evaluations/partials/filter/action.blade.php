@@ -63,7 +63,7 @@
                         មើលរបាយការណ៍
                     </span>
                 </a>
-                <a id="downloadWord" href="#" class="flex items-center gap-3 px-5 py-3 hover:bg-gray-100">
+                {{-- <a id="downloadWord" href="#" class="flex items-center gap-3 px-5 py-3 hover:bg-gray-100">
 
                     <i data-lucide="file-text" class="w-5 h-5 text-blue-600"></i>
 
@@ -73,7 +73,7 @@
 
                     </span>
 
-                </a>
+                </a> --}}
 
             </div>
 

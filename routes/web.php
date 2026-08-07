@@ -95,9 +95,13 @@ Route::middleware('auth')->group(function () {
     Route::prefix('reports')->name('reports.')->middleware(['role:super_admin,organization_admin,department_admin'])
         ->group(function () {
             Route::get('/evaluation/preview', [EvaluationReportController::class, 'preview'])->name('evaluation.preview');
+            Route::get('/evaluations/export-word', [EvaluationReportController::class, 'exportWord'])->name('evaluations.export.word');
         });
+
+
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::post('/logout', [LogoutController::class, 'logout'])->name('logout');
+
     // Route::get('/test-lunar', function () {
     //     return toLunarDate(
     //         CarbonImmutable::now()->setTimezone('Asia/Phnom_Penh')

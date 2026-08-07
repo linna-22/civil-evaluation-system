@@ -56,15 +56,24 @@
                 ត្រឡប់
             </a>
 
-            {{-- Print / Save PDF --}}
-            <button onclick="window.print()"
-                class="inline-flex items-center cursor-pointer gap-2 rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-medium text-white shadow-sm transition hover:bg-blue-700">
+            {{-- Action Buttons --}}
+            <div class="flex items-center gap-3">
 
-                <i data-lucide="printer" class="h-4 w-4"></i>
+                {{-- Print / Save PDF --}}
+                <button onclick="window.print()"
+                    class="inline-flex cursor-pointer items-center gap-2 rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-medium text-white shadow-sm transition hover:bg-blue-700">
+                    <i data-lucide="printer" class="h-4 w-4"></i>
+                    បោះពុម្ព / រក្សាទុកជា PDF
+                </button>
 
-                បោះពុម្ព / រក្សាទុកជា PDF
+                {{-- Export Word --}}
+                <a href="{{ route('reports.evaluations.export.word', request()->query()) }}"
+                    class="inline-flex items-center gap-2 rounded-xl bg-indigo-600 px-5 py-2.5 text-sm font-medium text-white shadow-sm transition hover:bg-indigo-700">
+                    <i data-lucide="file-text" class="h-4 w-4"></i>
+                    ទាញយក Word
+                </a>
 
-            </button>
+            </div>
 
         </div>
 
@@ -176,4 +185,5 @@
     </div>
 
 </body>
+
 </html>
