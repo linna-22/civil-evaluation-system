@@ -23,7 +23,7 @@
             placeholder="{{ $placeholder }}"
 
             {{ $attributes->merge([
-                'class' => 'w-full h-14 rounded-2xl border border-gray-300 px-5 pr-14 outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600 transition'
+                'class' => 'w-full h-10 rounded-2xl border border-gray-300 px-5 pr-14 outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600 transition'
             ]) }}>
 
        <button
