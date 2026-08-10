@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use App\Models\Organization;
 use App\Models\Department;
+use App\Models\Office;
 
 class OrganizationSeeder extends Seeder
 {
@@ -32,20 +33,38 @@ class OrganizationSeeder extends Seeder
                         'department_code' => 'SGAF',
                         'department_name_kh' => 'លេខាធិការដ្ឋាននៃអគ្គនាយកដ្ឋានរដ្ឋបាល និងហិរញ្ញវត្ថុ',
                         'department_name_en' => 'Secretariat of the General Department of Administration and Finance',
+
                     ],
+
                     [
                         'department_code' => 'DAP',
                         'department_name_kh' => 'នាយកដ្ឋានរដ្ឋបាល និងបុគ្គលិក',
                         'department_name_en' => 'Department of Administration and Personnel',
+
+                        'offices' => [
+                            [
+                                'office_code' => 'A-OFF',
+                                'office_name_kh' => 'ការិយាល័យរដ្ឋបាល',
+                                'office_name_en' => 'Administrative Office',
+                            ],
+                        ],
                     ],
+
                     [
                         'department_code' => 'DPSL',
                         'department_name_kh' => 'នាយកដ្ឋានផែនការ ស្ថិតិ និងនីតិកម្ម',
                         'department_name_en' => 'Department of Planning, Statistics and Legislation',
+
+                        'offices' => [
+                            [
+                                'office_code' => 'P-OFF',
+                                'office_name_kh' => 'ការិយាល័យផែនការ',
+                                'office_name_en' => 'Planning Office',
+                            ],
+                        ],
                     ],
 
                 ],
-
             ],
 
             // =====================================================
@@ -71,50 +90,78 @@ class OrganizationSeeder extends Seeder
                         'department_code' => 'DLI',
                         'department_name_kh' => 'នាយកដ្ឋានអធិការកិច្ចការងារ',
                         'department_name_en' => 'Department of Labor Inspection',
+
+                        'offices' => [
+                            [
+                                'office_code' => 'LL-OFF',
+                                'office_name_kh' => 'ការិយាល័យច្បាប់ការងារ',
+                                'office_name_en' => 'Labor Law Office',
+                            ],
+                        ],
                     ],
+
                 ],
             ],
+
         ];
 
         foreach ($organizations as $item) {
 
+            // =====================================================
             // Create Organization
-            $organization = Organization::updateOrCreate(
+            // =====================================================
 
+            $organization = Organization::updateOrCreate(
                 [
                     'org_code' => $item['org_code'],
                 ],
-
                 [
                     'org_name_kh' => $item['org_name_kh'],
                     'org_name_en' => $item['org_name_en'],
                     'desc' => $item['desc'],
                     'status' => $item['status'],
                 ]
-
             );
 
+            // =====================================================
             // Create Departments
+            // =====================================================
+
             foreach ($item['departments'] as $department) {
 
-                Department::updateOrCreate(
-
+                $departmentModel = Department::updateOrCreate(
                     [
                         'organization_id' => $organization->organization_id,
                         'department_code' => $department['department_code'],
                     ],
-
                     [
                         'department_name_kh' => $department['department_name_kh'],
                         'department_name_en' => $department['department_name_en'],
                         'desc' => null,
                         'status' => 'active',
                     ]
-
                 );
 
-            }
+                // =================================================
+                // Create Offices
+                // =================================================
 
+                foreach ($department['offices'] ?? [] as $office) {
+
+                    Office::updateOrCreate(
+                        [
+                            'department_id' => $departmentModel->department_id,
+                            'office_code' => $office['office_code'],
+                        ],
+                        [
+                            'office_name_kh' => $office['office_name_kh'],
+                            'office_name_en' => $office['office_name_en'],
+                            'desc' => null,
+                            'status' => 'active',
+                        ]
+                    );
+                }
+            }
         }
     }
 }

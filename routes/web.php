@@ -10,6 +10,7 @@ use App\Http\Controllers\Employee\EmployeeDashboardController;
 use App\Http\Controllers\Employee\MyEvaluationController;
 use App\Http\Controllers\EvaluationController;
 use App\Http\Controllers\EvaluationReportController;
+use App\Http\Controllers\OfficeController;
 use App\Http\Controllers\OrganizationController;
 use App\Http\Controllers\UserController;
 use Carbon\CarbonImmutable;
@@ -56,6 +57,21 @@ Route::middleware('auth')->group(function () {
             Route::get('/{department}/edit', [DepartmentController::class, 'edit'])->name('edit');
             Route::put('/{department}', [DepartmentController::class, 'update'])->name('update');
             Route::delete('/{department}', [DepartmentController::class, 'destroy'])->name('destroy');
+        });
+    // Department
+    Route::prefix('offices')
+        ->name('offices.')
+        ->middleware('auth')
+        ->group(function () {
+
+            Route::get('/', [OfficeController::class, 'index'])->name('index');
+            Route::get('/data', [OfficeController::class, 'data'])->name('data');
+            // Route::get('/by-organization/{organization}', [OfficeController::class, 'byOrganization'])->name('byOrganization');
+            Route::get('/create', [OfficeController::class, 'create'])->name('create');
+            Route::post('/', [OfficeController::class, 'store'])->name('store');
+            Route::get('/{office}/edit', [OfficeController::class, 'edit'])->name('edit');
+            Route::put('/{office}', [OfficeController::class, 'update'])->name('update');
+            Route::delete('/{office}', [OfficeController::class, 'destroy'])->name('destroy');
         });
 
     // User

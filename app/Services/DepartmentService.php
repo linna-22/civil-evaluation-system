@@ -72,24 +72,22 @@ class DepartmentService
     }
 
     public function getByOrganization($organizationId)
-{
-    return Department::query()
-
-        ->where(
-            'organization_id',
-            $organizationId
-        )
-
-        ->where(
-            'status',
-            'active'
-        )
-
-        ->orderBy('department_name_kh')
-
-        ->get([
-            'department_id',
-            'department_name_kh'
-        ]);
-}
+    {
+        return Department::query()
+            ->where('organization_id', $organizationId)
+            ->where('status', 'active')
+            ->orderBy('department_name_kh')
+            ->get([
+                'department_id',
+                'department_name_kh'
+            ]);
+    }
+    public function getActiveDepartments()
+    {
+        return Department::where('status', 'active')
+            ->orderBy('department_id')
+            ->get();
+    }
+    
+    
 }

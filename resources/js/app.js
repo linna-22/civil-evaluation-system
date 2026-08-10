@@ -5,6 +5,7 @@ import './modal';
 import './validation';
 import "./pages/organizations/index";
 import "./pages/departments/index";
+import "./pages/offices/index";
 import "./pages/users/index";
 import "./pages/users/create";
 import "./session-flash";

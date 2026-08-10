@@ -53,6 +53,12 @@ return [
                 'route' => 'departments.*',
                 'url'   => 'departments.index',
             ],
+            [
+                'icon'  => 'landmark',
+                'title' => 'ការិយាល័យ',
+                'route' => 'offices.*',
+                'url'   => 'offices.index',
+            ],
 
             [
                 'icon'  => 'users',
@@ -64,26 +70,26 @@ return [
         ],
     ],
 
-    [
-        'title' => 'គណនី',
+    // [
+    //     'title' => 'គណនី',
 
-        'items' => [
+    //     'items' => [
 
-            [
-                'icon'  => 'user-circle',
-                'title' => 'ព័ត៌មានផ្ទាល់ខ្លួន',
-                'route' => 'users.profile',
-                'url'   => 'users.profile',
-            ],
+    //         [
+    //             'icon'  => 'user-circle',
+    //             'title' => 'ព័ត៌មានផ្ទាល់ខ្លួន',
+    //             'route' => 'users.profile',
+    //             'url'   => 'users.profile',
+    //         ],
 
-            // [
-            //     'icon'  => 'log-out',
-            //     'title' => 'ចាកចេញ',
-            //     'route' => 'logout',
-            //     'url'   => 'logout',
-            // ],
+    //         [
+    //             'icon'  => 'log-out',
+    //             'title' => 'ចាកចេញ',
+    //             'route' => 'logout',
+    //             'url'   => 'logout',
+    //         ],
 
-        ],
-    ],
+    //     ],
+    // ],
 
 ];
