@@ -56,7 +56,7 @@ Route::middleware('auth')->group(function () {
             Route::post('/', [DepartmentController::class, 'store'])->name('store');
             Route::get('/{department}/edit', [DepartmentController::class, 'edit'])->name('edit');
             Route::put('/{department}', [DepartmentController::class, 'update'])->name('update');
-            Route::delete('/{department}', [DepartmentController::class, 'destroy'])->name('destroy');
+            // Route::delete('/{department}', [DepartmentController::class, 'destroy'])->name('destroy');
         });
     // Department
     Route::prefix('offices')
@@ -66,7 +66,6 @@ Route::middleware('auth')->group(function () {
 
             Route::get('/', [OfficeController::class, 'index'])->name('index');
             Route::get('/data', [OfficeController::class, 'data'])->name('data');
-            // Route::get('/by-organization/{organization}', [OfficeController::class, 'byOrganization'])->name('byOrganization');
             Route::get('/create', [OfficeController::class, 'create'])->name('create');
             Route::post('/', [OfficeController::class, 'store'])->name('store');
             Route::get('/{office}/edit', [OfficeController::class, 'edit'])->name('edit');

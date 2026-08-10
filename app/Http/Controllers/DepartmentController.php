@@ -83,13 +83,13 @@ class DepartmentController extends Controller
             $service->getByOrganization($organization->organization_id)
         );
     }
-    public function destroy(Department $department, DepartmentService $service)
-    {
-        $service->delete($department);
-        return response()->json([
-            'success' => true,
-            'message' => 'នាយកដ្ឋានត្រូវបានលុបដោយជោគជ័យ',
-        ]);
-    }
+    // public function destroy(Department $department, DepartmentService $service)
+    // {
+    //     $service->delete($department);
+    //     return response()->json([
+    //         'success' => true,
+    //         'message' => 'នាយកដ្ឋានត្រូវបានលុបដោយជោគជ័យ',
+    //     ]);
+    // }
 
 }

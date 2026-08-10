@@ -66,10 +66,10 @@ class DepartmentService
         return $department->refresh();
 
     }
-    public function delete(Department $department): void
-    {
-        $department->delete();
-    }
+    // public function delete(Department $department): void
+    // {
+    //     $department->delete();
+    // }
 
     public function getByOrganization($organizationId)
     {

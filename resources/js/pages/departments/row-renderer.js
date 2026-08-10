@@ -25,7 +25,7 @@ export function renderDepartmentRow(department) {
             </td>
 
             <td class="px-6 py-4">
-                ${actionButtons(department.department_id, true)}
+                ${actionButtons(department.department_id, false)}
             </td>
 
         </tr>
