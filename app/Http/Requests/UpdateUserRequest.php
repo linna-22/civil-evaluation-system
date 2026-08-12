@@ -21,6 +21,9 @@ class UpdateUserRequest extends FormRequest
             'department_id' => [
                 'required',
             ],
+            'office_id' => [
+                'required',
+            ],
             'name_kh' => [
                 'required',
                 'max:255',

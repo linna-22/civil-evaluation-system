@@ -66,6 +66,7 @@ Route::middleware('auth')->group(function () {
 
             Route::get('/', [OfficeController::class, 'index'])->name('index');
             Route::get('/data', [OfficeController::class, 'data'])->name('data');
+            Route::get('/by-department/{departmentId}', [OfficeController::class, 'getByDepartment']);
             Route::get('/create', [OfficeController::class, 'create'])->name('create');
             Route::post('/', [OfficeController::class, 'store'])->name('store');
             Route::get('/{office}/edit', [OfficeController::class, 'edit'])->name('edit');

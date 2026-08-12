@@ -14,7 +14,6 @@ return new class extends Migration {
 
             // Primary Key
             $table->id('user_id');
-
             // Foreign Keys
             $table->foreignId('organization_id')
                 ->nullable()
@@ -24,7 +23,6 @@ return new class extends Migration {
                 )
                 ->cascadeOnUpdate()
                 ->restrictOnDelete();
-
             $table->foreignId('department_id')
                 ->nullable()
                 ->constrained(
@@ -33,7 +31,6 @@ return new class extends Migration {
                 )
                 ->cascadeOnUpdate()
                 ->restrictOnDelete();
-
             // Employee Information
             $table->string('id_code', 30)->nullable();
             $table->string('name_en', 150);
@@ -46,7 +43,6 @@ return new class extends Migration {
             $table->boolean('is_leader')->default(false);
             // Authentication
             $table->string('password');
-
             // Authorization
             $table->enum('role', [
                 'super_admin',
@@ -54,16 +50,13 @@ return new class extends Migration {
                 'department_admin',
                 'user'
             ]);
-
-            // Account
             $table->enum('status', ['active', 'inactive'])
                 ->default('active');
-
             $table->timestamp('last_login')->nullable();
             $table->string('last_login_ip', 45)->nullable();
-
             $table->rememberToken();
-
+            $table->unsignedBigInteger('created_by')->nullable();
+            $table->unsignedBigInteger('updated_by')->nullable();
             $table->timestamps();
 
         });

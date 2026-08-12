@@ -11,7 +11,7 @@ use Illuminate\Http\Request;
 
 class OfficeController extends Controller
 {
-     public function index()
+    public function index()
     {
         return view('offices.index');
     }
@@ -51,7 +51,7 @@ class OfficeController extends Controller
             ]
         );
     }
-    public function update(OfficeRequest $request, Office $office, OfficeService $service) 
+    public function update(OfficeRequest $request, Office $office, OfficeService $service)
     {
         // dd($request->all());
         $service->update($office, $request->validated());
@@ -66,5 +66,13 @@ class OfficeController extends Controller
             'success' => true,
             'message' => 'ការិយាល័យត្រូវបានលុបដោយជោគជ័យ',
         ]);
+    }
+    public function getByDepartment(
+        $departmentId,
+        OfficeService $officeService
+    ) {
+        return response()->json(
+            $officeService->getByDepartment($departmentId)
+        );
     }
 }

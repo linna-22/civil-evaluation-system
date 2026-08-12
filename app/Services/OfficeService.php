@@ -69,4 +69,15 @@ class OfficeService
 
         $office->delete();
     }
+    public function getByDepartment($departmentId)
+    {
+        return Office::query()
+            ->where('department_id', $departmentId)
+            ->where('status', 'active')
+            ->orderBy('office_name_kh')
+            ->get([
+                'office_id',
+                'office_name_kh'
+            ]);
+    }
 }

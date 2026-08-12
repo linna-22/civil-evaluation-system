@@ -14,7 +14,7 @@
     {{-- Row 1 --}}
     <div class="grid grid-cols gap-5">
         <x-forms.select
-            label="អង្គភាព"
+            label="នាយកដ្ឋាន"
             name="department_id"
             required
             :selected="old('department_id', $office?->department_id)"

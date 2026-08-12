@@ -7,6 +7,7 @@ use App\Http\Requests\OrganizationRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Http\Requests\UserRequest;
 use App\Models\User;
+use App\Services\OfficeService;
 use App\Services\OrganizationService;
 use App\Services\UserService;
 use Illuminate\Http\Request;
@@ -37,20 +38,12 @@ class UserController extends Controller
     }
     public function store(UserRequest $request, UserService $service)
     {
-        $service->store(
-
-            $request->validated()
-
-        );
-
+        // dd($request->all());
+        Log::info($request->all());
+        $service->store($request->validated());
         return redirect()
-
             ->route('users.index')
-
-            ->with(
-                'success',
-                'អ្នកប្រើប្រាស់ត្រូវបានបង្កើតដោយជោគជ័យ'
-            );
+            ->with('success', 'អ្នកប្រើប្រាស់ត្រូវបានបង្កើតដោយជោគជ័យ');
     }
     public function edit(User $user, OrganizationService $organizationService)
     {
@@ -62,7 +55,6 @@ class UserController extends Controller
     }
     public function update(UpdateUserRequest $request, User $user, UserService $service)
     {
-        // dd($request->all());
         // Log::info('User update started.');
         $service->update(
             $user,
@@ -108,6 +100,14 @@ class UserController extends Controller
         return view(
             'users.profile',
             compact('user')
+        );
+    }
+    public function getOffices(
+        $departmentId,
+        OfficeService $officeService
+    ) {
+        return response()->json(
+            $officeService->getByDepartment($departmentId)
         );
     }
 }

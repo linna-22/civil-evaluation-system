@@ -17,6 +17,7 @@ class UserService
 
             'organization_id' => $data['organization_id'],
             'department_id' => $data['department_id'],
+            'office_id' => $data['office_id'],
             'name_kh' => $data['name_kh'],
             'name_en' => $data['name_en'],
             'username' => $data['username'],
@@ -72,6 +73,7 @@ class UserService
 
             'organization_id' => $data['organization_id'],
             'department_id' => $data['department_id'],
+            'office_id' => $data['office_id'],
             'name_kh' => $data['name_kh'],
             'name_en' => $data['name_en'],
             'username' => $data['username'],

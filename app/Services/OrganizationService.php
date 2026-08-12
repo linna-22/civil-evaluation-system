@@ -78,11 +78,11 @@ class OrganizationService
                 'org_name_kh'
             ]);
     }
-    public function getActiveOrganizations()
-    {
-        return Organization::where('status', 'active')
-            ->orderBy('org_name_kh')
-            ->get();
-    }
+        public function getActiveOrganizations()
+        {
+            return Organization::where('status', 'active')
+                ->orderBy('org_name_kh')
+                ->get();
+        }
 
 }
