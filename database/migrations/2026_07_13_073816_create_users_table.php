@@ -43,7 +43,7 @@ return new class extends Migration {
             $table->string('phone', 20)->nullable();
             $table->string('email')->unique();
             $table->string('position', 100)->nullable();
-
+            $table->boolean('is_leader')->default(false);
             // Authentication
             $table->string('password');
 

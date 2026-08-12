@@ -12,9 +12,15 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->boolean('is_leader')
-                ->default(false)
-                ->after('position');
+
+            $table->foreignId('office_id')
+                ->nullable()
+                ->constrained(
+                    table: 'offices',
+                    column: 'office_id'
+                )
+                ->cascadeOnUpdate()
+                ->restrictOnDelete();
         });
     }
 
@@ -24,7 +30,10 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
-             $table->dropColumn('is_leader');
+
+            $table->dropForeign(['office_id']);
+
+            $table->dropColumn('office_id');
         });
     }
 };
