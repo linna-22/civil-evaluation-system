@@ -6,53 +6,43 @@
    Application Theme
 ========================================== */
 
-:root{ 
-
+:root {
     /* Primary */
 
-    --primary:#2F60E8;
-    --primary-dark:#214CC2;
+    --primary: #2f60e8;
+    --primary-dark: #214cc2;
 
     /* Background */
 
-    --background:#F4F7FC;
+    --background: #f4f7fc;
 
     /* Status */
 
-    --success:#22C55E;
-    --warning:#F59E0B;
-    --danger:#EF4444;
-
+    --success: #22c55e;
+    --warning: #f59e0b;
+    --danger: #ef4444;
 }
 
 /* ==========================================
    Typography
 ========================================== */
 
-body{
+body {
+    font-family: "Siemreap", sans-serif;
 
-    font-family:"Siemreap",sans-serif;
-
-    background:var(--background);
-
+    background: var(--background);
 }
 
-.font-title{
-
-    font-family:"Moul",sans-serif;
-
+.font-title {
+    font-family: "Moul", sans-serif;
 }
 
-.font-body{
-
-    font-family:"Siemreap",sans-serif;
-
+.font-body {
+    font-family: "Siemreap", sans-serif;
 }
 
-.font-table{
-
-    font-family:"Battambang",sans-serif;
-
+.font-table {
+    font-family: "Battambang", sans-serif;
 }
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
@@ -61,8 +51,10 @@ body{
 @source '../**/*.js';
 
 @theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
+    --font-sans:
+        "Instrument Sans", ui-sans-serif, system-ui, sans-serif,
+        "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
+        "Noto Color Emoji";
 }
 
 /* ==========================================
@@ -70,7 +62,7 @@ body{
 ========================================== */
 
 .sidebar {
-    transition: width .3s ease;
+    transition: width 0.3s ease;
 }
 
 .sidebar.collapsed {
@@ -80,32 +72,24 @@ body{
 /* Hide text */
 .sidebar.collapsed .sidebar-text,
 .sidebar.collapsed .sidebar-title {
-
     display: none;
-
 }
 
 /* Center icons */
 .sidebar.collapsed .sidebar-item {
-
     justify-content: center;
     padding-left: 0;
     padding-right: 0;
-
 }
 
 /* Remove gap when collapsed */
 .sidebar.collapsed .sidebar-item {
-
     gap: 0;
-
 }
 
 /* Hide divider */
 .sidebar.collapsed hr {
-
     display: none;
-
 }
 
 /* ==========================================
@@ -113,7 +97,6 @@ body{
 ========================================== */
 
 .ts-wrapper {
-
     width: 100%;
 
     border: none !important;
@@ -121,69 +104,55 @@ body{
     outline: none !important;
 
     box-shadow: none !important;
-
 }
-.ts-control{
+.ts-control {
+    min-height: 40px !important;
+    border: 1px solid #d1d5db !important;
+    border-radius: 12px !important;
+    padding: 7px 14px !important;
 
-    min-height:40px !important;
-    border:1px solid #D1D5DB !important;
-    border-radius:12px !important;
-    padding:7px 14px !important;
-
-    font-size:14px;
+    font-size: 14px;
     font-family: inherit;
 
-    box-shadow:none !important;
+    box-shadow: none !important;
 
-    transition:all .2s;
+    transition: all 0.2s;
 }
 
-.ts-control input{
-
-    font-size:14px;
-
+.ts-control input {
+    font-size: 14px;
 }
 
-.ts-wrapper.focus .ts-control{
+.ts-wrapper.focus .ts-control {
+    border-color: #3b82f6 !important;
 
-    border-color:#3B82F6 !important;
-
-    box-shadow:0 0 0 4px rgb(59 130 246 / .15) !important;
-
+    box-shadow: 0 0 0 4px rgb(59 130 246 / 0.15) !important;
 }
 
-.ts-dropdown{
+.ts-dropdown {
+    margin-top: 6px;
 
-    margin-top:6px;
+    border-radius: 12px;
 
-    border-radius:12px;
+    border: 1px solid #e5e7eb;
 
-    border:1px solid #E5E7EB;
-
-    overflow:hidden;
-
+    overflow: hidden;
 }
 
-.ts-dropdown .option{
+.ts-dropdown .option {
+    padding: 10px 14px;
 
-    padding:10px 14px;
-
-    font-size:14px;
-
+    font-size: 14px;
 }
 
-.ts-dropdown .active{
+.ts-dropdown .active {
+    background: #eff6ff;
 
-    background:#EFF6FF;
-
-    color:#2563EB;
-
+    color: #2563eb;
 }
 
-.ts-control>.item{
-
-    font-size:14px;
-
+.ts-control > .item {
+    font-size: 14px;
 }
 .filter-toolbar .ts-wrapper {
     width: 100%;
@@ -214,6 +183,19 @@ body{
     position: relative;
 }
 
+.data-table-loading {
+    position: absolute;
+    inset: 0;
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.75);
+    backdrop-filter: blur(1px);
+}
+.data-table-loading.hidden {
+    display: none;
+}
 
 /* ==========================================
    Sticky Table Header
@@ -239,7 +221,6 @@ body{
 
     border-bottom: 1px solid #e5e7eb;
 }
-
 
 /* ==========================================
    Custom Scrollbar

@@ -10,71 +10,192 @@ export default class DataTable {
 
     constructor(options) {
 
-    this.url = options.url;
+        this.url = options.url;
 
-    this.body = document.querySelector(options.body);
+        this.body = document.querySelector(options.body);
 
-    this.render = options.render;
+        this.render = options.render;
 
-    this.state = new State();
+        this.state = new State();
 
-    this.pagination = new Pagination({
 
-        container: options.pagination,
+        // ==========================================
+        // Pagination
+        // ==========================================
 
-        onPageChange: (page) => {
-            this.state.setPage(page);
-            this.load();
+        this.pagination = new Pagination({
+
+            container: options.pagination,
+
+            onPageChange: (page) => {
+
+                this.state.setPage(page);
+
+                this.load();
+
+            }
+
+        });
+
+
+        // ==========================================
+        // Search
+        // ==========================================
+
+        this.search = new Search({
+
+            input: options.search,
+
+            onSearch: (keyword) => {
+
+                this.state.setSearch(keyword);
+
+                this.load();
+
+            }
+
+        });
+
+
+        // ==========================================
+        // Per Page
+        // ==========================================
+
+        this.perPage = new PerPage({
+
+            select: options.perPage,
+
+            onChange: (value) => {
+
+                this.state.setPerPage(value);
+
+                this.load();
+
+            }
+
+        });
+
+
+        // ==========================================
+        // Create Loading Overlay
+        // ==========================================
+
+        this.createLoadingOverlay();
+
+    }
+
+
+    // ==========================================
+    // Create Loading Overlay
+    // ==========================================
+
+    createLoadingOverlay() {
+
+        const tableContainer =
+            this.body.closest(".data-table-scroll");
+
+        if (!tableContainer) {
+            return;
         }
 
-    });
-    this.search = new Search({
 
-    input: options.search,
+        // Prevent duplicate loader
 
-    onSearch: (keyword) => {
+        if (
+            tableContainer.querySelector(
+                ".data-table-loading"
+            )
+        ) {
+            return;
+        }
 
-        this.state.setSearch(keyword);
 
-        this.load();
+        const loader =
+            document.createElement("div");
+
+
+        loader.className = `
+            data-table-loading
+            hidden
+        `;
+
+
+        loader.innerHTML = `
+            <div class="flex flex-col items-center gap-3">
+
+                <div class="
+                    w-8
+                    h-8
+                    border-4
+                    border-gray-200
+                    border-t-blue-600
+                    rounded-full
+                    animate-spin
+                "></div>
+
+                <span class="
+                    text-sm
+                    text-gray-500
+                ">
+                    កំពុងទាញទិន្នន័យ...
+                </span>
+
+            </div>
+        `;
+
+
+        tableContainer.appendChild(loader);
 
     }
 
-});
-this.perPage = new PerPage({
 
-    select: options.perPage,
-
-    onChange: (value) => {
-
-        this.state.setPerPage(value);
-
-        this.load();
-
-    }
-
-});
-
-}
+    // ==========================================
+    // Load Data
+    // ==========================================
 
     async load(page = 1) {
 
         this.showLoading();
 
+
         try {
 
-            const response = await get(`${this.url}?${this.state.toQueryString()}`);
-            this.renderRows(response.data.data);
+            const response = await get(
+                `${this.url}?${this.state.toQueryString()}`
+            );
+
+
+            this.renderRows(
+                response.data.data
+            );
+
+
             refreshIcons();
-            this.pagination.render(response.data);
+
+
+            this.pagination.render(
+                response.data
+            );
+
 
         } catch (error) {
 
-            this.showError(error.message);
+            this.showError(
+                error.message
+            );
+
+        } finally {
+
+            this.hideLoading();
 
         }
 
     }
+
+
+    // ==========================================
+    // Render Rows
+    // ==========================================
 
     renderRows(rows) {
 
@@ -84,25 +205,69 @@ this.perPage = new PerPage({
 
     }
 
+
+    // ==========================================
+    // Show Loading
+    // ==========================================
+
     showLoading() {
 
-        this.body.innerHTML = `
-            <tr>
-                <td colspan="6" class="py-10 text-center text-gray-400">
-                    កំពុងទាញយកទិន្នន័យ...
-                </td>
-            </tr>
-        `;
+        const loader =
+            this.body
+                .closest(".data-table-scroll")
+                ?.querySelector(
+                    ".data-table-loading"
+                );
+
+
+        if (loader) {
+
+            loader.classList.remove("hidden");
+
+        }
 
     }
+
+
+    // ==========================================
+    // Hide Loading
+    // ==========================================
+
+    hideLoading() {
+
+        const loader =
+            this.body
+                .closest(".data-table-scroll")
+                ?.querySelector(
+                    ".data-table-loading"
+                );
+
+
+        if (loader) {
+
+            loader.classList.add("hidden");
+
+        }
+
+    }
+
+
+    // ==========================================
+    // Show Error
+    // ==========================================
 
     showError(message) {
 
         this.body.innerHTML = `
             <tr>
-                <td colspan="6" class="py-10 text-center text-red-500">
+
+                <td
+                    colspan="6"
+                    class="py-10 text-center text-red-500"
+                >
                     ${message}
                 </td>
+
             </tr>
         `;
 
