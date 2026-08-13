@@ -1,12 +1,21 @@
+import { refreshIcons } from "../../utils/lucide";
+
 export default class Pagination {
+
     constructor(options) {
+
         this.container = document.querySelector(options.container);
+
         this.onPageChange = options.onPageChange;
+
     }
 
+
     render(meta) {
+
         // Clear old pagination
         this.container.innerHTML = "";
+
 
         // ==========================================
         // Bottom Pagination Layout
@@ -22,6 +31,7 @@ export default class Pagination {
             gap-4
         `;
 
+
         // ==========================================
         // Showing Information - Left
         // ==========================================
@@ -35,7 +45,9 @@ export default class Pagination {
         `;
 
         const from = meta.from ?? 0;
+
         const to = meta.to ?? 0;
+
         const total = meta.total ?? 0;
 
         info.textContent =
@@ -62,11 +74,17 @@ export default class Pagination {
         // ==========================================
 
         pagination.appendChild(
+
             this.createButton(
-                "«",
+
+                `<i data-lucide="arrow-left"></i>`,
+
                 meta.current_page - 1,
+
                 meta.current_page === 1
+
             )
+
         );
 
 
@@ -74,15 +92,26 @@ export default class Pagination {
         // Page Numbers
         // ==========================================
 
-        for (let page = 1; page <= meta.last_page; page++) {
+        for (
+            let page = 1;
+            page <= meta.last_page;
+            page++
+        ) {
 
             pagination.appendChild(
+
                 this.createButton(
+
                     page,
+
                     page,
+
                     false,
+
                     page === meta.current_page
+
                 )
+
             );
 
         }
@@ -93,17 +122,31 @@ export default class Pagination {
         // ==========================================
 
         pagination.appendChild(
+
             this.createButton(
-                "»",
+
+                `<i data-lucide="arrow-right"></i>`,
+
                 meta.current_page + 1,
+
                 meta.current_page === meta.last_page
+
             )
+
         );
 
 
         wrapper.appendChild(pagination);
 
         this.container.appendChild(wrapper);
+
+
+        // ==========================================
+        // Refresh Lucide Icons
+        // ==========================================
+
+        refreshIcons();
+
     }
 
 
@@ -112,17 +155,29 @@ export default class Pagination {
     // ==========================================
 
     createButton(
+
         label,
+
         page,
+
         disabled = false,
+
         active = false
+
     ) {
 
         const button = document.createElement("button");
 
+
         button.type = "button";
 
-        button.textContent = label;
+
+        // IMPORTANT:
+        // Use innerHTML because previous/next
+        // buttons contain Lucide <i> elements.
+
+        button.innerHTML = label;
+
 
         button.className = `
             min-w-10
@@ -133,6 +188,9 @@ export default class Pagination {
             transition
             text-sm
             font-medium
+            inline-flex
+            items-center
+            justify-center
             ${
                 active
                     ? "bg-blue-600 text-white border-blue-600"
@@ -140,6 +198,10 @@ export default class Pagination {
             }
         `;
 
+
+        // ==========================================
+        // Disabled
+        // ==========================================
 
         if (disabled) {
 
@@ -153,15 +215,23 @@ export default class Pagination {
         }
 
 
+        // ==========================================
+        // Click
+        // ==========================================
+
         button.addEventListener("click", () => {
 
             if (!disabled) {
+
                 this.onPageChange(page);
+
             }
 
         });
 
 
         return button;
+
     }
+
 }
