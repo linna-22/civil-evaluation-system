@@ -17,7 +17,7 @@
 
     <x-layout.page-header
         title="អ្នកប្រើប្រាស់"
-        icon="building-2">
+        icon="user">
 
         <x-slot:breadcrumb>
 
@@ -42,9 +42,9 @@
     </x-layout.page-header>
 
     <x-layout.page-card
-        title="ព័ត៌មានអ្នកប្រើប្រាស់"
-        description="សូមបំពេញព័ត៌មានអ្នកប្រើប្រាស់ឱ្យបានត្រឹមត្រូវ"
-        icon="clipboard-list">
+        title=""
+        description=""
+        icon="">
 
         @include('users._form', [
             'user' => null,

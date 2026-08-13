@@ -8,30 +8,54 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
+use App\Models\EvaluationPeriod;
+use App\Models\EvaluationPeriodUser;
+use Illuminate\Support\Facades\DB;
 
 class UserService
 {
+    private EvaluationPeriodService $evaluationPeriodService;
+
+    public function __construct(EvaluationPeriodService $evaluationPeriodService)
+    {
+        $this->evaluationPeriodService = $evaluationPeriodService;
+    }
     public function store(array $data): User
     {
-        return User::create([
+        return DB::transaction(function () use ($data) {
 
-            'organization_id' => $data['organization_id'],
-            'department_id' => $data['department_id'],
-            'office_id' => $data['office_id'],
-            'name_kh' => $data['name_kh'],
-            'name_en' => $data['name_en'],
-            'username' => $data['username'],
-            'gender' => $data['gender'],
-            'phone' => $data['phone'],
-            'email' => $data['email'],
-            'position' => $data['position'],
-            'id_code' => $data['id_code'],
-            'is_leader' => $data['is_leader'],
-            'password' => $data['password'],
-            'role' => $data['role'],
-            'created_by' => auth()->id(),
+            $user = User::create([
 
-        ]);
+                'organization_id' => $data['organization_id'],
+                'department_id' => $data['department_id'],
+                'office_id' => $data['office_id'],
+                'name_kh' => $data['name_kh'],
+                'name_en' => $data['name_en'],
+                'username' => $data['username'],
+                'gender' => $data['gender'],
+                'phone' => $data['phone'],
+                'email' => $data['email'],
+                'position' => $data['position'],
+                'id_code' => $data['id_code'],
+                'is_leader' => $data['is_leader'],
+                'password' => $data['password'],
+                'role' => $data['role'],
+                'status' => $data['status'],
+                'created_by' => auth()->id(),
+            ]);
+
+            // ==========================================
+            // Assign to Open Evaluation Period
+            // ==========================================
+
+            if ($user->status === 'active') {
+
+                $this->evaluationPeriodService
+                    ->assignUserToOpenPeriods($user);
+            }
+
+            return $user->refresh();
+        });
     }
 
     public function getData(Request $request)
@@ -64,33 +88,43 @@ class UserService
     {
         return $user;
     }
-    public function update(
-        User $user,
-        array $data
-    ): User {
+    public function update(User $user, array $data): User {
+        // Keep the old status before updating
+        $oldStatus = $user->status;
+        return DB::transaction(function () use ($user, $data, $oldStatus) {
+            // ==========================================
+            // Update User
+            // ==========================================
+            $user->update([
+                'organization_id' => $data['organization_id'],
+                'department_id' => $data['department_id'],
+                'office_id' => $data['office_id'],
+                'name_kh' => $data['name_kh'],
+                'name_en' => $data['name_en'],
+                'username' => $data['username'],
+                'gender' => $data['gender'],
+                'phone' => $data['phone'],
+                'email' => $data['email'],
+                'position' => $data['position'],
+                'id_code' => $data['id_code'],
+                'is_leader' => $data['is_leader'],
+                'role' => $data['role'],
+                'status' => $data['status'],
+                'updated_by' => auth()->id(),
+            ]);
 
-        $user->update([
+            // ==========================================
+            // Inactive → Active
+            // ==========================================
 
-            'organization_id' => $data['organization_id'],
-            'department_id' => $data['department_id'],
-            'office_id' => $data['office_id'],
-            'name_kh' => $data['name_kh'],
-            'name_en' => $data['name_en'],
-            'username' => $data['username'],
-            'gender' => $data['gender'],
-            'phone' => $data['phone'],
-            'email' => $data['email'],
-            'position' => $data['position'],
-            'id_code' => $data['id_code'],
-            'is_leader' => $data['is_leader'],
-            'role' => $data['role'],
-            'status' => $data['status'],
-            'updated_by' => auth()->id(),
+            if ($oldStatus === 'inactive' && $user->status === 'active') 
+            {
+                $this->evaluationPeriodService->assignUserToOpenPeriods($user);
+            }
 
-        ]);
+            return $user->refresh();
 
-        return $user->refresh();
-
+        });
     }
     public function changePassword(User $user, array $data): void
     {

@@ -12,7 +12,7 @@
 
         <x-page-header
             title="ព័ត៌មានការវាយតម្លៃ"
-            description="មើលព័ត៌មានលម្អិតនៃការវាយតម្លៃ">
+            description="">
 
             <x-slot:actions>
 

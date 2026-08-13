@@ -8,7 +8,7 @@
 
     <x-layout.page-header
         title="អ្នកប្រើប្រាស់"
-        icon="building-2">
+        icon="user">
 
         <x-slot:breadcrumb>
 
