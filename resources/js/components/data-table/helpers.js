@@ -22,6 +22,30 @@ export function statusBadge(status) {
     `;
 
 }
+export function EvaluationPeriodstatusBadge(status) {
+
+    const open = String(status).trim().toLowerCase() === "open";
+
+    return `
+        <span
+            class="inline-flex items-center gap-2 rounded-full px-3 py-1 text-sm font-medium
+            ${open
+            ? "bg-green-100 text-green-700"
+            : "bg-red-100 text-red-700"}">
+
+            <span
+                class="h-2 w-2 rounded-full
+                ${open
+            ? "bg-green-500"
+            : "bg-red-500"}">
+            </span>
+
+            ${open ? "បើកការវាយតម្លៃ" : "បិទការវាយតម្លៃ"}
+
+        </span>
+    `;
+
+}
 
 export function actionButtons(id, showDelete = false) {
 

@@ -69,4 +69,13 @@ class User extends Authenticatable
     {
         return $this->hasMany(Evaluation::class, 'user_id', 'user_id');
     }
+
+    public function evaluationPeriodUsers()
+    {
+        return $this->hasMany(
+            EvaluationPeriodUser::class,
+            'user_id',
+            'user_id'
+        );
+    }
 }

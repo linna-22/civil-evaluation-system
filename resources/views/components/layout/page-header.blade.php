@@ -7,7 +7,7 @@
     class="bg-white
            rounded-2xl
            shadow-sm
-           p-8">
+           p-4">
 
     <div
         class="flex
@@ -32,7 +32,7 @@
 
                     <i
                         data-lucide="{{ $icon }}"
-                        class="w-8 h-8 text-primary">
+                        class="w-6 h-6 text-primary">
                     </i>
 
                 </div>
@@ -43,7 +43,7 @@
 
                 <h1
                     class="font-title
-                           text-2xl
+                           text-xl
                            text-primary">
 
                     {{ $title }}

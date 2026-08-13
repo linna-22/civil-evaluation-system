@@ -8,28 +8,34 @@ return [
         'items' => [
 
             [
-                'icon'  => 'layout-dashboard',
+                'icon' => 'layout-dashboard',
                 'title' => 'ផ្ទាំងគ្រប់គ្រង',
                 'route' => 'dashboard',
-                'url'   => 'dashboard',
+                'url' => 'dashboard',
             ],
             [
-                'icon'  => 'clipboard-check',
+                'icon' => 'clipboard-check',
                 'title' => 'ការវាយតម្លៃ',
                 'route' => 'evaluations.index',
-                'url'   => 'evaluations.index',
+                'url' => 'evaluations.index',
             ],
             [
-                'icon'  => 'history',
+                'icon' => 'settings-2',
+                'title' => 'កំណត់ការវាយតម្លៃ',
+                'route' => 'evaluation-periods.*',
+                'url' => 'evaluation-periods.index',
+            ],
+            [
+                'icon' => 'history',
                 'title' => 'ប្រវត្តិការវាយតម្លៃ',
                 'route' => 'evaluations.history',
-                'url'   => 'evaluations.history',
+                'url' => 'evaluations.history',
             ],
             [
-                'icon'  => 'clipboard-list',
+                'icon' => 'clipboard-list',
                 'title' => 'បញ្ជីការវាយតម្លៃ',
                 'route' => 'evaluations.list',
-                'url'   => 'evaluations.list',
+                'url' => 'evaluations.list',
             ],
 
         ],
@@ -41,30 +47,30 @@ return [
         'items' => [
 
             [
-                'icon'  => 'building-2',
+                'icon' => 'building-2',
                 'title' => 'អង្គភាព',
                 'route' => 'organizations.*',
                 'url' => 'organizations.index',
             ],
 
             [
-                'icon'  => 'building',
+                'icon' => 'building',
                 'title' => 'នាយកដ្ឋាន',
                 'route' => 'departments.*',
-                'url'   => 'departments.index',
+                'url' => 'departments.index',
             ],
             [
-                'icon'  => 'landmark',
+                'icon' => 'landmark',
                 'title' => 'ការិយាល័យ',
                 'route' => 'offices.*',
-                'url'   => 'offices.index',
+                'url' => 'offices.index',
             ],
 
             [
-                'icon'  => 'users',
+                'icon' => 'users',
                 'title' => 'អ្នកប្រើប្រាស់',
                 'route' => 'users.index',
-                'url'   => 'users.index',
+                'url' => 'users.index',
             ],
 
         ],

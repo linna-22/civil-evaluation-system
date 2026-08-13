@@ -9,6 +9,7 @@ use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\Employee\EmployeeDashboardController;
 use App\Http\Controllers\Employee\MyEvaluationController;
 use App\Http\Controllers\EvaluationController;
+use App\Http\Controllers\EvaluationPeriodController;
 use App\Http\Controllers\EvaluationReportController;
 use App\Http\Controllers\OfficeController;
 use App\Http\Controllers\OrganizationController;
@@ -89,6 +90,19 @@ Route::middleware('auth')->group(function () {
             Route::get('/{user}/edit', [UserController::class, 'edit'])->name('edit');
             Route::put('/{user}', [UserController::class, 'update'])->name('update');
             Route::get('/profile', [UserController::class, 'profile'])->name('profile');
+
+        });
+    // Evaluation Period
+    Route::prefix('evaluation-periods')
+        ->name('evaluation-periods.')
+        ->middleware('auth')
+        ->group(function () {
+            Route::get('/', [EvaluationPeriodController::class, 'index'])->name('index');
+            Route::get('/data', [EvaluationPeriodController::class, 'data'])->name('data');
+            Route::get('/create', [EvaluationPeriodController::class, 'create'])->name('create');
+            Route::post('/', [EvaluationPeriodController::class, 'store'])->name('store');
+            Route::get('/{evaluationPeriod}/edit', [EvaluationPeriodController::class, 'edit'])->name('edit');
+            Route::put('/{evaluationPeriod}', [EvaluationPeriodController::class, 'update'])->name('update');
 
         });
 

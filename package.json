@@ -15,6 +15,7 @@
         "vite": "^7.0.7"
     },
     "dependencies": {
+        "flatpickr": "^4.6.13",
         "lucide": "^1.24.0",
         "sweetalert2": "^11.26.25",
         "tom-select": "^2.6.2"

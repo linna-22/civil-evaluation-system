@@ -12,6 +12,8 @@ return new class extends Migration {
     {
         Schema::create('evaluation_periods', function (Blueprint $table) {
             $table->id('evaluation_period_id');
+            $table->string('name_kh', 355);
+            $table->string('name_en', 355);
             // Evaluation month and year
             $table->unsignedTinyInteger('month');
             $table->unsignedSmallInteger('year');

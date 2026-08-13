@@ -199,6 +199,22 @@ export default class DataTable {
 
     renderRows(rows) {
 
+        if (!rows || rows.length === 0) {
+
+            this.body.innerHTML = `
+            <tr>
+                <td
+                    colspan="100%"
+                    class="py-12 text-center text-gray-400"
+                >
+                    គ្មានទិន្នន័យ
+                </td>
+            </tr>
+        `;
+
+            return;
+        }
+
         this.body.innerHTML = rows
             .map(row => this.render(row))
             .join("");
