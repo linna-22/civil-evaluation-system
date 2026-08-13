@@ -17,6 +17,6 @@ if (tableBody) {
 
     table.load();
 
-    registerEvaluationPeriodEvents();
+    registerEvaluationPeriodEvents(table);
 
 }

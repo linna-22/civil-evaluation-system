@@ -103,6 +103,8 @@ Route::middleware('auth')->group(function () {
             Route::post('/', [EvaluationPeriodController::class, 'store'])->name('store');
             Route::get('/{evaluationPeriod}/edit', [EvaluationPeriodController::class, 'edit'])->name('edit');
             Route::put('/{evaluationPeriod}', [EvaluationPeriodController::class, 'update'])->name('update');
+            Route::patch('/{evaluationPeriod}/close', [EvaluationPeriodController::class, 'close'])->name('close');
+            Route::get('/{evaluationPeriod}', [EvaluationPeriodController::class, 'show'])->name('show');
 
         });
 

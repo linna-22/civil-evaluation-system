@@ -48,22 +48,22 @@ class EvaluationPeriodController extends Controller
     /**
      * Store a new evaluation period.
      */
-    public function store(EvaluationPeriodRequest $request, EvaluationPeriodService $service) 
+    public function store(EvaluationPeriodRequest $request, EvaluationPeriodService $service)
     {
         // dd($request->all());
         $service->store($request->validated());
         Log::info('sucess');
         return redirect()->route('evaluation-periods.index')->with(
-                'success',
-                'ការវាយតម្លៃត្រូវបានបង្កើតដោយជោគជ័យ'
-            );
+            'success',
+            'ការវាយតម្លៃត្រូវបានបង្កើតដោយជោគជ័យ'
+        );
     }
 
 
     /**
      * Show edit evaluation period form.
      */
-    public function edit(EvaluationPeriod $evaluationPeriod) 
+    public function edit(EvaluationPeriod $evaluationPeriod)
     {
         return view('evaluation-periods.edit', compact('evaluationPeriod'));
     }
@@ -89,4 +89,25 @@ class EvaluationPeriodController extends Controller
                 'ការវាយតម្លៃត្រូវបានកែប្រែដោយជោគជ័យ'
             );
     }
+    public function close(EvaluationPeriod $evaluationPeriod, EvaluationPeriodService $service)
+    {
+        $service->close($evaluationPeriod);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'វគ្គវាយតម្លៃត្រូវបានបិទដោយជោគជ័យ។',
+        ]);
+    }
+    public function show(EvaluationPeriod $evaluationPeriod, EvaluationPeriodService $service) 
+    {
+        $evaluationPeriod = $service->find(
+            $evaluationPeriod
+        );
+
+        return view(
+            'evaluation-periods.show',
+            compact('evaluationPeriod')
+        );
+    }
+
 }

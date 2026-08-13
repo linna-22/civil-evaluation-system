@@ -1,7 +1,8 @@
 import {
     statusBadge,
     actionButtons,
-    EvaluationPeriodstatusBadge
+    EvaluationPeriodstatusBadge,
+    evaluationPeriodActionButtons
 } from "../../components/data-table/helpers";
 export function renderEvaluationPeriodRow(evaluation_period) {
 
@@ -25,7 +26,10 @@ export function renderEvaluationPeriodRow(evaluation_period) {
             </td>
 
             <td class="px-6 py-4">
-                ${actionButtons(evaluation_period.evaluation_period_id)}
+                 ${evaluationPeriodActionButtons(
+                    evaluation_period.evaluation_period_id,
+                    evaluation_period.status
+                )}
             </td>
 
         </tr>

@@ -9,7 +9,7 @@
 
         <h1
             class="font-title
-                   text-2xl
+                   text-xl
                    text-primary">
 
             {{ $title }}

@@ -40,7 +40,7 @@ export function EvaluationPeriodstatusBadge(status) {
             : "bg-red-500"}">
             </span>
 
-            ${open ? "បើកការវាយតម្លៃ" : "បិទការវាយតម្លៃ"}
+            ${open ? "កំពុងបើកការវាយតម្លៃ" : "បានបិទការវាយតម្លៃ"}
 
         </span>
     `;
@@ -51,7 +51,6 @@ export function actionButtons(id, showDelete = false) {
 
     let html = `
         <div class="flex items-center justify-center gap-2">
-
             <button
                 type="button"
                 class="btn-edit
@@ -95,4 +94,91 @@ export function actionButtons(id, showDelete = false) {
 
     return html;
 
+}
+export function evaluationPeriodActionButtons(id, status) {
+
+    let buttons = `
+        <!-- View -->
+        <button
+            type="button"
+            class="btn-view-evaluation
+                   p-2
+                   rounded-lg
+                   bg-blue-50
+                   text-blue-500
+                   hover:bg-blue-100
+                   hover:text-blue-600
+                   cursor-pointer
+                   transition"
+            data-id="${id}"
+            title="មើលលម្អិត">
+
+            <i
+                data-lucide="eye"
+                class="w-4 h-4">
+            </i>
+
+        </button>
+    `;
+
+
+    // ==========================================
+    // Open Period Actions
+    // ==========================================
+
+    if (status === "open") {
+
+        buttons += `
+            <!-- Edit -->
+            <button
+                type="button"
+                class="btn-edit
+                       p-2
+                       rounded-lg
+                       bg-amber-100
+                       text-amber-600
+                       hover:bg-amber-200
+                       cursor-pointer
+                       transition"
+                data-id="${id}"
+                title="កែប្រែ">
+
+                <i
+                    data-lucide="square-pen"
+                    class="w-4 h-4">
+                </i>
+
+            </button>
+
+
+            <!-- Close -->
+            <button
+                type="button"
+                class="btn-close-evaluation
+                       p-2
+                       rounded-lg
+                       bg-red-100
+                       text-red-600
+                       hover:bg-red-200
+                       cursor-pointer
+                       transition"
+                data-id="${id}"
+                title="បិទការវាយតម្លៃ">
+
+                <i
+                    data-lucide="lock"
+                    class="w-4 h-4">
+                </i>
+
+            </button>
+        `;
+
+    }
+
+
+    return `
+        <div class="flex justify-center items-center gap-2">
+            ${buttons}
+        </div>
+    `;
 }

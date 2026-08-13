@@ -48,11 +48,10 @@ class EvaluationPeriodService
     /**
      * Find an evaluation period.
      */
-    public function find(EvaluationPeriod $evaluationPeriod): EvaluationPeriod 
+    public function find(EvaluationPeriod $evaluationPeriod): EvaluationPeriod
     {
         return $evaluationPeriod->load('periodUsers.user');
     }
-
     /**
      * Create an evaluation period
      * and automatically assign active users.
@@ -116,13 +115,13 @@ class EvaluationPeriodService
 
                     return [
                         'evaluation_period_id'
-                            => $evaluationPeriod->evaluation_period_id,
+                        => $evaluationPeriod->evaluation_period_id,
                         'user_id'
-                            => $userId,
+                        => $userId,
                         'created_at'
-                            => now(),
+                        => now(),
                         'updated_at'
-                            => now(),
+                        => now(),
                     ];
                 })
                 ->toArray();
@@ -138,10 +137,9 @@ class EvaluationPeriodService
     /**
      * Update an evaluation period.
      */
-    public function update(EvaluationPeriod $evaluationPeriod, array $data): EvaluationPeriod 
+    public function update(EvaluationPeriod $evaluationPeriod, array $data): EvaluationPeriod
     {
-        return DB::transaction(function () use ($evaluationPeriod, $data) 
-        {
+        return DB::transaction(function () use ($evaluationPeriod, $data) {
             // ==========================================
             // Closed Period Protection
             // ==========================================
@@ -202,10 +200,9 @@ class EvaluationPeriodService
     /**
      * Close an evaluation period.
      */
-    public function close(EvaluationPeriod $evaluationPeriod): EvaluationPeriod 
+    public function close(EvaluationPeriod $evaluationPeriod): EvaluationPeriod
     {
-        return DB::transaction(function () use ($evaluationPeriod) 
-        {
+        return DB::transaction(function () use ($evaluationPeriod) {
             if ($evaluationPeriod->status === 'closed') {
                 throw ValidationException::withMessages([
                     'evaluation_period' =>
@@ -225,4 +222,5 @@ class EvaluationPeriodService
 
         });
     }
+   
 }
