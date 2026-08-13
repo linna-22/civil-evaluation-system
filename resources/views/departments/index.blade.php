@@ -1,4 +1,3 @@
-
 @extends('layouts.app')
 
 @section('title', 'departments')
@@ -35,45 +34,57 @@
         </div>
 
         {{-- Table --}}
-        <x-data-table bodyId="department-table-body">
+        <div class="bg-white rounded-2xl">
 
-            <x-slot:head>
+            <div class="data-table-scroll">
 
-                <th class="px-6 py-3 text-left w-20">#</th>
+                <x-data-table bodyId="department-table-body">
 
-                <th class="px-6 py-3 text-left">
-                    លេខកូដ
-                </th>
+                    <x-slot:head>
 
-                <th class="px-6 py-3 text-left">
-                    ឈ្មោះនាយកដ្ឋាន (ភាសាខ្មែរ)
-                </th>
+                        <th class="px-6 py-3 text-left w-20">
+                            #
+                        </th>
 
-                <th class="px-6 py-3 text-left">
-                    ឈ្មោះនាយកដ្ឋាន (ភាសាអង់គ្លេស)
-                </th>
+                        <th class="px-6 py-3 text-left">
+                            លេខកូដ
+                        </th>
 
-                <th class="px-6 py-3 text-left">
-                    ស្ថានភាព
-                </th>
+                        <th class="px-6 py-3 text-left">
+                            ឈ្មោះនាយកដ្ឋាន (ភាសាខ្មែរ)
+                        </th>
 
-                <th class="px-6 py-3 text-center w-40">
-                    សកម្មភាព
-                </th>
+                        <th class="px-6 py-3 text-left">
+                            ឈ្មោះនាយកដ្ឋាន (ភាសាអង់គ្លេស)
+                        </th>
 
-            </x-slot:head>
+                        <th class="px-6 py-3 text-left">
+                            ស្ថានភាព
+                        </th>
 
-            <x-slot:body>
+                        <th class="px-6 py-3 text-center w-40">
+                            សកម្មភាព
+                        </th>
 
-                <tbody id="department-table-body">
+                    </x-slot:head>
 
-                </tbody>
 
-            </x-slot:body>
+                    <x-slot:body>
 
-        </x-data-table>
+                        <tbody id="department-table-body">
+                        </tbody>
+
+                    </x-slot:body>
+
+                </x-data-table>
+
+            </div>
+
+        </div>
+
+
         <!-- Pagination -->
-        <div id="department-pagination" class="flex justify-end items-center gap-2 mt-6">
+        <div id="department-pagination" class="mt-6">
         </div>
 
     </div>

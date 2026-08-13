@@ -1,30 +1,23 @@
-<div class="bg-white
-           rounded-2xl
-           shadow-sm
-           overflow-hidden">
+<div class="data-table-component">
 
-    <div class="overflow-x-auto">
+    <table class="w-full">
 
-        <table class="w-full ">
+        <thead class="bg-gray-50">
 
-            <thead class="bg-gray-50">
+            <tr class="text-blue-500">
 
-                <tr class="text-blue-500">
+                {{ $head }}
 
-                    {{ $head }}
+            </tr>
 
-                </tr>
+        </thead>
 
-            </thead>
+        <tbody id="{{ $bodyId ?? '' }}">
 
-            <tbody id="{{ $bodyId ?? '' }}">
+            {{ $body }}
 
-                {{ $body }}
+        </tbody>
 
-            </tbody>
-
-        </table>
-
-    </div>
+    </table>
 
 </div>

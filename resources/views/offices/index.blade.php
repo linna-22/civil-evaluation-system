@@ -35,7 +35,9 @@
         </div>
 
         {{-- Table --}}
-        <x-data-table bodyId="office-table-body">
+        <div class="bg-white rounded-2xl">
+            <div class="data-table-scroll">
+                <x-data-table bodyId="office-table-body">
 
             <x-slot:head>
 
@@ -72,8 +74,11 @@
             </x-slot:body>
 
         </x-data-table>
+            </div>
+        </div>
+        
         <!-- Pagination -->
-        <div id="office-pagination" class="flex justify-end items-center gap-2 mt-6">
+        <div id="office-pagination" class="mt-6">
         </div>
 
     </div>

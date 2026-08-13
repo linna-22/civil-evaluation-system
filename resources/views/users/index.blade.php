@@ -34,7 +34,9 @@
         </div>
 
         {{-- Table --}}
-        <x-data-table bodyId="user-table-body">
+        <div class="bg-white rounded-2xl">
+            <div class="data-table-scroll">
+                <x-data-table bodyId="user-table-body">
 
             <x-slot:head>
 
@@ -73,8 +75,11 @@
             </x-slot:body>
 
         </x-data-table>
+            </div>
+        </div>
+        
         <!-- Pagination -->
-        <div id="user-pagination" class="flex justify-end items-center gap-2 mt-6">
+        <div id="user-pagination" class="mt-6">
         </div>
 
     </div>
