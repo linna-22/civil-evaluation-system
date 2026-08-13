@@ -70,7 +70,7 @@
                 </div>
 
             </div>
-            <hr class="py-3">
+            <hr class="py-2 text-gray-300">
 
 
             {{-- Information Grid --}}
@@ -234,7 +234,7 @@
 
         <div class="bg-white rounded-2xl shadow-sm">
 
-            <div class="p-6 border-b">
+            <div class="p-4 border-b text-gray-300">
 
                 <div class="flex items-center justify-between">
 
