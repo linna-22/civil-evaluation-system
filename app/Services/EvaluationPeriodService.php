@@ -16,7 +16,7 @@ class EvaluationPeriodService
      */
     public function getData(Request $request)
     {
-        $query = EvaluationPeriod::query();
+        $query = EvaluationPeriod::query()->orderBy('evaluation_period_id', 'desc');
 
 
         // ==========================================

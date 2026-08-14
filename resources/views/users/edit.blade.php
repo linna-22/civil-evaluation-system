@@ -15,7 +15,7 @@
             <x-layout.breadcrumb>
 
                 <x-layout.breadcrumb-item
-                    title="អង្គភាព"
+                    title="អ្នកប្រើប្រាស់"
                     :url="route('users.index')" />
 
                 <i
@@ -24,7 +24,7 @@
                 </i>
 
                 <x-layout.breadcrumb-item
-                    title="កែប្រែអង្គភាព" />
+                    title="កែប្រែអ្នកប្រើប្រាស់" />
 
             </x-layout.breadcrumb>
 
@@ -33,9 +33,9 @@
     </x-layout.page-header>
 
     <x-layout.page-card
-        title="ព័ត៌មានអង្គភាព"
-        description="សូមកែប្រែព័ត៌មានអង្គភាពឱ្យបានត្រឹមត្រូវ"
-        icon="clipboard-list">
+        title=""
+        description=""
+        icon="">
 
         @include('users._form', [
             'user' => $user,

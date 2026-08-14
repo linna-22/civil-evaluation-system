@@ -15,15 +15,6 @@
             <x-layout.breadcrumb>
 
                 <x-layout.breadcrumb-item
-                    title="ផ្ទាំងគ្រប់គ្រង"
-                    :url="route('dashboard')" />
-
-                <i
-                    data-lucide="chevron-right"
-                    class="w-4 h-4">
-                </i>
-
-                <x-layout.breadcrumb-item
                     title="អង្គភាព"
                     :url="route('organizations.index')" />
 
@@ -42,9 +33,9 @@
     </x-layout.page-header>
 
     <x-layout.page-card
-        title="ព័ត៌មានអង្គភាព"
-        description="សូមកែប្រែព័ត៌មានអង្គភាពឱ្យបានត្រឹមត្រូវ"
-        icon="clipboard-list">
+        title=""
+        description=""
+        icon="">
 
         @include('organizations._form', [
             'organization' => $organization,

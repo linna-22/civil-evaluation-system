@@ -33,9 +33,9 @@
     </x-layout.page-header>
 
     <x-layout.page-card
-        title="ព័ត៌មានការិយាល័យ"
-        description="សូមបំពេញព័ត៌មានការិយាល័យឱ្យបានត្រឹមត្រូវ"
-        icon="clipboard-list">
+        title=""
+        description=""
+        icon="">
 
         @include('offices._form', [
             'office' => null,

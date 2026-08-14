@@ -34,9 +34,9 @@
     </x-layout.page-header>
 
     <x-layout.page-card
-        title="ព័ត៌មាននាយកដ្ឋាន"
-        description="សូមកែប្រែព័ត៌មាននាយកដ្ឋានឱ្យបានត្រឹមត្រូវ"
-        icon="clipboard-list">
+        title=""
+        description=""
+        icon="">
 
         @include('departments._form', [
             'department' => $department,

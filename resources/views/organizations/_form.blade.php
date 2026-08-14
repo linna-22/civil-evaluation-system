@@ -56,7 +56,7 @@
         :value="old('description', $organization->desc ?? '')" />
 
     {{-- Footer --}}
-    <div class="flex justify-end gap-3 pt-6 mt-6 border-t">
+    <div class="flex justify-end gap-3 pt-6 mt-6 border-t border-gray-300">
 
         <x-action-btn
             href="{{ route('organizations.index') }}"
