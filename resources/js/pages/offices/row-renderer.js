@@ -2,12 +2,12 @@ import {
     statusBadge,
     actionButtons
 } from "../../components/data-table/helpers";
-export function renderOfficeRow(office) {
+export function renderOfficeRow(office, no) {
 
     return `
         <tr class="border-b border-gray-100 hover:bg-gray-50 transition">
 
-            <td class="px-6 py-4">${office.office_id}</td>
+            <td class="px-6 py-4">${no}</td>
 
             <td class="px-6 py-4 font-medium">
                 ${office.office_code}

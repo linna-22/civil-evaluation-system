@@ -166,7 +166,8 @@ export default class DataTable {
 
 
             this.renderRows(
-                response.data.data
+                response.data.data,
+                response.data.from
             );
 
 
@@ -197,7 +198,7 @@ export default class DataTable {
     // Render Rows
     // ==========================================
 
-    renderRows(rows) {
+    renderRows(rows, from = 1) {
 
         if (!rows || rows.length === 0) {
 
@@ -216,7 +217,14 @@ export default class DataTable {
         }
 
         this.body.innerHTML = rows
-            .map(row => this.render(row))
+            .map((row, index) => {
+
+                return this.render(
+                    row,
+                    from + index
+                );
+
+            })
             .join("");
 
     }

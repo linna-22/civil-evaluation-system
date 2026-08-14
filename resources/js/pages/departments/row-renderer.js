@@ -2,12 +2,12 @@ import {
     statusBadge,
     actionButtons
 } from "../../components/data-table/helpers";
-export function renderDepartmentRow(department) {
+export function renderDepartmentRow(department, no) {
 
     return `
         <tr class="border-b border-gray-100 hover:bg-gray-50 transition">
 
-            <td class="px-6 py-4">${department.department_id}</td>
+            <td class="px-6 py-4">${no}</td>
 
             <td class="px-6 py-4 font-medium">
                 ${department.department_code}

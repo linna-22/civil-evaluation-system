@@ -4,12 +4,11 @@ import {
     EvaluationPeriodstatusBadge,
     evaluationPeriodActionButtons
 } from "../../components/data-table/helpers";
-export function renderEvaluationPeriodRow(evaluation_period) {
-
+export function renderEvaluationPeriodRow(evaluation_period, no) {
     return `
         <tr class="border-b border-gray-100 hover:bg-gray-50 transition">
 
-            <td class="px-6 py-4">${evaluation_period.evaluation_period_id}</td>
+            <td class="px-6 py-4">${no}</td>
 
             <td class="px-6 py-4">
                 ${evaluation_period.name_kh}
