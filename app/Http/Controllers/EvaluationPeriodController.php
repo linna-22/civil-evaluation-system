@@ -17,8 +17,6 @@ class EvaluationPeriodController extends Controller
     {
         return view('evaluation-periods.index');
     }
-
-
     /**
      * Get evaluation periods for DataTable.
      */

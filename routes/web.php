@@ -4,6 +4,7 @@ use Asorasoft\Chhankitek\Chhankitek;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\LogoutController;
+use App\Http\Controllers\BehaviorEvaluationController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\Employee\EmployeeDashboardController;
@@ -107,6 +108,17 @@ Route::middleware('auth')->group(function () {
             Route::get('/{evaluationPeriod}', [EvaluationPeriodController::class, 'show'])->name('show');
 
         });
+    // ==========================================
+    // Behavior Evaluation
+    // =========================================
+    Route::prefix('evaluations/behavior')->group(function(){
+
+        Route::get('/', [BehaviorEvaluationController::class, 'index'])->name('evaluations.behavior.index');
+        Route::get('/create', [BehaviorEvaluationController::class, 'create'])->name('evaluations.behavior.create');
+        Route::post('/', [BehaviorEvaluationController::class, 'store'])->name('evaluations.behavior.store');
+    });
+
+
 
     // Evaluation 
     Route::prefix('evaluations')

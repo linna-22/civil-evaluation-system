@@ -13,29 +13,32 @@ class Evaluation extends Model
 
     protected $fillable = [
 
-        'user_id',
-
-        'evaluation_month',
-
-        'evaluation_year',
-
+        'evaluation_period_id',
+        'evaluator_id',
+        'evaluatee_id',
         'evaluation_status',
-
         'submitted_at',
-
-        'work_performance_score',
-
-        'attendance_score',
-
-        'behavior_score',
-
-        'total_score'
+        'created_by',
+        'updated_by'
 
     ];
 
-    public function user()
+    public function evaluator()
     {
-        return $this->belongsTo(User::class, 'user_id', 'user_id');
+        return $this->belongsTo(
+            User::class,
+            'evaluator_id',
+            'user_id'
+        );
+    }
+
+    public function evaluatee()
+    {
+        return $this->belongsTo(
+            User::class,
+            'evaluatee_id',
+            'user_id'
+        );
     }
 
     public function workPerformance()
