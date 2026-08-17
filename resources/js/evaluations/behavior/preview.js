@@ -1,3 +1,4 @@
+import Swal from "sweetalert2";
 document.addEventListener('DOMContentLoaded', function () {
 
     const tableBody =
@@ -5,6 +6,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const overallSummary =
         document.getElementById('overallSummary');
+
+    const confirmButton =
+        document.getElementById('confirmButton');
 
 
     // Get saved evaluation data
@@ -156,5 +160,163 @@ document.addEventListener('DOMContentLoaded', function () {
 
         })
         .join('');
+    const evaluations =
+        peers.map(peer => {
+
+            const peerAnswers =
+                answers[peer.user_id] || {};
+
+            return {
+                evaluatee_id: peer.user_id,
+
+                discipline:
+                    Number(peerAnswers.discipline ?? 0),
+
+                responsibility:
+                    Number(peerAnswers.responsibility ?? 0),
+
+                professional_ethics:
+                    Number(peerAnswers.professional_ethics ?? 0),
+
+                work_performance:
+                    Number(peerAnswers.work_performance ?? 0),
+
+                self_development:
+                    Number(peerAnswers.self_development ?? 0),
+
+                initiative_creativity:
+                    Number(peerAnswers.initiative_creativity ?? 0),
+
+                teamwork:
+                    Number(peerAnswers.teamwork ?? 0),
+
+                interpersonal_skill:
+                    Number(peerAnswers.interpersonal_skill ?? 0),
+
+                work_under_pressure:
+                    Number(peerAnswers.work_under_pressure ?? 0),
+
+                leadership:
+                    Number(peerAnswers.leadership ?? 0),
+            };
+
+        });
+    console.log(
+        'Evaluations to submit:',
+        evaluations
+    );
+    confirmButton.addEventListener('click', async function () {
+
+        try {
+
+            // Prevent double submission
+            confirmButton.disabled = true;
+
+            const response = await fetch(
+                '/evaluations/behavior',
+                {
+                    method: 'POST',
+
+                    headers: {
+                        'Content-Type': 'application/json',
+
+                        'X-CSRF-TOKEN':
+                            document
+                                .querySelector(
+                                    'meta[name="csrf-token"]'
+                                )
+                                .getAttribute('content'),
+
+                        'Accept': 'application/json',
+                    },
+
+                    body: JSON.stringify({
+                        evaluations: evaluations
+                    }),
+                }
+            );
+
+
+            const result =
+                await response.json();
+
+
+            // ==========================================
+            // Success
+            // ==========================================
+
+            if (
+                response.ok &&
+                result.success
+            ) {
+
+                // Clear temporary evaluation data
+                sessionStorage.removeItem(
+                    'behaviorEvaluationData'
+                );
+
+
+                await Swal.fire({
+
+                    icon: 'success',
+
+                    title: 'រក្សាទុកដោយជោគជ័យ',
+
+                    text: result.message,
+
+                    confirmButtonText: 'យល់ព្រម',
+
+                    confirmButtonColor: '#2563eb',
+
+                });
+
+
+                // Redirect to behavior index
+                window.location.href =
+                    '/evaluations/behavior';
+
+                return;
+            }
+
+
+            // ==========================================
+            // Server error
+            // ==========================================
+
+            throw new Error(
+                result.message ||
+                'មានបញ្ហាក្នុងការរក្សាទុកការវាយតម្លៃ។'
+            );
+
+
+        } catch (error) {
+
+            console.error(
+                'Submit error:',
+                error
+            );
+
+
+            Swal.fire({
+
+                icon: 'error',
+
+                title: 'មានបញ្ហា',
+
+                text:
+                    error.message ||
+                    'មិនអាចបញ្ជូនការវាយតម្លៃបានទេ។',
+
+                confirmButtonText: 'យល់ព្រម',
+
+            });
+
+
+            // Enable button again
+            confirmButton.disabled = false;
+
+        }
+
+    });
 
 });

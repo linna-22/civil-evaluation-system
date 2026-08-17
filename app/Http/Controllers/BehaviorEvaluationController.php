@@ -10,12 +10,13 @@ class BehaviorEvaluationController extends Controller
     /**
      * Display the behavior evaluation page.
      */
-    public function index(
-        BehaviorEvaluationService $service
-    ) {
+    public function index(BehaviorEvaluationService $service) 
+    {
         $peers = $service->getEligiblePeers();
 
-        return view('evaluations.behavior.index', compact('peers')
+        return view(
+            'evaluations.behavior.index',
+            compact('peers')
         );
     }
 
@@ -23,7 +24,7 @@ class BehaviorEvaluationController extends Controller
     /**
      * Show behavior evaluation form.
      */
-    public function create(BehaviorEvaluationService $service) 
+    public function create(BehaviorEvaluationService $service)
     {
         $peers = $service->getEligiblePeers();
         return view('evaluations.behavior.create', compact('peers'));
@@ -31,18 +32,27 @@ class BehaviorEvaluationController extends Controller
     /**
      * Store a behavior evaluation.
      */
-    public function store(BehaviorEvaluationRequest $request, BehaviorEvaluationService $service) 
+    public function store(BehaviorEvaluationRequest $request, BehaviorEvaluationService $service)
     {
         $service->store($request->validated());
-        return redirect()
-            ->route('evaluations.behavior.index')
-            ->with(
-                'success',
-                'ការវាយតម្លៃឥរិយាបថត្រូវបានរក្សាទុកដោយជោគជ័យ។'
-            );
+
+        return response()->json([
+            'success' => true,
+            'message' =>
+                'ការវាយតម្លៃឥរិយាបថត្រូវបានរក្សាទុកដោយជោគជ័យ។',
+        ]);
     }
 
-    public function preview(){
+    public function preview()
+    {
         return view('evaluations.behavior.preview');
+    }
+    public function view(BehaviorEvaluationService $service) 
+    {
+        $evaluations = $service->getSubmittedEvaluations();
+        return view(
+            'evaluations.behavior.view',
+            compact('evaluations')
+        );
     }
 }

@@ -467,7 +467,7 @@ document.addEventListener('DOMContentLoaded', function () {
         ) {
 
             nextButton.innerHTML = `
-                ពិនិត្យលទ្ធផល
+                ពិនិត្យលទ្ធផលវាយតម្លៃ
 
                 <i
                     data-lucide="eye"

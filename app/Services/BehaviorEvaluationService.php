@@ -115,9 +115,35 @@ class BehaviorEvaluationService
         }
 
 
-        return $query
+        $peers = $query
             ->orderBy('name_kh')
             ->get();
+
+
+        foreach ($peers as $peer) {
+
+            $evaluation = Evaluation::query()
+                ->where(
+                    'evaluation_period_id',
+                    $evaluationPeriod->evaluation_period_id
+                )
+                ->where(
+                    'evaluator_id',
+                    $user->user_id
+                )
+                ->where(
+                    'evaluatee_id',
+                    $peer->user_id
+                )
+                ->first();
+
+            $peer->evaluation_status =
+                $evaluation?->evaluation_status;
+
+        }
+
+
+        return $peers;
     }
 
 
@@ -127,17 +153,12 @@ class BehaviorEvaluationService
     public function store(array $data): void
     {
         $evaluator = auth()->user();
-
         DB::transaction(function () use ($data, $evaluator) {
-
             // ==========================================
             // Get Current Open Evaluation Period
             // ==========================================
-
             $evaluationPeriod = $this->getOpenEvaluationPeriod();
-
             if (!$evaluationPeriod) {
-
                 throw ValidationException::withMessages([
                     'evaluations' =>
                         'មិនមានការវាយតម្លៃដែលកំពុងបើកទេ។',
@@ -178,10 +199,7 @@ class BehaviorEvaluationService
             // ==========================================
 
             foreach ($data['evaluations'] as $evaluationData) {
-
                 $evaluateeId = (int) $evaluationData['evaluatee_id'];
-
-
                 // ==========================================
                 // Verify Peer Eligibility
                 // ==========================================
@@ -192,13 +210,9 @@ class BehaviorEvaluationService
                         'evaluations' =>
                             'មន្ត្រីម្នាក់ក្នុងបញ្ជីមិនមែនជាមន្ត្រីដែលអ្នកអាចវាយតម្លៃបានទេ។',
                     ]);
-
                 }
 
-
                 $evaluatee = $eligiblePeers->get($evaluateeId);
-
-
                 // ==========================================
                 // Calculate Behavior Total
                 // ==========================================
@@ -221,20 +235,10 @@ class BehaviorEvaluationService
                 // ==========================================
 
                 $evaluation = Evaluation::query()
-                    ->where(
-                        'evaluation_period_id',
-                        $evaluationPeriod->evaluation_period_id
-                    )
-                    ->where(
-                        'evaluator_id',
-                        $evaluator->user_id
-                    )
-                    ->where(
-                        'evaluatee_id',
-                        $evaluatee->user_id
-                    )
+                    ->where('evaluation_period_id', $evaluationPeriod->evaluation_period_id)
+                    ->where('evaluator_id', $evaluator->user_id)
+                    ->where('evaluatee_id', $evaluatee->user_id)
                     ->first();
-
 
                 // ==========================================
                 // Create New Evaluation
@@ -300,42 +304,17 @@ class BehaviorEvaluationService
 
                     [
 
-                        'discipline' =>
-                            $evaluationData['discipline'],
-
-                        'responsibility' =>
-                            $evaluationData['responsibility'],
-
-                        'professional_ethics' =>
-                            $evaluationData['professional_ethics'],
-
-
-                        'work_performance' =>
-                            $evaluationData['work_performance'],
-
-                        'self_development' =>
-                            $evaluationData['self_development'],
-
-                        'initiative_creativity' =>
-                            $evaluationData['initiative_creativity'],
-
-
-                        'teamwork' =>
-                            $evaluationData['teamwork'],
-
-                        'interpersonal_skill' =>
-                            $evaluationData['interpersonal_skill'],
-
-                        'work_under_pressure' =>
-                            $evaluationData['work_under_pressure'],
-
-                        'leadership' =>
-                            $evaluationData['leadership'],
-
-
-                        'total_score' =>
-                            $totalScore,
-
+                        'discipline' =>$evaluationData['discipline'],
+                        'responsibility' =>$evaluationData['responsibility'],
+                        'professional_ethics' =>$evaluationData['professional_ethics'],
+                        'work_performance' =>$evaluationData['work_performance'],
+                        'self_development' =>$evaluationData['self_development'],
+                        'initiative_creativity' =>$evaluationData['initiative_creativity'],
+                        'teamwork' =>$evaluationData['teamwork'],
+                        'interpersonal_skill' =>$evaluationData['interpersonal_skill'],
+                        'work_under_pressure' =>$evaluationData['work_under_pressure'],
+                        'leadership' =>$evaluationData['leadership'],
+                        'total_score' =>$totalScore,
                     ]
                 );
 
@@ -361,27 +340,24 @@ class BehaviorEvaluationService
     /**
      * Check whether evaluatee is an eligible peer.
      */
-    private function isEligiblePeer(User $evaluator, User $evaluatee): bool 
+    private function isEligiblePeer(User $evaluator, User $evaluatee): bool
     {
         // ==========================================
         // Cannot evaluate yourself
         // ==========================================
-        if ($evaluator->user_id === $evaluatee->user_id) 
-        {
+        if ($evaluator->user_id === $evaluatee->user_id) {
             return false;
         }
         // ==========================================
         // Same Organization
         // ==========================================
-        if ($evaluator->organization_id !== $evaluatee->organization_id) 
-        {
+        if ($evaluator->organization_id !== $evaluatee->organization_id) {
             return false;
         }
         // ==========================================
         // Same Department
         // ==========================================
-        if ($evaluator->department_id !== $evaluatee->department_id) 
-        {
+        if ($evaluator->department_id !== $evaluatee->department_id) {
             return false;
         }
         // ==========================================
@@ -394,5 +370,35 @@ class BehaviorEvaluationService
         // If Evaluator Has No Office
         // ==========================================
         return true;
+    }
+    /**
+     * Get submitted behavior evaluations
+     * for the current evaluator.
+     */
+    public function getSubmittedEvaluations()
+    {
+        $user = auth()->user();
+
+        // ==========================================
+        // Get Open Evaluation Period
+        // ==========================================
+
+        $evaluationPeriod = $this->getOpenEvaluationPeriod();
+
+        if (!$evaluationPeriod) {
+            return collect();
+        }
+
+
+        // ==========================================
+        // Get Submitted Evaluations
+        // ==========================================
+
+        return Evaluation::query()
+            ->with(['evaluatee', 'behavior',])
+            ->where('evaluation_period_id', $evaluationPeriod->evaluation_period_id)
+            ->where('evaluator_id', $user->user_id)
+            ->where('evaluation_status', 'submitted')
+            ->get();
     }
 }

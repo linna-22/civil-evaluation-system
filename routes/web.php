@@ -117,6 +117,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/create', [BehaviorEvaluationController::class, 'create'])->name('evaluations.behavior.create');
         Route::post('/', [BehaviorEvaluationController::class, 'store'])->name('evaluations.behavior.store');
         Route::get('/preview', [BehaviorEvaluationController::class, 'preview'])->name('evaluations.behavior.preview');
+        Route::get('/view', [BehaviorEvaluationController::class, 'view'])->name('evaluations.behavior.view');
     });
 
 
