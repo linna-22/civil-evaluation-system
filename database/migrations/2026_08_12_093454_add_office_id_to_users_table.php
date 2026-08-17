@@ -15,6 +15,7 @@ return new class extends Migration
 
             $table->foreignId('office_id')
                 ->after('department_id')
+                ->nullable()
                 ->constrained(
                     table: 'offices',
                     column: 'office_id'

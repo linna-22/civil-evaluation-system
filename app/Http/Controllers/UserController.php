@@ -55,6 +55,7 @@ class UserController extends Controller
     }
     public function update(UpdateUserRequest $request, User $user, UserService $service)
     {
+        // dd($request->all());
         // Log::info('User update started.');
         $service->update(
             $user,

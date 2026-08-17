@@ -29,12 +29,12 @@
         {{-- Department --}}
         <x-forms.searchable-select label="នាយកដ្ឋាន" name="department_id" id="department" :selected="old('department_id', $user->department_id ?? '')"
             data-selected="{{ old('department_id', $user->department_id ?? '') }}" :options="[]"
-            placeholder="ជ្រើសរើសនាយកដ្ឋាន" disabled required />
+            placeholder="ជ្រើសរើសនាយកដ្ឋាន" disabled />
 
         {{-- Office --}}
         <x-forms.searchable-select label="ការិយាល័យ" name="office_id" id="office" :selected="old('office_id', $user->office_id ?? '')"
             data-selected="{{ old('office_id', $user->office_id ?? '') }}" :options="[]"
-            placeholder="ជ្រើសរើសការិយាល័យ" disabled required />
+            placeholder="ជ្រើសរើសការិយាល័យ" disabled />
     </div>
 
 
@@ -70,11 +70,21 @@
     <div class="grid grid-cols-3 gap-5">
 
         {{-- Role --}}
-        <x-forms.select label="Role" name="role" :selected="old('role', $user->role ?? 'user')" :options="[
+        
+        @if(auth()->user()->role === 'super_admin')
+            <x-forms.select label="Role" name="role" :selected="old('role', $user->role ?? 'user')" :options="[
+            'super_admin' => 'Super Admin',
             'organization_admin' => 'អ្នកគ្រប់គ្រងអង្គភាព',
             'department_admin' => 'អ្នកគ្រប់គ្រងនាយកដ្ឋាន',
             'user' => 'អ្នកប្រើប្រាស់',
         ]" />
+        @else 
+         <x-forms.select label="Role" name="role" :selected="old('role', $user->role ?? 'user')" :options="[
+            'organization_admin' => 'អ្នកគ្រប់គ្រងអង្គភាព',
+            'department_admin' => 'អ្នកគ្រប់គ្រងនាយកដ្ឋាន',
+            'user' => 'អ្នកប្រើប្រាស់',
+        ]" />
+        @endif
 
         {{-- Status --}}
         <x-forms.select label="ស្ថានភាព" name="status" :selected="old('status', $user->status ?? 'active')" :options="[
