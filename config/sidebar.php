@@ -16,8 +16,8 @@ return [
             [
                 'icon' => 'clipboard-check',
                 'title' => 'ការវាយតម្លៃ',
-                'route' => 'evaluations.index',
-                'url' => 'evaluations.index',
+                'route' => 'evaluations.behavior.index',
+                'url' => 'evaluations.behavior.index',
             ],
             [
                 'icon' => 'settings-2',

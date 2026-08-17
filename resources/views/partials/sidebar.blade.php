@@ -133,7 +133,7 @@
                 $allowedRoutes = [
                     'dashboard',
                     'users.profile',
-                    'evaluations.index',
+                    'evaluations.behavior.index',
                     // 'evaluations.history',
                     'evaluations.evaluations.create',
                     'logout',
@@ -142,7 +142,7 @@
             case 'organization_admin':
                 $allowedRoutes = [
                     'dashboard',
-                    'evaluations.index',
+                    'evaluations.behavior.index',
                     'evaluations.history',
                     'evaluations.list',
                     'users.profile',
