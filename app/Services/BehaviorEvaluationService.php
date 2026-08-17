@@ -29,7 +29,13 @@ class BehaviorEvaluationService
     public function getEligiblePeers()
     {
         $user = auth()->user();
+        // ==========================================
+        // Leaders do not participate in evaluation
+        // ==========================================
 
+        if ($user->is_leader) {
+            return collect();
+        }
         // ==========================================
         // Get Open Evaluation Period
         // ==========================================
@@ -67,7 +73,7 @@ class BehaviorEvaluationService
 
         $query = User::query()
             ->where('status', 'active')
-            ->where('is_leader', false)
+            ->where('is_leader', 0)
             // Never evaluate yourself
             ->where(
                 'user_id',
