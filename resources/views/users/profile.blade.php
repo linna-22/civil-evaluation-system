@@ -30,9 +30,9 @@
                 <div class="flex gap-3 mt-5">
 
                     {{-- Role --}}
-                    <span class="px-4 py-1 rounded-full bg-white text-blue-700 font-semibold text-sm">
+                    {{-- <span class="px-4 py-1 rounded-full bg-white text-blue-700 font-semibold text-sm">
                         {{ ucfirst($user->role) }}
-                    </span>
+                    </span> --}}
 
                     {{-- Status --}}
                     @if ($user->status == 'active')

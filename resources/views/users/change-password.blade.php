@@ -22,7 +22,12 @@
             href="{{ route('users.index') }}"
             class="inline-flex items-center px-4 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-100 transition"
         >
-            ត្រឡប់
+             <i
+                data-lucide="arrow-left"
+                class="w-4 h-4"
+            ></i>
+
+            ត្រឡប់ក្រោយ
         </a>
     </div>
 
@@ -87,13 +92,6 @@
 
             {{-- Buttons --}}
             <div class="flex justify-end gap-3 pt-6 border-t">
-
-                <a
-                    href="{{ route('users.index') }}"
-                    class="px-5 py-2 rounded-lg border border-gray-300 hover:bg-gray-100 cursor-pointer"
-                >
-                    ត្រឡប់
-                </a>
 
                 <button
                     type="submit"

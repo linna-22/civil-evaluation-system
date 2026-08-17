@@ -16,8 +16,8 @@
         {{-- Title --}}
         <div>
 
-            <h1 class="text-2xl font-semibold text-gray-800">
-                ពិនិត្យលទ្ធផលការវាយតម្លៃលក្ខណៈវិនិច្ឆ័យ
+            <h1 class="text-xl font-title text-gray-800">
+                មើលលទ្ធផលវាយតម្លៃ
             </h1>
         </div>
 
@@ -63,12 +63,8 @@
         <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
 
             <h2 class="text-lg font-semibold text-gray-800">
-                សង្ខេបលទ្ធផល
+                សង្ខេបលទ្ធផលវាយតម្លៃ
             </h2>
-
-            <p class="text-sm text-gray-500 mt-1">
-                ពិន្ទុត្រូវបានបង្ហាញតាមផ្នែកវាយតម្លៃនីមួយៗ
-            </p>
 
         </div>
 

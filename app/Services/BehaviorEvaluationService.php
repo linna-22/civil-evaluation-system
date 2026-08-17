@@ -67,7 +67,7 @@ class BehaviorEvaluationService
 
         $query = User::query()
             ->where('status', 'active')
-
+            ->where('is_leader', false)
             // Never evaluate yourself
             ->where(
                 'user_id',
@@ -103,8 +103,8 @@ class BehaviorEvaluationService
 
 
         // ==========================================
-// Same Office
-// ==========================================
+        // Same Office
+        // ==========================================
 
         if ($user->office_id) {
 
@@ -304,17 +304,17 @@ class BehaviorEvaluationService
 
                     [
 
-                        'discipline' =>$evaluationData['discipline'],
-                        'responsibility' =>$evaluationData['responsibility'],
-                        'professional_ethics' =>$evaluationData['professional_ethics'],
-                        'work_performance' =>$evaluationData['work_performance'],
-                        'self_development' =>$evaluationData['self_development'],
-                        'initiative_creativity' =>$evaluationData['initiative_creativity'],
-                        'teamwork' =>$evaluationData['teamwork'],
-                        'interpersonal_skill' =>$evaluationData['interpersonal_skill'],
-                        'work_under_pressure' =>$evaluationData['work_under_pressure'],
-                        'leadership' =>$evaluationData['leadership'],
-                        'total_score' =>$totalScore,
+                        'discipline' => $evaluationData['discipline'],
+                        'responsibility' => $evaluationData['responsibility'],
+                        'professional_ethics' => $evaluationData['professional_ethics'],
+                        'work_performance' => $evaluationData['work_performance'],
+                        'self_development' => $evaluationData['self_development'],
+                        'initiative_creativity' => $evaluationData['initiative_creativity'],
+                        'teamwork' => $evaluationData['teamwork'],
+                        'interpersonal_skill' => $evaluationData['interpersonal_skill'],
+                        'work_under_pressure' => $evaluationData['work_under_pressure'],
+                        'leadership' => $evaluationData['leadership'],
+                        'total_score' => $totalScore,
                     ]
                 );
 

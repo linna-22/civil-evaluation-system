@@ -14,7 +14,7 @@
 
                 <div>
 
-                    <h1 class="text-2xl font-semibold text-gray-800">
+                    <h1 class="text-xl font-title text-gray-800">
                         ការវាយតម្លៃឥរិយាបថ
                     </h1>
 
@@ -114,14 +114,6 @@
         shadow-sm
         overflow-hidden
     ">
-
-            <div class="px-6 py-4 border-b border-gray-200">
-
-                <h2 class="text-lg font-medium text-gray-800">
-                    មន្ត្រីដែលត្រូវវាយតម្លៃ
-                </h2>
-
-            </div>
 
 
             @if ($peers->isEmpty())
