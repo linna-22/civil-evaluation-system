@@ -134,7 +134,7 @@
                     'dashboard',
                     'users.profile',
                     'evaluations.index',
-                    'evaluations.history',
+                    // 'evaluations.history',
                     'evaluations.evaluations.create',
                     'logout',
                 ];

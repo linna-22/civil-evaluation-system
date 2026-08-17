@@ -21,6 +21,14 @@ class BehaviorEvaluationController extends Controller
 
 
     /**
+     * Show behavior evaluation form.
+     */
+    public function create(BehaviorEvaluationService $service) 
+    {
+        $peers = $service->getEligiblePeers();
+        return view('evaluations.behavior.create', compact('peers'));
+    }
+    /**
      * Store a behavior evaluation.
      */
     public function store(BehaviorEvaluationRequest $request, BehaviorEvaluationService $service) 
@@ -32,5 +40,9 @@ class BehaviorEvaluationController extends Controller
                 'success',
                 'ការវាយតម្លៃឥរិយាបថត្រូវបានរក្សាទុកដោយជោគជ័យ។'
             );
+    }
+
+    public function preview(){
+        return view('evaluations.behavior.preview');
     }
 }

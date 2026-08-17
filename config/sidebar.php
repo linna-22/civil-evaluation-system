@@ -25,12 +25,12 @@ return [
                 'route' => 'evaluation-periods.*',
                 'url' => 'evaluation-periods.index',
             ],
-            [
-                'icon' => 'history',
-                'title' => 'ប្រវត្តិការវាយតម្លៃ',
-                'route' => 'evaluations.history',
-                'url' => 'evaluations.history',
-            ],
+            // [
+            //     'icon' => 'history',
+            //     'title' => 'ប្រវត្តិការវាយតម្លៃ',
+            //     'route' => 'evaluations.history',
+            //     'url' => 'evaluations.history',
+            // ],
             [
                 'icon' => 'clipboard-list',
                 'title' => 'បញ្ជីការវាយតម្លៃ',
