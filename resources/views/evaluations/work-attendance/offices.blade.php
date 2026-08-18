@@ -1,5 +1,5 @@
 @extends('layouts.app')
-
+@section('title', 'វាយតម្លៃមន្ត្រី')
 @section('content')
 
     <div class="max-w-7xl mx-auto px-6 py-6">

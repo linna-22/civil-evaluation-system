@@ -1,5 +1,5 @@
 @extends('layouts.app')
-
+@section('title', 'វាយតម្លៃមន្ត្រី')
 @section('content')
 
 <div class="max-w-7xl mx-auto px-6 py-6">
@@ -64,7 +64,7 @@
             </div>
         </div>
     </div>
-{{-- Employee Table --}}
+{{-- user Table --}}
     <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
         {{-- Table Header --}}
         <div class="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
@@ -112,7 +112,7 @@
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-100">
-                        @foreach ($users as $index => $employee)
+                        @foreach ($users as $index => $user)
                             <tr class="hover:bg-gray-50 transition">
                                 {{-- Number --}}
                                 <td class="px-6 py-4 text-gray-500">
@@ -121,30 +121,30 @@
                                  {{-- ID Code --}}
 
                                 <td class="px-6 py-4 text-gray-600">
-                                    {{ $employee->id_code }}
+                                    {{ $user->id_code }}
                                 </td>
                                 {{-- Name --}}
                                 <td class="px-6 py-4">
                                     <p class="font-medium text-gray-800">
-                                        {{ $employee->name_kh }}
+                                        {{ $user->name_kh }}
                                     </p>
-                                    @if ($employee->name_en)
+                                    @if ($user->name_en)
                                         <p
                                             class="text-sm text-gray-500 mt-0.5">
-                                            {{ $employee->name_en }}
+                                            {{ $user->name_en }}
                                         </p>
                                     @endif
                                 </td>
                                 {{-- Gender --}}
                                 <td class="px-6 py-4 text-gray-600">
-                                    {{ $employee->gender === 'female'
+                                    {{ $user->gender === 'female'
                                         ? 'ស្រី'
                                         : 'ប្រុស'
                                     }}
                                 </td>
                                 {{-- Position --}}
                                 <td class="px-6 py-4 text-gray-600">
-                                    {{ $employee->position }}
+                                    {{ $user->position }}
                                 </td>
                             </tr>
                         @endforeach
@@ -154,7 +154,7 @@
             {{-- Start Evaluation --}}
             <div
                 class="px-6 py-5 border-t border-gray-200 flex justify-end">
-                <a href="#"
+                <a href="{{ route('evaluations.work-attendance.create', $user) }}"
                     class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-blue-600 text-white text-sm font-medium hover:bg-blue-700 transition">
                     <i data-lucide="clipboard-pen" class="w-4 h-4"></i>
                     ចាប់ផ្ដើមវាយតម្លៃ
