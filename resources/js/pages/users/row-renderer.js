@@ -19,12 +19,12 @@ export function renderUserRow(user, no) {
             <td class="px-6 py-4">
                 <span
                     class="inline-flex items-center px-2.5 py-1 rounded-full bg-blue-600 text-white text-xs font-medium"
-                    title="${user.organization?.org_name_kh ?? '-'}"
+                    title="${user.organization?.org_name_kh ?? 'មិនមាន'}"
                 >
                     ${
                         user.organization?.org_name_kh.length > 20
                             ? user.organization.org_name_kh.substring(0, 20) + "..."
-                            : user.organization?.org_name_kh ?? "-"
+                            : user.organization?.org_name_kh ?? "មិនមាន"
                     }
                 </span>
             </td>
