@@ -27,8 +27,8 @@ class UserService
             $user = User::create([
 
                 'organization_id' => $data['organization_id'],
-                'department_id' => $data['department_id'],
-                'office_id' => $data['office_id'],
+                'department_id' => $data['department_id'] ?? null,
+                'office_id' => $data['office_id'] ?? null,
                 'name_kh' => $data['name_kh'],
                 'name_en' => $data['name_en'],
                 'username' => $data['username'],
