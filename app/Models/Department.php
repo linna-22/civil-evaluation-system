@@ -37,4 +37,12 @@ class Department extends Model
     {
         return $this->hasMany(User::class, 'department_id', 'department_id');
     }
+     public function offices()
+    {
+        return $this->hasMany(
+            Office::class,
+            'department_id',
+            'department_id'
+        );
+    }
 }

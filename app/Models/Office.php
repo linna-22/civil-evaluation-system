@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Office extends Model
 {
-     use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes;
 
     protected $primaryKey = 'office_id';
 
@@ -23,4 +23,21 @@ class Office extends Model
         'updated_by',
         'deleted_by'
     ];
+
+    public function department()
+    {
+        return $this->belongsTo(
+            Department::class,
+            'department_id',
+            'department_id'
+        );
+    }
+    public function users()
+    {
+        return $this->hasMany(
+            User::class,
+            'office_id',
+            'office_id'
+        );
+    }
 }
