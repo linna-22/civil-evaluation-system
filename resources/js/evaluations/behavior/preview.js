@@ -209,8 +209,74 @@ document.addEventListener('DOMContentLoaded', function () {
 
         try {
 
-            // Prevent double submission
+            // ==========================================
+            // Confirm Submission
+            // ==========================================
+
+            const confirmation = await Swal.fire({
+
+                icon: 'question',
+
+                title: 'បញ្ជូនការវាយតម្លៃ?',
+
+                text: 'តើអ្នកពិតជាចង់ដាក់បញ្ជូនការវាយតម្លៃទាំងនេះមែនទេ?',
+
+                showCancelButton: true,
+
+                confirmButtonText: 'បញ្ជូន',
+
+                cancelButtonText: 'បោះបង់',
+
+                confirmButtonColor: '#2563eb',
+
+                cancelButtonColor: '#6b7280',
+
+            });
+
+
+            // User cancelled
+            if (!confirmation.isConfirmed) {
+
+                return;
+
+            }
+
+
+            // ==========================================
+            // Prevent Double Submission
+            // ==========================================
+
             confirmButton.disabled = true;
+
+
+            // ==========================================
+            // Loading
+            // ==========================================
+
+            Swal.fire({
+
+                title: 'កំពុងរក្សាទុក...',
+
+                text: 'សូមរង់ចាំបន្តិច',
+
+                allowOutsideClick: false,
+
+                allowEscapeKey: false,
+
+                showConfirmButton: false,
+
+                didOpen: () => {
+
+                    Swal.showLoading();
+
+                },
+
+            });
+
+
+            // ==========================================
+            // Submit
+            // ==========================================
 
             const response = await fetch(
                 '/evaluations/behavior',
@@ -242,51 +308,87 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
             // ==========================================
-            // Success
+            // Server Error
             // ==========================================
 
             if (
-                response.ok &&
-                result.success
+                !response.ok ||
+                !result.success
             ) {
 
-                // Clear temporary evaluation data
-                sessionStorage.removeItem(
-                    'behaviorEvaluationData'
+                throw new Error(
+                    result.message ||
+                    'មានបញ្ហាក្នុងការរក្សាទុកការវាយតម្លៃ។'
                 );
 
-
-                await Swal.fire({
-
-                    icon: 'success',
-
-                    title: 'រក្សាទុកដោយជោគជ័យ',
-
-                    text: result.message,
-
-                    confirmButtonText: 'យល់ព្រម',
-
-                    confirmButtonColor: '#2563eb',
-
-                });
-
-
-                // Redirect to behavior index
-                window.location.href =
-                    '/evaluations/behavior';
-
-                return;
             }
 
 
             // ==========================================
-            // Server error
+            // Clear Temporary Data
             // ==========================================
 
-            throw new Error(
-                result.message ||
-                'មានបញ្ហាក្នុងការរក្សាទុកការវាយតម្លៃ។'
+            sessionStorage.removeItem(
+                'behaviorEvaluationData'
             );
+
+
+            // ==========================================
+            // Success
+            // ==========================================
+
+            await Swal.fire({
+
+                icon: 'success',
+
+                title: 'រក្សាទុកដោយជោគជ័យ',
+
+                text: result.message,
+
+                confirmButtonText: 'យល់ព្រម',
+
+                confirmButtonColor: '#2563eb',
+
+            });
+
+
+            // ==========================================
+            // Redirect Loading
+            // ==========================================
+
+            Swal.fire({
+
+                title: 'កំពុងបន្តទៅទំព័រ...',
+
+                text: 'សូមរង់ចាំ',
+
+                allowOutsideClick: false,
+
+                allowEscapeKey: false,
+
+                showConfirmButton: false,
+
+                didOpen: () => {
+
+                    Swal.showLoading();
+
+                },
+
+            });
+
+
+            // Small delay so user can see loading
+            await new Promise(resolve =>
+                setTimeout(resolve, 700)
+            );
+
+
+            // ==========================================
+            // Redirect
+            // ==========================================
+
+            window.location.href =
+                '/evaluations/behavior';
 
 
         } catch (error) {
