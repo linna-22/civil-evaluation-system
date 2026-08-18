@@ -142,9 +142,9 @@
             case 'organization_admin':
                 $allowedRoutes = [
                     'dashboard',
-                    'evaluations.behavior.index',
                     'evaluations.history',
-                    'evaluations.list',
+                    'evaluations.work-attendance.*',
+                    'evaluations.work-attendance.offices',
                     'users.profile',
                 ];
                 break;

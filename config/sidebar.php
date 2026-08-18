@@ -20,6 +20,12 @@ return [
                 'url' => 'evaluations.behavior.index',
             ],
             [
+                'icon' => 'clipboard-check',
+                'title' => 'វាយតម្លៃមន្ត្រី',
+                'route' => 'evaluations.work-attendance.*',
+                'url' => 'evaluations.work-attendance.index',
+            ],
+            [
                 'icon' => 'settings-2',
                 'title' => 'កំណត់ការវាយតម្លៃ',
                 'route' => 'evaluation-periods.*',
