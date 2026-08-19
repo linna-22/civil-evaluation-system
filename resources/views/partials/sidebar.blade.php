@@ -148,6 +148,14 @@
                     'users.profile',
                 ];
                 break;
+            case 'department_admin':
+                $allowedRoutes = [
+                    'dashboard',
+                    'evaluations.work-performance.*',
+                    'evaluations.work-performance.offices',
+                    'users.profile',
+                ];
+                break;
             default:
 
                 // super_admin & department_admin

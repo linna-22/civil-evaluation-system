@@ -3,7 +3,7 @@
 return [
 
     [
-        'title' => 'មីនុយ',
+        'title' => 'ផ្ទាំងគ្រប់គ្រង',
 
         'items' => [
 
@@ -13,17 +13,24 @@ return [
                 'route' => 'dashboard',
                 'url' => 'dashboard',
             ],
+
+        ],
+    ],
+    [
+        'title' => 'ការវាយតម្លៃ',
+
+        'items' => [
             [
                 'icon' => 'clipboard-check',
-                'title' => 'ការវាយតម្លៃ',
+                'title' => 'ការវាយតម្លៃឥរិយាបថ',
                 'route' => 'evaluations.behavior.index',
                 'url' => 'evaluations.behavior.index',
             ],
             [
                 'icon' => 'clipboard-check',
-                'title' => 'វាយតម្លៃមន្ត្រី',
-                'route' => 'evaluations.work-attendance.*',
-                'url' => 'evaluations.work-attendance.index',
+                'title' => 'វាយតម្លៃសមិទ្ធកម្មការងារ',
+                'route' => 'evaluations.work-performance.*',
+                'url' => 'evaluations.work-performance.index',
             ],
             [
                 'icon' => 'settings-2',
@@ -37,12 +44,12 @@ return [
             //     'route' => 'evaluations.history',
             //     'url' => 'evaluations.history',
             // ],
-            [
-                'icon' => 'clipboard-list',
-                'title' => 'បញ្ជីការវាយតម្លៃ',
-                'route' => 'evaluations.list',
-                'url' => 'evaluations.list',
-            ],
+            // [
+            //     'icon' => 'clipboard-list',
+            //     'title' => 'បញ្ជីការវាយតម្លៃ',
+            //     'route' => 'evaluations.list',
+            //     'url' => 'evaluations.list',
+            // ],
 
         ],
     ],

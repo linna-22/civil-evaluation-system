@@ -54,7 +54,7 @@ class OrganizationTestSeeder extends Seeder
 
             /*
             |--------------------------------------------------------------------------
-            | Organization Leader
+            | Organization Admin
             |--------------------------------------------------------------------------
             */
 
@@ -62,15 +62,20 @@ class OrganizationTestSeeder extends Seeder
                 'organization_id' => $organization->organization_id,
                 'department_id' => null,
                 'office_id' => null,
-                'id_code' => $orgData['org_code'] . '-L01',
-                'name_kh' => 'ថ្នាក់ដឹកនាំ ' . $organization->org_code,
-                'name_en' => 'Leader ' . $organization->org_code,
-                'username' => strtolower($orgData['org_code']) . '_leader',
+
+                'id_code' => $orgData['org_code'] . '-ADMIN',
+                'name_kh' => 'អ្នកគ្រប់គ្រងអង្គភាព ' . $organization->org_code,
+                'name_en' => 'Organization Admin ' . $organization->org_code,
+
+                'username' => strtolower($orgData['org_code']) . '_admin',
                 'gender' => 'male',
                 'phone' => '012000001',
-                'email' => strtolower($orgData['org_code']) . '_leader@example.com',
-                'position' => 'ថ្នាក់ដឹកនាំ',
+                'email' => strtolower($orgData['org_code']) . '_admin@example.com',
+
+                'position' => 'អ្នកគ្រប់គ្រងអង្គភាព',
+
                 'is_leader' => true,
+
                 'password' => 'password',
                 'role' => 'organization_admin',
                 'status' => 'active',
@@ -86,12 +91,53 @@ class OrganizationTestSeeder extends Seeder
 
             $department1 = Department::create([
                 'organization_id' => $organization->organization_id,
+
                 'department_code' => $orgData['org_code'] . '-D01',
+
                 'department_name_kh' => 'នាយកដ្ឋានរដ្ឋបាល',
                 'department_name_en' => 'Administration Department',
+
                 'desc' => 'នាយកដ្ឋានសម្រាប់សាកល្បងដែលមានការិយាល័យ',
+
                 'status' => 'active',
             ]);
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | Department 1 Admin
+            |--------------------------------------------------------------------------
+            */
+
+            User::create([
+                'organization_id' => $organization->organization_id,
+                'department_id' => $department1->department_id,
+                'office_id' => null,
+
+                'id_code' => $orgData['org_code'] . '-D01-ADMIN',
+
+                'name_kh' => 'អ្នកគ្រប់គ្រងនាយកដ្ឋាន ១',
+                'name_en' => 'Department Admin 1',
+
+                'username' => strtolower($orgData['org_code']) . '_d01_admin',
+
+                'gender' => 'female',
+
+                'phone' => '012100001',
+
+                'email' => strtolower($orgData['org_code']) . '_d01_admin@example.com',
+
+                'position' => 'អ្នកគ្រប់គ្រងនាយកដ្ឋាន',
+
+                'is_leader' => false,
+
+                'password' => 'password',
+
+                'role' => 'department_admin',
+
+                'status' => 'active',
+            ]);
+
 
             /*
             |--------------------------------------------------------------------------
@@ -186,6 +232,42 @@ class OrganizationTestSeeder extends Seeder
 
             /*
             |--------------------------------------------------------------------------
+            | Department 2 Admin
+            |--------------------------------------------------------------------------
+            */
+
+            User::create([
+                'organization_id' => $organization->organization_id,
+                'department_id' => $department2->department_id,
+                'office_id' => null,
+
+                'id_code' => $orgData['org_code'] . '-D02-ADMIN',
+
+                'name_kh' => 'អ្នកគ្រប់គ្រងនាយកដ្ឋាន ២',
+                'name_en' => 'Department Admin 2',
+
+                'username' => strtolower($orgData['org_code']) . '_d02_admin',
+
+                'gender' => 'male',
+
+                'phone' => '012200001',
+
+                'email' => strtolower($orgData['org_code']) . '_d02_admin@example.com',
+
+                'position' => 'អ្នកគ្រប់គ្រងនាយកដ្ឋាន',
+
+                'is_leader' => true,
+
+                'password' => 'password',
+
+                'role' => 'department_admin',
+
+                'status' => 'active',
+            ]);
+
+
+            /*
+            |--------------------------------------------------------------------------
             | Users directly under Department 2
             |--------------------------------------------------------------------------
             */
@@ -218,22 +300,37 @@ class OrganizationTestSeeder extends Seeder
         for ($i = 1; $i <= $count; $i++) {
 
             User::create([
+
                 'organization_id' => $organization->organization_id,
+
                 'department_id' => $department->department_id,
+
                 'office_id' => $office?->office_id,
+
                 'id_code' => $prefix . '-U0' . $i,
+
                 'name_kh' => 'មន្ត្រីសាកល្បង ' . $i,
+
                 'name_en' => 'Test User ' . $i,
+
                 'username' => strtolower($prefix) . '_user' . $i,
+
                 'gender' => $i % 2 === 0
                     ? 'female'
                     : 'male',
+
                 'phone' => '012' . rand(100000, 999999),
+
                 'email' => strtolower($prefix) . '_user' . $i . '@example.com',
+
                 'position' => 'មន្ត្រី',
+
                 'is_leader' => false,
+
                 'password' => 'password',
+
                 'role' => 'user',
+
                 'status' => 'active',
             ]);
         }

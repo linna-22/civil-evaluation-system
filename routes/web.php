@@ -10,7 +10,7 @@ use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\EvaluationController;
 use App\Http\Controllers\EvaluationPeriodController;
 use App\Http\Controllers\EvaluationReportController;
-use App\Http\Controllers\Evaluations\WorkAttendanceEvaluationController;
+use App\Http\Controllers\Evaluations\WorkPerformanceEvaluationController;
 use App\Http\Controllers\OfficeController;
 use App\Http\Controllers\OrganizationController;
 use App\Http\Controllers\UserController;
@@ -119,19 +119,16 @@ Route::middleware('auth')->group(function () {
         Route::get('/view', [BehaviorEvaluationController::class, 'view'])->name('evaluations.behavior.view');
     });
 
-    // Work attendance evaluation
-    Route::prefix('evaluations/work-attendance')
-        ->name('evaluations.work-attendance.')
+    // Work Performance evaluation
+    Route::prefix('evaluations/work-performance')
+        ->name('evaluations.work-performance.')
         ->group(function () {
 
             // Department cards
-            Route::get('/', [WorkAttendanceEvaluationController::class, 'index'])->name('index');
-            // Office cards
-            Route::get('/department/{department}/offices', [WorkAttendanceEvaluationController::class, 'offices'])->name('offices');
-            // Users under an office
-            Route::get('/office/{office}/users', [WorkAttendanceEvaluationController::class, 'usersByOffice'])->name('office.users');
-            // Users under department with no office
-            Route::get('/department/{department}/users', [WorkAttendanceEvaluationController::class, 'usersByDepartment'])->name('department.users');
+            Route::get('/', [WorkPerformanceEvaluationController::class, 'index'])->name('index');
+            Route::get('/department/{department}/users', [WorkPerformanceEvaluationController::class, 'usersByDepartment'])->name('department.users');
+            Route::get('/office/{office}/users', [WorkPerformanceEvaluationController::class, 'usersByOffice'])->name('office.users');
+            Route::get('/evaluate/{user}', [WorkPerformanceEvaluationController::class, 'create'])->name('create');
 
         });
 
