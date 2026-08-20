@@ -1,0 +1,17 @@
+/* ==========================================
+   Khmer Fonts
+========================================== */
+
+@font-face {
+    font-family: "Moul";
+    src: url("../fonts/Moul.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Siemreap";
+    src: url("../fonts/Siemreap.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+}
