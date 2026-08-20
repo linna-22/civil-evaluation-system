@@ -128,7 +128,8 @@ Route::middleware('auth')->group(function () {
             Route::get('/', [WorkPerformanceEvaluationController::class, 'index'])->name('index');
             Route::get('/department/{department}/users', [WorkPerformanceEvaluationController::class, 'usersByDepartment'])->name('department.users');
             Route::get('/office/{office}/users', [WorkPerformanceEvaluationController::class, 'usersByOffice'])->name('office.users');
-            Route::get('/evaluate/{user}', [WorkPerformanceEvaluationController::class, 'create'])->name('create');
+            Route::get('/create',[WorkPerformanceEvaluationController::class, 'create'])->name('create');
+            Route::get('/preview', [WorkPerformanceEvaluationController::class, 'preview'])->name('preview');
 
         });
 

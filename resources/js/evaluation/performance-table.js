@@ -2,10 +2,11 @@ import Swal from "sweetalert2";
 import { refreshIcons } from "../utils/lucide";
 
 document.addEventListener("DOMContentLoaded", () => {
-   
+
     const addBtn = document.getElementById("addPerformanceBtn");
     const tbody = document.getElementById("performanceTableBody");
-     if (!addBtn || !tbody) {
+
+    if (!addBtn || !tbody) {
         return;
     }
 
@@ -27,20 +28,18 @@ document.addEventListener("DOMContentLoaded", () => {
             });
 
             return;
-
         }
 
-        const rowCount = currentRows + 1;
         const index = currentRows;
+        const rowNumber = currentRows + 1;
 
         const row = document.createElement("tr");
 
         row.innerHTML = `
             <td class="border text-center row-number font-medium">
-                ${rowCount}
+                ${rowNumber}
             </td>
 
-            <!-- Activity -->
             <td class="border p-2">
                 <textarea
                     name="performances[${index}][activity]"
@@ -49,7 +48,6 @@ document.addEventListener("DOMContentLoaded", () => {
                     placeholder="បញ្ចូលសកម្មភាព..."></textarea>
             </td>
 
-            <!-- Indicator -->
             <td class="border p-2">
                 <textarea
                     name="performances[${index}][indicator]"
@@ -58,29 +56,31 @@ document.addEventListener("DOMContentLoaded", () => {
                     placeholder="បញ្ចូលសូចនាករសមិទ្ធកម្ម..."></textarea>
             </td>
 
-            <!-- Achievement -->
             <td class="border p-2">
+
                 <input
                     type="number"
                     name="performances[${index}][achievement_percent]"
                     min="0"
                     max="100"
-                    class="w-full rounded-lg text-center outline-none focus:outline-none focus:ring-0"
+                    value="0"
+                    class="achievement-input w-full rounded-lg text-center outline-none focus:outline-none focus:ring-0"
                     placeholder="0">
+
             </td>
 
-            <!-- Score -->
             <td class="border p-2">
+
                 <input
                     type="text"
                     name="performances[${index}][score]"
                     value="0"
                     readonly
                     data-score
-                    class="w-full rounded-lg bg-gray-100 text-center border-0">
+                    class="score-input w-full rounded-lg bg-gray-100 text-center border-0">
+
             </td>
 
-            <!-- Action -->
             <td class="border text-center">
 
                 <button
@@ -98,7 +98,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
         refreshIcons();
 
+        updateScores();
+
     });
+
 
     // ========================================
     // Delete Row
@@ -108,47 +111,47 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const deleteBtn = e.target.closest(".delete-row");
 
-        if (!deleteBtn) return;
+        if (!deleteBtn) {
+            return;
+        }
 
         deleteBtn.closest("tr").remove();
 
         reIndexRows();
 
-        updateSummary();
+        updateScores();
 
     });
 
+
     // ========================================
-    // Auto Calculate Score
+    // Achievement Input
     // ========================================
 
     tbody.addEventListener("input", (e) => {
 
-        if (!e.target.name.includes("achievement_percent")) {
-
+        if (!e.target.name?.includes("achievement_percent")) {
             return;
-
         }
 
         let percent = Number(e.target.value);
 
-        if (percent < 0) percent = 0;
+        if (percent < 0) {
+            percent = 0;
+        }
 
-        if (percent > 100) percent = 100;
+        if (percent > 100) {
+            percent = 100;
+        }
 
         e.target.value = percent;
 
-        const row = e.target.closest("tr");
-
-        const score = calculateRowScore(percent);
-
-        row.querySelector("input[name*='score']").value = score;
-
-        updateSummary();
+        updateScores();
 
     });
 
 });
+
 
 // ========================================
 // Re-index Rows
@@ -156,120 +159,292 @@ document.addEventListener("DOMContentLoaded", () => {
 
 function reIndexRows() {
 
-    const rows = document.querySelectorAll("#performanceTableBody tr");
+    const rows = document.querySelectorAll(
+        "#performanceTableBody tr"
+    );
 
     rows.forEach((row, index) => {
 
-        row.querySelector(".row-number").textContent = index + 1;
+        const rowNumber = row.querySelector(".row-number");
 
-        row.querySelector("textarea[name*='activity']")
-            .name = `performances[${index}][activity]`;
+        const activity = row.querySelector(
+            "textarea[name*='activity']"
+        );
 
-        row.querySelector("textarea[name*='indicator']")
-            .name = `performances[${index}][indicator]`;
+        const indicator = row.querySelector(
+            "textarea[name*='indicator']"
+        );
 
-        row.querySelector("input[name*='achievement_percent']")
-            .name = `performances[${index}][achievement_percent]`;
+        const achievement = row.querySelector(
+            "input[name*='achievement_percent']"
+        );
 
-        row.querySelector("input[name*='score']")
-            .name = `performances[${index}][score]`;
+        const score = row.querySelector(
+            "input[name*='score']"
+        );
+
+
+        if (rowNumber) {
+            rowNumber.textContent = index + 1;
+        }
+
+        if (activity) {
+            activity.name =
+                `performances[${index}][activity]`;
+        }
+
+        if (indicator) {
+            indicator.name =
+                `performances[${index}][indicator]`;
+        }
+
+        if (achievement) {
+            achievement.name =
+                `performances[${index}][achievement_percent]`;
+        }
+
+        if (score) {
+            score.name =
+                `performances[${index}][score]`;
+        }
 
     });
 
 }
 
+
 // ========================================
-// Row Score
+// Calculate Activity Weight
 // ========================================
 
-function calculateRowScore(percent) {
+function calculateActivityWeight(totalRows) {
 
-    percent = Number(percent);
-
-    if (isNaN(percent)) {
-
+    if (totalRows === 0) {
         return 0;
-
     }
 
-    return Number((percent * 20 / 100).toFixed(2));
+    return 100 / totalRows;
 
 }
 
+
 // ========================================
-// Total Score
+// Calculate Row Contribution
+// ========================================
+
+function calculateRowScore(achievementPercent, activityWeight) {
+
+    const achievement = Number(achievementPercent) || 0;
+
+    const score =
+        activityWeight * (achievement / 100);
+
+    return Number(score.toFixed(2));
+
+}
+
+
+// ========================================
+// Calculate Total Achievement
 // ========================================
 
 function calculateTotalScore() {
 
+    const rows = document.querySelectorAll(
+        "#performanceTableBody tr"
+    );
+
+    const totalRows = rows.length;
+
+    if (totalRows === 0) {
+        return 0;
+    }
+
+    const activityWeight =
+        calculateActivityWeight(totalRows);
+
     let total = 0;
 
-    document
-        .querySelectorAll("input[name*='score']")
-        .forEach(input => {
+    rows.forEach(row => {
 
-            total += Number(input.value) || 0;
+        const achievementInput =
+            row.querySelector(
+                "input[name*='achievement_percent']"
+            );
 
-        });
+        const scoreInput =
+            row.querySelector(
+                "input[name*='score']"
+            );
+
+        const achievement =
+            Number(achievementInput?.value) || 0;
+
+        const rowScore =
+            calculateRowScore(
+                achievement,
+                activityWeight
+            );
+
+        if (scoreInput) {
+            scoreInput.value = rowScore.toFixed(2);
+        }
+
+        total += rowScore;
+
+    });
 
     return Number(total.toFixed(2));
 
 }
 
+
 // ========================================
-// Work Performance Score
+// Final Work Performance Score
 // ========================================
 
 function calculateWorkPerformanceScore(total) {
 
-    if (total > 0 && total <= 60) {
+    if (total < 60) {
 
         return 0;
 
     }
 
-    if (total > 60 && total <= 70) {
+    if (total < 70) {
 
         return 15;
 
     }
 
-    if (total > 70 && total <= 80) {
+    if (total < 80) {
 
         return 30;
 
     }
 
-    if (total > 80 && total <= 90) {
+    if (total < 90) {
 
         return 45;
 
     }
 
-    if (total > 90 && total <= 100) {
-
-        return 60;
-
-    }
-
-    return 0;
+    return 60;
 
 }
 
+
 // ========================================
-// Update Summary
+// Update Scores
 // ========================================
 
-function updateSummary() {
+function updateScores() {
 
-    const total = calculateTotalScore();
+    const totalAchievement =
+        calculateTotalScore();
 
-    const workScore = calculateWorkPerformanceScore(total);
+    const workPerformanceScore =
+        calculateWorkPerformanceScore(
+            totalAchievement
+        );
 
-    document.getElementById("totalActivityScore").textContent =
-        `${total.toFixed(2)} / 100`;
 
-    document.getElementById("workPerformanceScore").textContent =
-        `${workScore} / 60`;
+    // Total achievement
+    const totalScoreElement =
+        document.getElementById("totalScore");
+
+    if (totalScoreElement) {
+
+        totalScoreElement.textContent =
+            totalAchievement.toFixed(2);
+
+    }
+
+
+    // Optional final score element
+    const workPerformanceElement =
+        document.getElementById(
+            "workPerformanceScore"
+        );
+
+    if (workPerformanceElement) {
+
+        workPerformanceElement.textContent =
+            workPerformanceScore;
+
+    }
+
+}
+const performanceForm = document.getElementById("performanceForm");
+
+if (performanceForm) {
+
+    performanceForm.addEventListener("submit", async (e) => {
+
+        e.preventDefault();
+
+        const submitButton = document.getElementById("nextUserBtn");
+
+        if (submitButton) {
+            submitButton.disabled = true;
+            submitButton.classList.add("opacity-50", "cursor-not-allowed");
+        }
+
+        try {
+
+            const formData = new FormData(performanceForm);
+
+            const response = await fetch(
+                performanceForm.action,
+                {
+                    method: "POST",
+                    body: formData,
+                    headers: {
+                        "X-Requested-With": "XMLHttpRequest",
+                        "Accept": "application/json",
+                    }
+                }
+            );
+
+            const result = await response.json();
+
+            if (!response.ok) {
+                throw new Error(
+                    result.message || "មានបញ្ហាក្នុងការរក្សាទុកទិន្នន័យ។"
+                );
+            }
+
+            if (result.success && result.redirect) {
+
+                window.location.href = result.redirect;
+
+                return;
+            }
+
+            throw new Error(
+                result.message || "មិនអាចបន្តបានទេ។"
+            );
+
+        } catch (error) {
+
+            console.error(error);
+
+            Swal.fire({
+                icon: "error",
+                title: "មានបញ្ហា",
+                text: error.message,
+                confirmButtonColor: "#2563eb"
+            });
+
+            if (submitButton) {
+                submitButton.disabled = false;
+                submitButton.classList.remove(
+                    "opacity-50",
+                    "cursor-not-allowed"
+                );
+            }
+        }
+
+    });
 
 }

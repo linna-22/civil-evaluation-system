@@ -5,11 +5,13 @@ namespace App\Http\Controllers\Evaluations;
 use App\Http\Controllers\Controller;
 use App\Models\Department;
 use App\Models\Office;
-use App\Models\User;
-use Illuminate\Http\Request;
+use App\Services\WorkPerformanceEvaluationService;
 
 class WorkPerformanceEvaluationController extends Controller
 {
+    /**
+     * Display work performance evaluation page.
+     */
     public function index()
     {
         $user = auth()->user();
@@ -24,16 +26,23 @@ class WorkPerformanceEvaluationController extends Controller
             ->where('department_id', $user->department_id)
             ->withCount([
                 'users' => function ($query) {
-                    $query->where('status', 'active');
+                    $query->where('status', 'active')
+                        ->where('is_leader', false);
                 }
             ])
             ->orderBy('office_name_kh')
             ->get();
 
-        // If department has no offices,
-        // go directly to users under department
-        if ($offices->isEmpty()) {
+        /*
+        |--------------------------------------------------------------------------
+        | Department has no offices
+        |--------------------------------------------------------------------------
+        |
+        | If there are no offices, go directly to the department users.
+        |
+        */
 
+        if ($offices->isEmpty()) {
             return redirect()->route(
                 'evaluations.work-performance.department.users',
                 $user->department_id
@@ -46,16 +55,20 @@ class WorkPerformanceEvaluationController extends Controller
         );
     }
 
+
+    /**
+     * Display users under a department.
+     */
     public function usersByDepartment(Department $department)
     {
         $user = auth()->user();
 
-        // Security: only Department Admin
+        // Only Department Admin
         if ($user->role !== 'department_admin') {
             abort(403);
         }
 
-        // Security: department must belong to logged-in admin
+        // Department must belong to logged-in admin
         if ($department->department_id !== $user->department_id) {
             abort(403);
         }
@@ -67,7 +80,7 @@ class WorkPerformanceEvaluationController extends Controller
             ->orderBy('name_kh')
             ->get();
 
-        // This department has no office
+        // No office
         $office = null;
 
         return view(
@@ -79,35 +92,94 @@ class WorkPerformanceEvaluationController extends Controller
             )
         );
     }
+
+
+    /**
+     * Display users under an office.
+     */
     public function usersByOffice(Office $office)
     {
         $user = auth()->user();
+
+        // Only Department Admin
         if ($user->role !== 'department_admin') {
             abort(403);
         }
+
         // Office must belong to admin's department
         if ($office->department_id !== $user->department_id) {
             abort(403);
         }
-        // Get Department
+
         $department = $office->department;
-        // Get Users in Office
+
         $users = $office->users()
             ->where('status', 'active')
             ->where('is_leader', false)
             ->orderBy('name_kh')
             ->get();
+
         return view(
             'evaluations.work-performance.users',
             compact(
-                'office',
                 'department',
+                'office',
                 'users'
             )
         );
     }
-    public function create(User $user)
+
+
+    /**
+     * Show work performance evaluation form.
+     */
+    public function create(WorkPerformanceEvaluationService $service)
     {
-        return view('evaluations.work-performance.create', compact('user'));
+        $user = auth()->user();
+        $users = $service->getEligibleUsers();
+        if ($users->isEmpty()) {
+            abort(404, 'មិនមានមន្ត្រីសម្រាប់វាយតម្លៃទេ');
+        }
+        // Only Department Admin
+        if ($user->role !== 'department_admin') {
+            abort(403);
+        }
+
+        //  The Service handles the session and user list.
+
+        if (!session()->has('work_performance_user_ids')) {
+            $service->startEvaluation();
+        }
+
+        //  Get current evaluation data
+        $currentUser = $service->getCurrentUser();
+
+        if (!$currentUser) {
+            abort(404, 'មិនមានមន្ត្រីសម្រាប់វាយតម្លៃទេ');
+        }
+
+        $currentUserNumber = $service->getCurrentUserNumber();
+        $totalUsers = $service->getTotalUsers();
+
+        return view(
+            'evaluations.work-performance.create',
+            compact(
+                'currentUser',
+                'currentUserNumber',
+                'totalUsers',
+                'users'
+            )
+        );
+    }
+
+
+    /**
+     * Display evaluation preview.
+     */
+    public function preview()
+    {
+        return view(
+            'evaluations.work-performance.preview'
+        );
     }
 }

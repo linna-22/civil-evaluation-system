@@ -12,8 +12,9 @@ import "./pages/users/index";
 import "./pages/users/create";
 import "./session-flash";
 import "./plugins/tom-select";
-import "./evaluation/performance-table";
+// import "./evaluation/performance-table";
 // import "./evaluation/evaluation-list";
+
 
 import { refreshIcons } from "./utils/lucide";
 

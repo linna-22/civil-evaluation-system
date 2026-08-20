@@ -14,7 +14,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             // OrganizationSeeder::class,
             UserSeeder::class,
-            OrganizationTestSeeder::class,
+            GeneralDepartmentofAdministrationandFinanceSeeder::class,
         ]);
     }
 }
