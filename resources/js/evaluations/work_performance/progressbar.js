@@ -28,15 +28,9 @@ document.addEventListener("DOMContentLoaded", () => {
     function renderProgress(currentIndex = 0) {
 
         const currentUser = users[currentIndex];
-
-        currentUserName.textContent =
-            currentUser.name_kh || "-";
-
-        currentUserPosition.textContent =
-            currentUser.position || "-";
-
-        currentPosition.textContent =
-            `មន្ត្រីទី${currentIndex + 1} នៃមន្ត្រីសរុប ${users.length}នាក់`;
+        currentUserName.textContent = currentUser.name_kh || "-";
+        currentUserPosition.textContent = currentUser.position || "-";
+        currentPosition.textContent = `មន្ត្រីទី${currentIndex + 1} នៃមន្ត្រីសរុប ${users.length}នាក់`;
 
         // =================================================
         // Clear Progress

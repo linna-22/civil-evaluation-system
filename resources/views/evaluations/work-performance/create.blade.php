@@ -217,35 +217,6 @@
                         </table>
 
                     </div>
-
-
-
-
-
-                    {{-- Summary --}}
-
-                    <div class="mt-6 grid grid-cols-1 md:grid-cols-1 gap-4">
-
-                        <div class="rounded-lg border border-gray-200 bg-gray-50 px-5 py-4">
-
-                            <div class="flex items-center justify-between">
-
-                                <span class="text-sm text-gray-500">
-                                    ពិន្ទុសរុប
-                                </span>
-
-                                <span id="totalScore" class="text-lg font-semibold text-gray-800">
-
-                                    0 / 60
-
-                                </span>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
                 </div>
 
 

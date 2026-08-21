@@ -2,11 +2,41 @@
 
 namespace App\Services;
 
+use App\Models\EvaluationPeriod;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
 
 class WorkPerformanceEvaluationService
 {
+    /*
+    |--------------------------------------------------------------------------
+    | Get Open Evaluation Period
+    |--------------------------------------------------------------------------
+    |
+    | Get the evaluation period that is currently open and within
+    | its start and end dates.
+    |
+    */
+
+    public function getOpenEvaluationPeriod(): ?EvaluationPeriod
+    {
+        return EvaluationPeriod::query()
+            ->where('status', 'open')
+            ->whereDate(
+                'start_date',
+                '<=',
+                now()->toDateString()
+            )
+            ->whereDate(
+                'end_date',
+                '>=',
+                now()->toDateString()
+            )
+            ->latest('evaluation_period_id')
+            ->first();
+    }
+
+
     /*
     |--------------------------------------------------------------------------
     | Get Eligible Users
@@ -17,14 +47,39 @@ class WorkPerformanceEvaluationService
     |
     */
 
-    public function getEligibleUsers(): Collection
+    public function getEligibleUsers(?int $officeId = null): Collection
     {
         $admin = auth()->user();
 
-        return User::query()
+        $query = User::query()
             ->where('department_id', $admin->department_id)
             ->where('status', 'active')
-            ->where('is_leader', false)
+            ->where('is_leader', false);
+
+        /*
+        |--------------------------------------------------------------------------
+        | If an office is selected
+        |--------------------------------------------------------------------------
+        */
+
+        if ($officeId !== null) {
+
+            $query->where('office_id', $officeId);
+
+        } else {
+
+            /*
+            |--------------------------------------------------------------------------
+            | No office selected
+            | Only users directly under the department
+            |--------------------------------------------------------------------------
+            */
+
+            $query->whereNull('office_id');
+
+        }
+
+        return $query
             ->orderBy('name_kh')
             ->get();
     }
@@ -35,21 +90,93 @@ class WorkPerformanceEvaluationService
     | Start Evaluation
     |--------------------------------------------------------------------------
     |
-    | Start a new evaluation session by storing the IDs of all
-    | eligible users in the session.
+    | Start a new evaluation session.
     |
     */
 
-    public function startEvaluation(): void
+    public function startEvaluation(?int $officeId = null): void
     {
-        $users = $this->getEligibleUsers();
+        /*
+        |--------------------------------------------------------------------------
+        | Make sure an evaluation period is open
+        |--------------------------------------------------------------------------
+        */
+
+        $evaluationPeriod = $this->getOpenEvaluationPeriod();
+
+        if (!$evaluationPeriod) {
+
+            abort(
+                404,
+                'បច្ចុប្បន្នមិនមានវគ្គវាយតម្លៃដែលកំពុងបើកទេ។'
+            );
+
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Get eligible users
+        |--------------------------------------------------------------------------
+        */
+
+        $users = $this->getEligibleUsers($officeId);
+
+        if ($users->isEmpty()) {
+
+            abort(
+                404,
+                'មិនមានមន្ត្រីសម្រាប់វាយតម្លៃទេ'
+            );
+
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Store evaluation period
+        |--------------------------------------------------------------------------
+        */
+
+        session()->put(
+            'work_performance_evaluation_period_id',
+            $evaluationPeriod->evaluation_period_id
+        );
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Store selected office
+        |--------------------------------------------------------------------------
+        */
+
+        session()->put(
+            'work_performance_office_id',
+            $officeId
+        );
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Store selected users
+        |--------------------------------------------------------------------------
+        */
 
         session()->put(
             'work_performance_user_ids',
-            $users->pluck('user_id')->values()->toArray()
+            $users
+                ->pluck('user_id')
+                ->values()
+                ->toArray()
         );
 
-        // Start from the first user
+
+        /*
+        |--------------------------------------------------------------------------
+        | Start from first user
+        |--------------------------------------------------------------------------
+        */
+
         session()->put(
             'work_performance_current_index',
             0
@@ -65,17 +192,15 @@ class WorkPerformanceEvaluationService
 
     public function getCurrentUser(): ?User
     {
-        $userIds = session()->get(
-            'work_performance_user_ids',
-            []
-        );
-
+        $userIds =
+            session()->get(
+                'work_performance_user_ids',
+                []
+            );
         $currentIndex = $this->getCurrentIndex();
-
         if (!isset($userIds[$currentIndex])) {
             return null;
         }
-
         return User::find($userIds[$currentIndex]);
     }
 
@@ -134,6 +259,20 @@ class WorkPerformanceEvaluationService
                 'work_performance_user_ids',
                 []
             )
+        );
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Get Current Evaluation Period ID
+    |--------------------------------------------------------------------------
+    */
+
+    public function getCurrentEvaluationPeriodId(): ?int
+    {
+        return session()->get(
+            'work_performance_evaluation_period_id'
         );
     }
 }
