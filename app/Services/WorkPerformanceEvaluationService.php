@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Evaluation;
 use App\Models\EvaluationPeriod;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
@@ -274,5 +275,51 @@ class WorkPerformanceEvaluationService
         return session()->get(
             'work_performance_evaluation_period_id'
         );
+    }
+    /*
+|--------------------------------------------------------------------------
+| Get Submitted Evaluation For View
+|--------------------------------------------------------------------------
+|
+| Get one submitted work performance evaluation
+| with its employee, evaluation period and activities.
+|
+*/
+
+    public function getSubmittedUserIds(array $userIds): array
+    {
+        $evaluationPeriod = $this->getOpenEvaluationPeriod();
+
+        if (!$evaluationPeriod || empty($userIds)) {
+            return [];
+        }
+
+        return Evaluation::query()
+            ->where(
+                'evaluation_period_id',
+                $evaluationPeriod->evaluation_period_id
+            )
+            ->where('evaluation_status', 'submitted')
+            ->whereIn('evaluatee_id', $userIds)
+            ->pluck('evaluatee_id')
+            ->toArray();
+    }
+    /**
+     * Check whether all users have submitted
+     * their evaluation for the current period.
+     */
+    public function allUsersSubmitted(
+        array $userIds
+    ): bool {
+
+        if (empty($userIds)) {
+            return false;
+        }
+    
+        $submittedUserIds =
+            $this->getSubmittedUserIds($userIds);
+
+        return count($submittedUserIds)
+            === count($userIds);
     }
 }

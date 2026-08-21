@@ -131,6 +131,7 @@ Route::middleware('auth')->group(function () {
             Route::get('/create/{office?}', [WorkPerformanceEvaluationController::class, 'create'])->name('create');
             Route::get('/preview', [WorkPerformanceEvaluationController::class, 'preview'])->name('preview');
             Route::post('/submit', [WorkPerformanceEvaluationController::class, 'submit'])->name('submit');
+            Route::get('/view/{office?}', [WorkPerformanceEvaluationController::class, 'view'])->name('view');
 
         });
 
