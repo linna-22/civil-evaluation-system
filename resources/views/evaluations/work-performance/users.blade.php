@@ -61,12 +61,9 @@
 
                     {{-- Icon --}}
 
-                    <div
-                        class="w-11 h-11 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center">
+                    <div class="w-11 h-11 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center">
 
-                        <i
-                            data-lucide="{{ $office ? 'building' : 'building-2' }}"
-                            class="w-5 h-5">
+                        <i data-lucide="{{ $office ? 'building' : 'building-2' }}" class="w-5 h-5">
                         </i>
 
                     </div>
@@ -86,7 +83,6 @@
                         {{-- Office --}}
 
                         @if ($office)
-
                             <p class="mt-1 text-sm text-gray-500">
 
                                 <span class="font-medium text-gray-700">
@@ -96,15 +92,12 @@
                                 </span>
 
                             </p>
-
                         @else
-
                             <p class="mt-1 text-sm text-gray-500">
 
                                 មិនមានការិយាល័យ
 
                             </p>
-
                         @endif
 
                     </div>
@@ -160,8 +153,7 @@
 
                 <div class="px-6 py-12 text-center">
 
-                    <i data-lucide="users"
-                        class="w-10 h-10 mx-auto text-gray-300 mb-3">
+                    <i data-lucide="users" class="w-10 h-10 mx-auto text-gray-300 mb-3">
                     </i>
 
                     <p class="text-gray-500">
@@ -171,9 +163,7 @@
                     </p>
 
                 </div>
-
             @else
-
                 {{-- ==========================================
                     User Table
                 =========================================== --}}
@@ -214,7 +204,6 @@
                         <tbody class="divide-y divide-gray-100">
 
                             @foreach ($users as $index => $user)
-
                                 <tr class="hover:bg-gray-50 transition">
 
                                     {{-- Number --}}
@@ -246,13 +235,11 @@
                                         </p>
 
                                         @if ($user->name_en)
-
                                             <p class="text-sm text-gray-500 mt-0.5">
 
                                                 {{ $user->name_en }}
 
                                             </p>
-
                                         @endif
 
                                     </td>
@@ -262,10 +249,7 @@
 
                                     <td class="px-6 py-4 text-gray-600">
 
-                                        {{ $user->gender === 'female'
-                                            ? 'ស្រី'
-                                            : 'ប្រុស'
-                                        }}
+                                        {{ $user->gender === 'female' ? 'ស្រី' : 'ប្រុស' }}
 
                                     </td>
 
@@ -279,7 +263,6 @@
                                     </td>
 
                                 </tr>
-
                             @endforeach
 
                         </tbody>
@@ -295,21 +278,16 @@
 
                 <div class="px-6 py-5 border-t border-gray-200 flex justify-end">
 
-                    <a href="{{ route('evaluations.work-performance.create', $user) }}"
+                    <a href="{{ $office
+                        ? route('evaluations.work-performance.create', ['office' => $office->office_id])
+                        : route('evaluations.work-performance.create') }}"
                         class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-blue-600 text-white text-sm font-medium hover:bg-blue-700 transition">
-
                         <i data-lucide="clipboard-pen" class="w-4 h-4"></i>
-
                         ចាប់ផ្ដើមវាយតម្លៃ
-
                     </a>
-
                 </div>
-
             @endif
-
         </div>
-
     </div>
 
 @endsection

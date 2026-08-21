@@ -19,7 +19,6 @@ class EvaluationWorkPerformance extends Model
         'indicator',
         'achievement_percent',
         'score',
-        'rating',
     ];
 
     protected $casts = [

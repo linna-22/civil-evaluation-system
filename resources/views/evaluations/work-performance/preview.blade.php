@@ -1,304 +1,316 @@
 @extends('layouts.app')
 
-@section('title', 'ពិនិត្យការវាយតម្លៃសមិទ្ធកម្ម')
-
 @section('content')
 
-    <div class="max-w-7xl mx-auto px-6 py-6">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
 
-        {{-- ==========================================
-            Page Header
-        =========================================== --}}
+    {{-- =====================================================
+        Page Header
+    ====================================================== --}}
 
-        <div class="mb-6">
+    <div class="mb-6">
+
+        <div class="flex items-center gap-3">
+
+            <div
+                class="w-11 h-11 rounded-xl bg-blue-50 text-blue-600
+                       flex items-center justify-center"
+            >
+
+                <i
+                    data-lucide="clipboard-check"
+                    class="w-6 h-6"
+                ></i>
+
+            </div>
+
+            <div>
+
+                <h1 class="text-xl font-semibold text-gray-800">
+                    ពិនិត្យលទ្ធផលវាយតម្លៃ
+                </h1>
+
+                <p class="text-sm text-gray-500 mt-1">
+                    សូមពិនិត្យលទ្ធផលរបស់មន្ត្រី
+                    មុនពេលបញ្ជូន
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    {{-- =====================================================
+        Evaluation Summary
+    ====================================================== --}}
+
+    <div
+        class="bg-white rounded-xl border border-gray-200
+               shadow-sm mb-6"
+    >
+
+        <div class="px-6 py-5">
 
             <div class="flex items-center justify-between">
 
                 <div>
 
-                    <h1 class="text-xl font-title text-gray-800">
-                        ពិនិត្យការវាយតម្លៃសមិទ្ធកម្មការងារ
-                    </h1>
+                    <h2 class="text-base font-semibold text-gray-800">
+                        សង្ខេបលទ្ធផល
+                    </h2>
 
-                    <p class="mt-1 text-sm text-gray-500">
-                        សូមពិនិត្យព័ត៌មាន និងពិន្ទុ មុនពេលរក្សាទុក
+                    <p
+                        id="evaluationSummary"
+                        class="text-sm text-gray-500 mt-1"
+                    >
+                        កំពុងរៀបចំទិន្នន័យ...
                     </p>
 
                 </div>
 
-                <a href="{{ route('evaluations.work-performance.create') }}"
-                    class="inline-flex items-center gap-2 px-4 py-2 rounded-lg
-                           border border-gray-300 text-gray-600 text-sm font-medium
-                           hover:bg-gray-50 transition">
 
-                    <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                {{-- Total Users --}}
 
-                    ត្រឡប់ទៅវាយតម្លៃ
+                <div
+                    class="inline-flex items-center gap-2
+                           px-3 py-1.5
+                           rounded-full
+                           bg-blue-50
+                           text-blue-700
+                           text-sm
+                           font-medium"
+                >
 
-                </a>
+                    <i
+                        data-lucide="users"
+                        class="w-4 h-4"
+                    ></i>
 
-            </div>
+                    <span id="totalUsers">
+                        0
+                    </span>
 
-        </div>
-
-
-        {{-- ==========================================
-            Summary
-        =========================================== --}}
-
-        <div class="bg-white rounded-xl border border-gray-200 shadow-sm mb-6">
-
-            <div class="px-6 py-5 border-b border-gray-200">
-
-                <div class="flex items-center justify-between">
-
-                    <div>
-
-                        <h2 class="text-lg font-semibold text-gray-800">
-                            សេចក្តីសង្ខេប
-                        </h2>
-
-                        <p class="mt-1 text-sm text-gray-500">
-                            បញ្ជីមន្ត្រីដែលបានបញ្ចូលការវាយតម្លៃ
-                        </p>
-
-                    </div>
-
-
-                    <div
-                        class="inline-flex items-center gap-2 px-3 py-1.5
-                               rounded-full bg-blue-50 text-blue-700
-                               text-sm font-medium">
-
-                        <i data-lucide="users" class="w-4 h-4"></i>
-
-                        {{ count($evaluations ?? []) }} នាក់
-
-                    </div>
+                    មន្ត្រី
 
                 </div>
 
             </div>
 
+        </div>
 
-            {{-- ==========================================
-                Evaluation List
-            =========================================== --}}
+    </div>
 
-            <div class="divide-y divide-gray-100">
 
-                @forelse ($evaluations ?? [] as $evaluation)
+    {{-- =====================================================
+        Users Summary Table
+    ====================================================== --}}
 
-                    <div class="px-6 py-5">
+    <div
+        class="bg-white rounded-xl border border-gray-200
+               shadow-sm overflow-hidden"
+    >
 
-                        <div class="flex items-center justify-between">
+        <div class="px-6 py-5 border-b border-gray-200">
 
-                            {{-- User Information --}}
+            <h2 class="text-base font-semibold text-gray-800">
+                លទ្ធផលសមិទ្ធកម្មការងារ
+            </h2>
 
-                            <div class="flex items-center gap-4">
-
-                                <div
-                                    class="w-11 h-11 rounded-full bg-blue-50
-                                           text-blue-600 flex items-center
-                                           justify-center">
-
-                                    <i data-lucide="user" class="w-5 h-5"></i>
-
-                                </div>
-
-
-                                <div>
-
-                                    <h3 class="font-semibold text-gray-800">
-
-                                        {{ $evaluation['user_name'] ?? '-' }}
-
-                                    </h3>
-
-                                    @if (!empty($evaluation['position']))
-
-                                        <p class="text-sm text-gray-500">
-
-                                            {{ $evaluation['position'] }}
-
-                                        </p>
-
-                                    @endif
-
-                                </div>
-
-                            </div>
-
-
-                            {{-- Score --}}
-
-                            <div class="text-right">
-
-                                <p class="text-xs text-gray-500">
-                                    ពិន្ទុសមិទ្ធកម្ម
-                                </p>
-
-                                <p class="text-xl font-bold text-blue-600">
-
-                                    {{ number_format($evaluation['total_score'] ?? 0, 2) }}
-
-                                    <span class="text-sm text-gray-400">
-                                        / 100
-                                    </span>
-
-                                </p>
-
-                            </div>
-
-                        </div>
-
-
-                        {{-- ==========================================
-                            Performance Details
-                        =========================================== --}}
-
-                        @if (!empty($evaluation['performances']))
-
-                            <div class="mt-5 overflow-x-auto">
-
-                                <table class="min-w-full border border-gray-200 text-sm">
-
-                                    <thead class="bg-gray-50">
-
-                                        <tr>
-
-                                            <th class="border px-3 py-3 text-center">
-                                                ល.រ
-                                            </th>
-
-                                            <th class="border px-4 py-3 text-left">
-                                                សកម្មភាព
-                                            </th>
-
-                                            <th class="border px-4 py-3 text-left">
-                                                សូចនាករ
-                                            </th>
-
-                                            <th class="border px-3 py-3 text-center">
-                                                លទ្ធផល (%)
-                                            </th>
-
-                                            <th class="border px-3 py-3 text-center">
-                                                ពិន្ទុ
-                                            </th>
-
-                                        </tr>
-
-                                    </thead>
-
-
-                                    <tbody>
-
-                                        @foreach ($evaluation['performances'] as $index => $performance)
-
-                                            <tr>
-
-                                                <td class="border px-3 py-3 text-center">
-                                                    {{ $index + 1 }}
-                                                </td>
-
-                                                <td class="border px-4 py-3">
-                                                    {{ $performance['activity'] ?? '-' }}
-                                                </td>
-
-                                                <td class="border px-4 py-3">
-                                                    {{ $performance['indicator'] ?? '-' }}
-                                                </td>
-
-                                                <td class="border px-3 py-3 text-center">
-                                                    {{ $performance['achievement_percent'] ?? 0 }}%
-                                                </td>
-
-                                                <td class="border px-3 py-3 text-center font-medium">
-                                                    {{ number_format($performance['score'] ?? 0, 2) }}
-                                                </td>
-
-                                            </tr>
-
-                                        @endforeach
-
-                                    </tbody>
-
-                                </table>
-
-                            </div>
-
-                        @endif
-
-                    </div>
-
-                @empty
-
-                    {{-- No Data --}}
-
-                    <div class="px-6 py-12 text-center">
-
-                        <i data-lucide="clipboard-x"
-                            class="w-10 h-10 mx-auto text-gray-300 mb-3">
-                        </i>
-
-                        <p class="text-gray-500">
-                            មិនទាន់មានទិន្នន័យសម្រាប់ពិនិត្យទេ
-                        </p>
-
-                    </div>
-
-                @endforelse
-
-            </div>
+            <p class="text-sm text-gray-500 mt-1">
+                សូមពិនិត្យពិន្ទុសរុបរបស់មន្ត្រីម្នាក់ៗ
+            </p>
 
         </div>
 
 
-        {{-- ==========================================
-            Bottom Actions
-        =========================================== --}}
+        {{-- Table Wrapper --}}
 
-        <div class="flex items-center justify-end gap-3">
+        <div class="overflow-x-auto">
 
-            {{-- Back --}}
+            <table class="w-full text-sm">
 
-            <a href="{{ route('evaluations.work-performance.create') }}"
-                class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg
-                       border border-gray-300 text-gray-700 text-sm
-                       font-medium hover:bg-gray-50 transition">
+                {{-- =================================================
+                    Table Header
+                ================================================== --}}
 
-                <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                <thead class="bg-gray-50 border-b border-gray-200">
 
-                កែសម្រួល
+                    <tr>
 
-            </a>
+                        {{-- Number --}}
+
+                        <th
+                            class="px-5 py-4
+                                   text-center
+                                   font-semibold
+                                   text-gray-700
+                                   whitespace-nowrap"
+                        >
+                            ល.រ
+                        </th>
 
 
-            {{-- Final Save --}}
+                        {{-- User Name --}}
 
-            <form
-                method="POST"
-                action="#">
+                        <th
+                            class="px-5 py-4
+                                   text-left
+                                   font-semibold
+                                   text-gray-700
+                                   whitespace-nowrap"
+                        >
+                            ឈ្មោះមន្ត្រី
+                        </th>
 
-                @csrf
 
-                <button
-                    type="submit"
-                    class="inline-flex items-center gap-2 px-5 py-2.5
-                           rounded-lg bg-blue-600 text-white text-sm
-                           font-medium hover:bg-blue-700 transition">
+                        {{-- Position --}}
 
-                    <i data-lucide="save" class="w-4 h-4"></i>
+                        <th
+                            class="px-5 py-4
+                                   text-left
+                                   font-semibold
+                                   text-gray-700
+                                   whitespace-nowrap"
+                        >
+                            តួនាទី
+                        </th>
 
-                    រក្សាទុកការវាយតម្លៃ
 
-                </button>
+                        {{-- Activity Count --}}
 
-            </form>
+                        <th
+                            class="px-5 py-4
+                                   text-center
+                                   font-semibold
+                                   text-gray-700
+                                   whitespace-nowrap"
+                        >
+                            ចំនួនសកម្មភាព
+                        </th>
+
+
+                        {{-- Total Score --}}
+
+                        <th
+                            class="px-5 py-4
+                                   text-center
+                                   font-semibold
+                                   text-gray-700
+                                   whitespace-nowrap"
+                        >
+                            ពិន្ទុសរុប
+                        </th>
+
+
+                        {{-- Evaluation Score --}}
+
+                        <th
+                            class="px-5 py-4
+                                   text-center
+                                   font-semibold
+                                   text-gray-700
+                                   whitespace-nowrap"
+                        >
+                            ពិន្ទុវាយតម្លៃ
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                {{-- =================================================
+                    Table Body
+                ================================================== --}}
+
+                <tbody
+                    id="previewUsers"
+                    class="divide-y divide-gray-100"
+                >
+
+                    {{-- JavaScript will render users here --}}
+
+                </tbody>
+
+            </table>
 
         </div>
 
     </div>
+
+
+    {{-- =====================================================
+        Bottom Navigation
+    ====================================================== --}}
+
+    <div
+        class="flex items-center justify-between
+               bg-white rounded-xl border border-gray-200
+               shadow-sm p-4 mt-6"
+    >
+
+        {{-- Back --}}
+
+        <button
+            type="button"
+            id="backToEvaluationBtn"
+            class="inline-flex items-center gap-2
+                   px-5 py-2.5
+                   rounded-lg
+                   border border-gray-300
+                   text-gray-700
+                   hover:bg-gray-50
+                   transition"
+        >
+
+            <i
+                data-lucide="arrow-left"
+                class="w-4 h-4"
+            ></i>
+
+            ត្រឡប់ក្រោយ
+
+        </button>
+
+
+        {{-- Submit --}}
+
+        <button
+            type="button"
+            id="submitEvaluationBtn"
+            class="inline-flex items-center gap-2
+                   px-5 py-2.5
+                   rounded-lg
+                   bg-blue-600
+                   text-white
+                   hover:bg-blue-700
+                   transition"
+        >
+
+            បញ្ជូនការវាយតម្លៃ
+
+            <i
+                data-lucide="send"
+                class="w-4 h-4"
+            ></i>
+
+        </button>
+
+    </div>
+
+</div>
+
+
+{{-- =====================================================
+    Preview JavaScript
+====================================================== --}}
+<script>
+    window.workPerformanceOfficeId = @json(
+        session('work_performance_office_id')
+    );
+</script>
+@vite('resources/js/evaluations/work_performance/preview.js')
 
 @endsection

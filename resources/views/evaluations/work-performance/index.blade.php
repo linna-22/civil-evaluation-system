@@ -2,6 +2,7 @@
 @section('title', 'វាយតម្លៃសមិទ្ធកម្មការងារ')
 @section('content')
 
+
     <div class="max-w-7xl mx-auto px-6 py-6">
 
         {{-- Page Header --}}
@@ -13,15 +14,38 @@
                 សូមជ្រើសរើសការិយាល័យ ដើម្បីបន្តការវាយតម្លៃ
             </p>
         </div>
+        @if (!$evaluationPeriod)
+            <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-8 text-center">
+
+                <div
+                    class="w-14 h-14 mx-auto rounded-full
+                   bg-gray-100 text-gray-400
+                   flex items-center justify-center">
+                    <i data-lucide="calendar-x" class="w-7 h-7"></i>
+                </div>
+
+                <h2 class="mt-4 text-lg font-semibold text-gray-800">
+                    មិនមានការវាយតម្លៃ
+                </h2>
+
+                <p class="mt-2 text-sm text-gray-500">
+                    បច្ចុប្បន្នមិនមានការវាយតម្លៃដែលបើកដំណើរការទេ។
+                </p>
+
+            </div>
+        @else
+            {{-- Your existing office cards here --}}
+        @endif
         {{-- Department Cards --}}
-        @if ($offices->isEmpty())
+        {{-- @if ($offices->isEmpty())
             <div class="bg-white rounded-xl border border-gray-200 shadow-sm px-6 py-12 text-center">
                 <i data-lucide="building-2" class="w-10 h-10 mx-auto text-gray-300 mb-3"></i>
                 <p class="text-gray-500">
                     មិនមានការិយាល័យសម្រាប់វាយតម្លៃទេ
                 </p>
             </div>
-        @else
+        @else --}}
+        @if ($offices)
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
                 @foreach ($offices as $office)
                     <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6 hover:shadow-md transition">
