@@ -8,7 +8,7 @@
         {{-- Page Header --}}
         <div class="mb-6">
             <h1 class="text-xl font-title text-gray-800">
-                ការវាយតម្លៃសមិទ្ធកម្មការងារ និងវត្តមាន
+             {{ $evaluationPeriod->name_kh }} <span class="text-blue-500">(សមិទ្ធកម្មការងារ)</span>
             </h1>
             <p class="mt-1 text-sm text-gray-500">
                 សូមជ្រើសរើសការិយាល័យ ដើម្បីបន្តការវាយតម្លៃ
@@ -119,13 +119,9 @@
                         {{-- Action --}}
                         <a href="{{ route('evaluations.work-performance.office.users', $office) }}"
                             class="inline-flex items-center gap-2 mt-4 text-sm font-medium text-blue-600 hover:text-blue-700 transition">
-
-                            មើលមន្ត្រី
-
+                            លម្អិត
                             <i data-lucide="arrow-right" class="w-4 h-4"></i>
-
                         </a>
-
                     </div>
                 @endforeach
 
