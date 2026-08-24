@@ -131,7 +131,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (
             window.workPerformanceTable &&
             typeof window.workPerformanceTable.getData ===
-                "function"
+            "function"
         ) {
 
             answers[user.user_id] = {
@@ -189,7 +189,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (
             window.workPerformanceTable &&
             typeof window.workPerformanceTable.loadData ===
-                "function"
+            "function"
         ) {
 
             window.workPerformanceTable.loadData(
@@ -206,7 +206,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (
             window.workPerformanceProgress &&
             typeof window.workPerformanceProgress.render ===
-                "function"
+            "function"
         ) {
 
             window.workPerformanceProgress.render(
@@ -223,7 +223,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (
             window.workPerformanceNavigation &&
             typeof window.workPerformanceNavigation.update ===
-                "function"
+            "function"
         ) {
 
             window.workPerformanceNavigation.update(
@@ -273,9 +273,37 @@ document.addEventListener("DOMContentLoaded", () => {
 
     nextUserBtn.addEventListener(
         "click",
-        () => {
+        async () => {
 
-            // Save current user
+            // -------------------------------------------------
+            // Validate Performance Table
+            // -------------------------------------------------
+
+            if (
+                window.workPerformanceTable &&
+                typeof window.workPerformanceTable.validateData ===
+                "function"
+            ) {
+
+                const isValid =
+                    await window.workPerformanceTable.validateData();
+
+                if (!isValid) {
+                    return;
+                }
+            }
+
+
+            // -------------------------------------------------
+            // Save Current User
+            // -------------------------------------------------
+
+            saveCurrentUser();
+
+
+            // -------------------------------------------------
+            // Save Current User
+            // -------------------------------------------------
 
             saveCurrentUser();
 

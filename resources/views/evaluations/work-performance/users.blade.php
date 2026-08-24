@@ -165,8 +165,8 @@
                 </div>
             @else
                 {{-- ==========================================
-                    User Table
-                =========================================== --}}
+    User Table
+=========================================== --}}
 
                 <div class="overflow-x-auto">
 
@@ -196,6 +196,10 @@
                                     តួនាទី
                                 </th>
 
+                                {{-- Status --}}
+                                <th class="px-6 py-4 text-center font-medium text-gray-600">
+                                    ស្ថានភាព
+                                </th>
                             </tr>
 
                         </thead>
@@ -204,6 +208,10 @@
                         <tbody class="divide-y divide-gray-100">
 
                             @foreach ($users as $index => $user)
+                                @php
+                                    $isSubmitted = in_array($user->user_id, $submittedUserIds);
+                                @endphp
+
                                 <tr class="hover:bg-gray-50 transition">
 
                                     {{-- Number --}}
@@ -262,6 +270,42 @@
 
                                     </td>
 
+
+                                    {{-- ==========================================
+                                        Status
+                                    =========================================== --}}
+
+                                    <td class="px-6 py-4 text-center">
+
+                                        @if ($isSubmitted)
+                                            <span
+                                                class="inline-flex items-center gap-1.5
+                                                    px-3 py-1.5
+                                                    rounded-full
+                                                    bg-green-50
+                                                    text-green-700
+                                                    text-xs
+                                                    font-medium">
+
+                                                <i data-lucide="circle-check" class="w-3.5 h-3.5"></i>
+
+                                                បានវាយតម្លៃរួច
+
+                                            </span>
+                                        @else
+                                            <span
+                                                class="inline-flex items-center gap-1.5
+                                                        px-3 py-1.5
+                                                        rounded-full
+                                                        bg-yellow-200
+                                                        text-yellow-600
+                                                        text-xs
+                                                        font-medium">
+                                                <i data-lucide="clock-3" class="w-3.5 h-3.5"></i>
+                                                រងចាំការវាយតម្លៃ
+                                            </span>
+                                        @endif
+                                    </td>
                                 </tr>
                             @endforeach
 
@@ -278,13 +322,34 @@
 
                 <div class="px-6 py-5 border-t border-gray-200 flex justify-end">
 
-                    <a href="{{ $office
-                        ? route('evaluations.work-performance.create', ['office' => $office->office_id])
-                        : route('evaluations.work-performance.create') }}"
-                        class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-blue-600 text-white text-sm font-medium hover:bg-blue-700 transition">
-                        <i data-lucide="clipboard-pen" class="w-4 h-4"></i>
-                        ចាប់ផ្ដើមវាយតម្លៃ
-                    </a>
+                    @if (count($submittedUserIds) === $users->count())
+                        {{-- All users submitted --}}
+
+                        <a href="{{ $office
+                            ? route('evaluations.work-performance.view', ['office' => $office->office_id])
+                            : route('evaluations.work-performance.view') }}"
+                            class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-blue-600 text-white text-sm font-medium hover:bg-blue-700 transition">
+
+                            <i data-lucide="eye" class="w-4 h-4"></i>
+
+                            មើលការវាយតម្លៃ
+
+                        </a>
+                    @else
+                        {{-- Not all users submitted --}}
+
+                        <a href="{{ $office
+                            ? route('evaluations.work-performance.create', ['office' => $office->office_id])
+                            : route('evaluations.work-performance.create') }}"
+                            class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-blue-600 text-white text-sm font-medium hover:bg-blue-700 transition">
+
+                            <i data-lucide="clipboard-pen" class="w-4 h-4"></i>
+
+                            ចាប់ផ្ដើមវាយតម្លៃ
+
+                        </a>
+                    @endif
+
                 </div>
             @endif
         </div>

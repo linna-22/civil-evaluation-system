@@ -94,17 +94,20 @@ class WorkPerformanceEvaluationController extends Controller
     /**
      * Display users under a department.
      */
-    public function usersByDepartment(Department $department)
-    {
+    public function usersByDepartment(
+        Department $department,
+        WorkPerformanceEvaluationService $service
+    ) {
         $user = auth()->user();
 
-        // Only Department Admin
         if ($user->role !== 'department_admin') {
             abort(403);
         }
 
-        // Department must belong to logged-in admin
-        if ($department->department_id !== $user->department_id) {
+        if (
+            $department->department_id
+            !== $user->department_id
+        ) {
             abort(403);
         }
 
@@ -115,7 +118,16 @@ class WorkPerformanceEvaluationController extends Controller
             ->orderBy('name_kh')
             ->get();
 
-        // No office
+        $submittedUserIds =
+            $service->getSubmittedUserIds(
+                $users->pluck('user_id')->toArray()
+            );
+
+        $allUsersSubmitted =
+            $service->allUsersSubmitted(
+                $users->pluck('user_id')->toArray()
+            );
+
         $office = null;
 
         return view(
@@ -123,7 +135,9 @@ class WorkPerformanceEvaluationController extends Controller
             compact(
                 'department',
                 'office',
-                'users'
+                'users',
+                'submittedUserIds',
+                'allUsersSubmitted'
             )
         );
     }
@@ -132,17 +146,20 @@ class WorkPerformanceEvaluationController extends Controller
     /**
      * Display users under an office.
      */
-    public function usersByOffice(Office $office)
-    {
+    public function usersByOffice(
+        Office $office,
+        WorkPerformanceEvaluationService $service
+    ) {
         $user = auth()->user();
 
-        // Only Department Admin
         if ($user->role !== 'department_admin') {
             abort(403);
         }
 
-        // Office must belong to admin's department
-        if ($office->department_id !== $user->department_id) {
+        if (
+            $office->department_id
+            !== $user->department_id
+        ) {
             abort(403);
         }
 
@@ -154,12 +171,24 @@ class WorkPerformanceEvaluationController extends Controller
             ->orderBy('name_kh')
             ->get();
 
+        $submittedUserIds =
+            $service->getSubmittedUserIds(
+                $users->pluck('user_id')->toArray()
+            );
+
+        $allUsersSubmitted =
+            $service->allUsersSubmitted(
+                $users->pluck('user_id')->toArray()
+            );
+
         return view(
             'evaluations.work-performance.users',
             compact(
                 'department',
                 'office',
-                'users'
+                'users',
+                'submittedUserIds',
+                'allUsersSubmitted'
             )
         );
     }
@@ -422,88 +451,47 @@ class WorkPerformanceEvaluationController extends Controller
                 // Prevent Duplicate Evaluation
                 // -------------------------------------------------
 
-                $existingEvaluation =
-                    Evaluation::query()
-                        ->where(
-                            'evaluation_period_id',
-                            $evaluationPeriod->evaluation_period_id
-                        )
-                        ->where(
-                            'evaluatee_id',
-                            $evaluateeId
-                        )
-                        ->first();
-
+                $existingEvaluation = Evaluation::query()
+                    ->where('evaluation_period_id', $evaluationPeriod->evaluation_period_id)
+                    ->where('evaluatee_id', $evaluateeId)
+                    ->first();
 
                 if ($existingEvaluation) {
-
                     throw new \Exception(
                         "មន្ត្រី {$evaluatee->name_kh} បានវាយតម្លៃរួចហើយ។"
                     );
-
                 }
-
-
                 // -------------------------------------------------
                 // Create Evaluation
                 // -------------------------------------------------
-
-                $evaluation =
-                    Evaluation::create([
-
-                        'evaluation_period_id' =>
-                            $evaluationPeriod->evaluation_period_id,
-
-                        'evaluator_id' =>
-                            $user->user_id,
-
-                        'evaluatee_id' =>
-                            $evaluateeId,
-
-                        'evaluation_status' =>
-                            'submitted',
-
-                        'submitted_at' =>
-                            now(),
-
-                        'created_by' =>
-                            $user->user_id,
-
-                        'updated_by' =>
-                            $user->user_id,
-
-                    ]);
-
+                $evaluation = Evaluation::create([
+                    'evaluation_period_id' => $evaluationPeriod->evaluation_period_id,
+                    'evaluator_id' => $user->user_id,
+                    'evaluatee_id' => $evaluateeId,
+                    'evaluation_status' => 'submitted',
+                    'submitted_at' => now(),
+                    'created_by' => $user->user_id,
+                    'updated_by' => $user->user_id,
+                ]);
 
                 // -------------------------------------------------
                 // Get Activities
                 // -------------------------------------------------
-
-                $performances =
-                    $userData['answers']['performances'] ?? [];
-
-
+                $performances = $userData['answers']['performances'] ?? [];
                 // -------------------------------------------------
                 // Remove Completely Empty Rows
                 // -------------------------------------------------
-
                 $validPerformances = [];
-
                 foreach ($performances as $performance) {
-
                     $activity = trim(
                         $performance['activity'] ?? ''
                     );
-
                     $indicator = trim(
                         $performance['indicator'] ?? ''
                     );
-
                     $achievement = (float) (
                         $performance['achievement_percent'] ?? 0
                     );
-
-
                     // Ignore completely empty rows
                     if (
                         $activity === '' &&
@@ -584,5 +572,144 @@ class WorkPerformanceEvaluationController extends Controller
             ], 422);
 
         }
+    }
+    /**
+     * Display work performance evaluation results.
+     */
+    public function view(
+        WorkPerformanceEvaluationService $service,
+        ?int $office = null
+    ) {
+        $user = auth()->user();
+
+        // -------------------------------------------------
+        // Only Department Admin
+        // -------------------------------------------------
+
+        if ($user->role !== 'department_admin') {
+            abort(403);
+        }
+
+
+        // -------------------------------------------------
+        // Get Open Evaluation Period
+        // -------------------------------------------------
+
+        $evaluationPeriod =
+            $service->getOpenEvaluationPeriod();
+
+        if (!$evaluationPeriod) {
+
+            abort(
+                404,
+                'បច្ចុប្បន្នមិនមានវគ្គវាយតម្លៃដែលកំពុងបើកទេ។'
+            );
+
+        }
+
+
+        // -------------------------------------------------
+        // Initialize Office
+        // -------------------------------------------------
+
+        $officeModel = null;
+
+
+        // -------------------------------------------------
+        // Get Users
+        // -------------------------------------------------
+
+        if ($office) {
+
+            // ---------------------------------------------
+            // Office
+            // ---------------------------------------------
+
+            $officeModel = Office::query()
+                ->where('office_id', $office)
+                ->where(
+                    'department_id',
+                    $user->department_id
+                )
+                ->firstOrFail();
+
+
+            $department =
+                $officeModel->department;
+
+
+            $users =
+                $officeModel->users()
+                    ->where('status', 'active')
+                    ->where('is_leader', false)
+                    ->orderBy('name_kh')
+                    ->get();
+
+        } else {
+
+            // ---------------------------------------------
+            // Users without Office
+            // ---------------------------------------------
+
+            $department =
+                Department::query()
+                    ->where(
+                        'department_id',
+                        $user->department_id
+                    )
+                    ->firstOrFail();
+
+
+            $users =
+                $department->users()
+                    ->whereNull('office_id')
+                    ->where('status', 'active')
+                    ->where('is_leader', false)
+                    ->orderBy('name_kh')
+                    ->get();
+
+        }
+
+
+        // -------------------------------------------------
+        // Get Submitted Evaluations
+        // -------------------------------------------------
+
+        $evaluations =
+            Evaluation::query()
+                ->with([
+                    'evaluatee',
+                    'workPerformance'
+                ])
+                ->where(
+                    'evaluation_period_id',
+                    $evaluationPeriod->evaluation_period_id
+                )
+                ->where(
+                    'evaluation_status',
+                    'submitted'
+                )
+                ->whereIn(
+                    'evaluatee_id',
+                    $users->pluck('user_id')
+                )
+                ->get()
+                ->keyBy('evaluatee_id');
+
+
+        // -------------------------------------------------
+        // Return View
+        // -------------------------------------------------
+
+        return view(
+            'evaluations.work-performance.view',
+            compact(
+                'users',
+                'evaluations',
+                'department',
+                'officeModel',
+                'evaluationPeriod'
+            )
+        );
     }
 }

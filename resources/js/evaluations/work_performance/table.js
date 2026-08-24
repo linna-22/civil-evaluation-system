@@ -183,9 +183,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
             <td class="border text-center">
 
-                ${
-                    canDelete
-                        ? `
+                ${canDelete
+                ? `
                             <button
                                 type="button"
                                 class="delete-row text-red-600 hover:text-red-700 cursor-pointer">
@@ -197,12 +196,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
                             </button>
                         `
-                        : `
+                : `
                             <span class="text-gray-300">
                                 —
                             </span>
                         `
-                }
+            }
 
             </td>
 
@@ -448,7 +447,101 @@ document.addEventListener("DOMContentLoaded", () => {
 
     }
 
+    // =====================================================
+    // Validate Performance Table
+    // =====================================================
 
+    async function validateData() {
+
+        const data = getData();
+
+        // -------------------------------------------------
+        // No performance entered at all
+        // -------------------------------------------------
+
+        if (!data || data.length === 0) {
+
+            await Swal.fire({
+                icon: "warning",
+                title: "មិនអាចបន្តបានទេ",
+                text: "សូមបញ្ចូលសមិទ្ធកម្មការងារយ៉ាងហោចណាស់មួយជួរ។",
+                confirmButtonText: "យល់ព្រម",
+                confirmButtonColor: "#2563eb"
+            });
+
+            return false;
+        }
+
+
+        // -------------------------------------------------
+        // Validate every entered row
+        // -------------------------------------------------
+
+        for (const row of data) {
+
+            const activity =
+                (row.activity || "").trim();
+
+            const indicator =
+                (row.indicator || "").trim();
+
+            const achievement =
+                row.achievement_percent;
+
+
+            // Activity
+            if (activity === "") {
+
+                await Swal.fire({
+                    icon: "warning",
+                    title: "មិនអាចបន្តបានទេ",
+                    text: "សូមបញ្ចូលសកម្មភាពសមិទ្ធកម្មការងារ។",
+                    confirmButtonText: "យល់ព្រម",
+                    confirmButtonColor: "#2563eb"
+                });
+
+                return false;
+            }
+
+
+            // Indicator
+            if (indicator === "") {
+
+                await Swal.fire({
+                    icon: "warning",
+                    title: "មិនអាចបន្តបានទេ",
+                    text: "សូមបញ្ចូលសូចនាករសមិទ្ធកម្ម។",
+                    confirmButtonText: "យល់ព្រម",
+                    confirmButtonColor: "#2563eb"
+                });
+
+                return false;
+            }
+
+
+            // Achievement
+            if (
+                achievement === "" ||
+                achievement === null ||
+                achievement === undefined
+            ) {
+
+                await Swal.fire({
+                    icon: "warning",
+                    title: "មិនអាចបន្តបានទេ",
+                    text: "សូមបញ្ចូលលទ្ធផលសមិទ្ធកម្ម។",
+                    confirmButtonText: "យល់ព្រម",
+                    confirmButtonColor: "#2563eb"
+                });
+
+                return false;
+            }
+
+        }
+
+
+        return true;
+    }
     // =====================================================
     // Load Table Data
     // =====================================================
@@ -498,15 +591,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
     window.workPerformanceTable = {
 
-        addRow:
-            addPerformanceRow,
-
+        addRow: addPerformanceRow,
         getData,
-
+        validateData,
         loadData,
-
-        recalculateScores:
-            recalculateAllRowScores
+        recalculateScores: recalculateAllRowScores
 
     };
 
