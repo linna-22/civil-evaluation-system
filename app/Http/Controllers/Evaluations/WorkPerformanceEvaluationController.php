@@ -21,34 +21,22 @@ class WorkPerformanceEvaluationController extends Controller
     public function index(WorkPerformanceEvaluationService $service)
     {
         $user = auth()->user();
-
-        // -------------------------------------------------
         // Only Department Admin
-        // -------------------------------------------------
-
         if ($user->role !== 'department_admin') {
             abort(403);
         }
-        // -------------------------------------------------
         // Check Open Evaluation Period
-        // -------------------------------------------------
-        $evaluationPeriod =
-            $service->getOpenEvaluationPeriod();
-        // -------------------------------------------------
+        $evaluationPeriod = $service->getOpenEvaluationPeriod();
         // No Open Evaluation Period
-        // -------------------------------------------------
         if (!$evaluationPeriod) {
-            return view(
-                'evaluations.work-performance.index',
+            return view('evaluations.work-performance.index',
                 [
                     'offices' => collect(),
                     'evaluationPeriod' => null,
                 ]
             );
         }
-        // -------------------------------------------------
         // Get Offices
-        // -------------------------------------------------
         $offices = Office::query()
             ->where(
                 'department_id',
@@ -56,82 +44,72 @@ class WorkPerformanceEvaluationController extends Controller
             )
             ->withCount([
                 'users' => function ($query) {
-
                     $query
                         ->where('status', 'active')
                         ->where('is_leader', false);
-
                 }
             ])
             ->orderBy('office_name_kh')
             ->get();
 
-
-        // -------------------------------------------------
-        // Department Has No Offices
-        // -------------------------------------------------
-
-        if ($offices->isEmpty()) {
-
-            return redirect()->route(
-                'evaluations.work-performance.department.users',
-                $user->department_id
-            );
-
+        // Check Evaluation Status For Each Office
+        foreach ($offices as $office) {
+            // Get Eligible Users
+            $userIds = $office->users()
+                ->where('status', 'active')
+                ->where('is_leader', false)
+                ->pluck('user_id');
+            // Count Submitted Evaluations
+            $submittedCount = Evaluation::query()
+                ->where(
+                    'evaluation_period_id',
+                    $evaluationPeriod->evaluation_period_id
+                )
+                ->where(
+                    'evaluation_status',
+                    'submitted'
+                )
+                ->whereIn(
+                    'evaluatee_id',
+                    $userIds
+                )
+                ->count();
+            // Office Evaluation Status
+            // The office is considered completed only when
+            // every eligible user has been evaluated.
+            $office->is_evaluated = $userIds->isNotEmpty() && $submittedCount === $userIds->count();
         }
-
-
-        return view(
-            'evaluations.work-performance.index',
-            compact(
-                'offices',
-                'evaluationPeriod'
-            )
-        );
+        // Department Has No Offices
+        if ($offices->isEmpty()) {
+            return redirect()->route('evaluations.work-performance.department.users', $user->department_id);
+        }
+        // Return View
+        return view('evaluations.work-performance.index', compact('offices', 'evaluationPeriod'));
     }
-
 
     /**
      * Display users under a department.
      */
-    public function usersByDepartment(
-        Department $department,
-        WorkPerformanceEvaluationService $service
-    ) {
+    public function usersByDepartment(Department $department, WorkPerformanceEvaluationService $service) 
+    {
         $user = auth()->user();
-
         if ($user->role !== 'department_admin') {
             abort(403);
         }
-
-        if (
-            $department->department_id
-            !== $user->department_id
-        ) {
+        if ($department->department_id !== $user->department_id) 
+        {
             abort(403);
         }
-
         $users = $department->users()
             ->whereNull('office_id')
             ->where('status', 'active')
             ->where('is_leader', false)
             ->orderBy('name_kh')
             ->get();
-
-        $submittedUserIds =
-            $service->getSubmittedUserIds(
-                $users->pluck('user_id')->toArray()
-            );
-
-        $allUsersSubmitted =
-            $service->allUsersSubmitted(
-                $users->pluck('user_id')->toArray()
-            );
-
+        $submittedUserIds = $service->getSubmittedUserIds($users->pluck('user_id')->toArray());
+        $allUsersSubmitted = $service->allUsersSubmitted($users->pluck('user_id')->toArray());
         $office = null;
-
-        return view(
-            'evaluations.work-performance.users',
+        return view('evaluations.work-performance.users',
             compact(
                 'department',
                 'office',
@@ -146,43 +124,25 @@ class WorkPerformanceEvaluationController extends Controller
     /**
      * Display users under an office.
      */
-    public function usersByOffice(
-        Office $office,
-        WorkPerformanceEvaluationService $service
-    ) {
+    public function usersByOffice(Office $office, WorkPerformanceEvaluationService $service) 
+    {
         $user = auth()->user();
-
         if ($user->role !== 'department_admin') {
             abort(403);
         }
-
-        if (
-            $office->department_id
-            !== $user->department_id
-        ) {
+        if ($office->department_id !== $user->department_id) 
+        {
             abort(403);
         }
-
         $department = $office->department;
-
         $users = $office->users()
             ->where('status', 'active')
             ->where('is_leader', false)
             ->orderBy('name_kh')
             ->get();
-
-        $submittedUserIds =
-            $service->getSubmittedUserIds(
-                $users->pluck('user_id')->toArray()
-            );
-
-        $allUsersSubmitted =
-            $service->allUsersSubmitted(
-                $users->pluck('user_id')->toArray()
-            );
-
-        return view(
-            'evaluations.work-performance.users',
+        $submittedUserIds = $service->getSubmittedUserIds($users->pluck('user_id')->toArray());
+        $allUsersSubmitted = $service->allUsersSubmitted($users->pluck('user_id')->toArray());
+        return view('evaluations.work-performance.users',
             compact(
                 'department',
                 'office',
@@ -200,128 +160,61 @@ class WorkPerformanceEvaluationController extends Controller
     public function create(WorkPerformanceEvaluationService $service, ?int $office = null)
     {
         $user = auth()->user();
-
-        /*
-        |--------------------------------------------------------------------------
-        | Only Department Admin
-        |--------------------------------------------------------------------------
-        */
-
+        // Only Department Admin
         if ($user->role !== 'department_admin') {
             abort(403);
         }
-
-        /*
-        |--------------------------------------------------------------------------
-        | Check Open Evaluation Period
-        |--------------------------------------------------------------------------
-        */
-
+        // Check Open Evaluation Period
         $evaluationPeriod = $service->getOpenEvaluationPeriod();
-
         if (!$evaluationPeriod) {
-
             abort(
                 404,
                 'បច្ចុប្បន្នមិនមានការវាយតម្លៃដែលកំពុងដំណើរការទេ។'
             );
-
         }
 
-
-        /*
-        |--------------------------------------------------------------------------
-        | If an office was selected, verify it belongs
-        | to the logged-in admin's department
-        |--------------------------------------------------------------------------
-        */
-
+        // If an office was selected, verify it belongs to the logged-in admin's department
         if ($office !== null) {
-
             $officeModel = Office::query()
                 ->where('office_id', $office)
                 ->where('department_id', $user->department_id)
                 ->first();
-
             if (!$officeModel) {
                 abort(403);
             }
-
         }
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | Start evaluation for selected scope
-        |--------------------------------------------------------------------------
-        */
-
-        $sessionOfficeId = session(
-            'work_performance_office_id'
-        );
-
-
+       
+        // Start evaluation for selected scope
+        $sessionOfficeId = session('work_performance_office_id');
         /*
         | Start a new evaluation if:
         | - no users in session
         | - selected office changed
         | - evaluation period changed
         */
-
-        if (
-            !session()->has('work_performance_user_ids') ||
-            $sessionOfficeId != $office ||
-            session('work_performance_evaluation_period_id')
-            != $evaluationPeriod->evaluation_period_id
-        ) {
-
+        if (!session()->has('work_performance_user_ids') || $sessionOfficeId != $office || session('work_performance_evaluation_period_id') != $evaluationPeriod->evaluation_period_id) 
+        {
             $service->startEvaluation($office);
-
         }
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | Get current user
-        |--------------------------------------------------------------------------
-        */
-
+        // Get current user
         $currentUser = $service->getCurrentUser();
-
         if (!$currentUser) {
-
             abort(
                 404,
                 'មិនមានមន្ត្រីសម្រាប់វាយតម្លៃទេ'
             );
-
         }
-
-
         /*
         |--------------------------------------------------------------------------
         | Get evaluation information
         |--------------------------------------------------------------------------
         */
-
-        $currentUserNumber =
-            $service->getCurrentUserNumber();
-
-        $totalUsers =
-            $service->getTotalUsers();
-
-        $users =
-            $service->getEligibleUsers($office);
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | Return view
-        |--------------------------------------------------------------------------
-        */
-
-        return view(
-            'evaluations.work-performance.create',
+        $currentUserNumber = $service->getCurrentUserNumber();
+        $totalUsers = $service->getTotalUsers();
+        $users = $service->getEligibleUsers($office);
+        
+        // Return view
+        return view('evaluations.work-performance.create',
             compact(
                 'currentUser',
                 'currentUserNumber',
@@ -340,14 +233,10 @@ class WorkPerformanceEvaluationController extends Controller
     public function preview()
     {
         $user = auth()->user();
-
         if ($user->role !== 'department_admin') {
             abort(403);
         }
-
-        return view(
-            'evaluations.work-performance.preview'
-        );
+        return view('evaluations.work-performance.preview');
     }
 
     /**
@@ -378,39 +267,24 @@ class WorkPerformanceEvaluationController extends Controller
             'users.*.answers' => ['required', 'array'],
         ]);
 
-
         // -------------------------------------------------
         // Get Evaluation Period From Session
         // -------------------------------------------------
 
-        $evaluationPeriodId =
-            session()->get(
-                'work_performance_evaluation_period_id'
-            );
-
-
+        $evaluationPeriodId = session()->get('work_performance_evaluation_period_id');
         if (!$evaluationPeriodId) {
-
             return response()->json([
                 'success' => false,
                 'message' =>
                     'មិនមានវគ្គវាយតម្លៃសម្រាប់ការវាយតម្លៃនេះទេ។'
             ], 422);
-
         }
-
-
-        // -------------------------------------------------
         // Get Evaluation Period
-        // -------------------------------------------------
-
-        $evaluationPeriod =
-            EvaluationPeriod::query()->where('evaluation_period_id', $evaluationPeriodId)
-                ->where('status', 'open')
-                ->whereDate('start_date', '<=', now()->toDateString())
-                ->whereDate('end_date', '>=', now()->toDateString())
-                ->first();
-
+        $evaluationPeriod = EvaluationPeriod::query()->where('evaluation_period_id', $evaluationPeriodId)
+                            ->where('status', 'open')
+                            ->whereDate('start_date', '<=', now()->toDateString())
+                            ->whereDate('end_date', '>=', now()->toDateString())
+                            ->first();
         if (!$evaluationPeriod) {
             return response()->json([
                 'success' => false,
@@ -419,10 +293,7 @@ class WorkPerformanceEvaluationController extends Controller
             ], 422);
         }
 
-        // -------------------------------------------------
         // Save Everything Inside Transaction
-        // -------------------------------------------------
-
         DB::beginTransaction();
         try {
             foreach ($request->users as $userData) {
@@ -436,34 +307,22 @@ class WorkPerformanceEvaluationController extends Controller
                     ->where('status', 'active')
                     ->where('is_leader', false)
                     ->first();
-
-
                 if (!$evaluatee) {
-
                     throw new \Exception(
                         'មន្ត្រីមិនត្រឹមត្រូវ។'
                     );
-
                 }
-
-
-                // -------------------------------------------------
                 // Prevent Duplicate Evaluation
-                // -------------------------------------------------
-
                 $existingEvaluation = Evaluation::query()
                     ->where('evaluation_period_id', $evaluationPeriod->evaluation_period_id)
                     ->where('evaluatee_id', $evaluateeId)
                     ->first();
-
                 if ($existingEvaluation) {
                     throw new \Exception(
                         "មន្ត្រី {$evaluatee->name_kh} បានវាយតម្លៃរួចហើយ។"
                     );
                 }
-                // -------------------------------------------------
                 // Create Evaluation
-                // -------------------------------------------------
                 $evaluation = Evaluation::create([
                     'evaluation_period_id' => $evaluationPeriod->evaluation_period_id,
                     'evaluator_id' => $user->user_id,
@@ -474,13 +333,9 @@ class WorkPerformanceEvaluationController extends Controller
                     'updated_by' => $user->user_id,
                 ]);
 
-                // -------------------------------------------------
                 // Get Activities
-                // -------------------------------------------------
                 $performances = $userData['answers']['performances'] ?? [];
-                // -------------------------------------------------
                 // Remove Completely Empty Rows
-                // -------------------------------------------------
                 $validPerformances = [];
                 foreach ($performances as $performance) {
                     $activity = trim(
@@ -500,38 +355,23 @@ class WorkPerformanceEvaluationController extends Controller
                     ) {
                         continue;
                     }
-
-
                     // Keep achievement between 0 - 100
                     $achievement = max(
                         0,
                         min(100, $achievement)
                     );
-
-
                     $validPerformances[] = [
                         'activity' => $activity,
                         'indicator' => $indicator,
                         'achievement_percent' => $achievement,
                     ];
                 }
-
-
                 // -------------------------------------------------
                 // Calculate Equal Weight
                 // -------------------------------------------------
-
                 $numberOfPerformances = count($validPerformances);
-                $weight =
-                    $numberOfPerformances > 0
-                    ? 100 / $numberOfPerformances
-                    : 0;
-
-
-                // -------------------------------------------------
+                $weight = $numberOfPerformances > 0 ? 100 / $numberOfPerformances : 0;
                 // Save Activities
-                // -------------------------------------------------
-
                 foreach ($validPerformances as $performance) {
                     $achievement = $performance['achievement_percent'];
                     // Each activity gets equal weight
@@ -542,15 +382,11 @@ class WorkPerformanceEvaluationController extends Controller
                         'indicator' => $performance['indicator'],
                         'achievement_percent' => $achievement,
                         'score' => $score,
-
                     ]);
-
                 }
             }
             DB::commit();
-            // -------------------------------------------------
             // Clear Temporary Session
-            // -------------------------------------------------
             session()->forget([
                 'work_performance_user_ids',
                 'work_performance_current_index',
@@ -581,85 +417,36 @@ class WorkPerformanceEvaluationController extends Controller
         ?int $office = null
     ) {
         $user = auth()->user();
-
-        // -------------------------------------------------
         // Only Department Admin
-        // -------------------------------------------------
-
         if ($user->role !== 'department_admin') {
             abort(403);
         }
-
-
-        // -------------------------------------------------
         // Get Open Evaluation Period
-        // -------------------------------------------------
-
-        $evaluationPeriod =
-            $service->getOpenEvaluationPeriod();
-
+        $evaluationPeriod = $service->getOpenEvaluationPeriod();
         if (!$evaluationPeriod) {
-
-            abort(
-                404,
-                'បច្ចុប្បន្នមិនមានវគ្គវាយតម្លៃដែលកំពុងបើកទេ។'
-            );
-
+            abort(404, 'បច្ចុប្បន្នមិនមានវគ្គវាយតម្លៃដែលកំពុងបើកទេ។');
         }
 
-
-        // -------------------------------------------------
         // Initialize Office
-        // -------------------------------------------------
-
         $officeModel = null;
-
-
-        // -------------------------------------------------
         // Get Users
-        // -------------------------------------------------
-
         if ($office) {
-
-            // ---------------------------------------------
             // Office
-            // ---------------------------------------------
-
             $officeModel = Office::query()
                 ->where('office_id', $office)
-                ->where(
-                    'department_id',
-                    $user->department_id
-                )
-                ->firstOrFail();
-
-
-            $department =
-                $officeModel->department;
-
-
+                ->where('department_id', $user->department_id)->firstOrFail();
+            $department = $officeModel->department;
             $users =
                 $officeModel->users()
                     ->where('status', 'active')
                     ->where('is_leader', false)
                     ->orderBy('name_kh')
                     ->get();
-
         } else {
-
-            // ---------------------------------------------
             // Users without Office
-            // ---------------------------------------------
-
-            $department =
-                Department::query()
-                    ->where(
-                        'department_id',
-                        $user->department_id
-                    )
+            $department = Department::query()
+                    ->where('department_id', $user->department_id)
                     ->firstOrFail();
-
-
             $users =
                 $department->users()
                     ->whereNull('office_id')
@@ -667,16 +454,9 @@ class WorkPerformanceEvaluationController extends Controller
                     ->where('is_leader', false)
                     ->orderBy('name_kh')
                     ->get();
-
         }
-
-
-        // -------------------------------------------------
         // Get Submitted Evaluations
-        // -------------------------------------------------
-
-        $evaluations =
-            Evaluation::query()
+        $evaluations = Evaluation::query()
                 ->with([
                     'evaluatee',
                     'workPerformance'
@@ -695,14 +475,7 @@ class WorkPerformanceEvaluationController extends Controller
                 )
                 ->get()
                 ->keyBy('evaluatee_id');
-
-
-        // -------------------------------------------------
-        // Return View
-        // -------------------------------------------------
-
-        return view(
-            'evaluations.work-performance.view',
+        return view('evaluations.work-performance.view',
             compact(
                 'users',
                 'evaluations',

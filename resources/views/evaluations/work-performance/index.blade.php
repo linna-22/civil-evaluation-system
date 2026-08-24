@@ -46,26 +46,61 @@
             </div>
         @else --}}
         @if ($offices)
+
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+
                 @foreach ($offices as $office)
                     <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6 hover:shadow-md transition">
+
                         <div class="flex items-center justify-between mb-4">
+
                             {{-- Icon --}}
                             <div class="w-11 h-11 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center">
+
                                 <i data-lucide="building-2" class="w-5 h-5"></i>
+
                             </div>
-                            {{-- Department Code --}}
-                            @if (!empty($office->office_code))
-                                <p class="text-sm text-gray-500">
-                                    {{ $office->office_code }}
-                                </p>
-                            @endif
+
+
+                            {{-- Office Code + Evaluation Status --}}
+                            <div class="flex items-center gap-2">
+
+                                {{-- @if (!empty($office->office_code))
+                                    <p class="text-sm text-gray-500">
+                                        {{ $office->office_code }}
+                                    </p>
+                                @endif --}}
+
+
+                                {{-- Evaluation Completed --}}
+                                @if ($office->is_evaluated)
+                                    <span
+                                        class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-green-50 text-green-700 text-xs font-medium">
+                                        <i data-lucide="check-circle" class="w-3.5 h-3.5"></i>
+                                        វាយតម្លៃរួច
+                                    </span>
+                                @else
+                                     <span
+                                        class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-red-50 text-red-600 text-xs font-medium">
+                                        <i data-lucide="clock-3" class="w-3.5 h-3.5"></i>
+                                        រងចាំការវាយតម្លៃ
+                                    </span>
+                                @endif
+
+                            </div>
+
                         </div>
-                        {{-- Department Name --}}
+
+
+                        {{-- Office Name --}}
                         <h2 class="text-lg font-semibold text-gray-800">
+
                             {{ $office->office_name_kh }}
+
                         </h2>
-                        {{-- Total user in each office --}}
+
+
+                        {{-- Total Users --}}
                         <div class="mt-2 flex items-center gap-2 text-sm">
 
                             <i data-lucide="users" class="w-4 h-4 text-gray-400"></i>
@@ -79,18 +114,23 @@
                             </span>
 
                         </div>
+
+
                         {{-- Action --}}
                         <a href="{{ route('evaluations.work-performance.office.users', $office) }}"
                             class="inline-flex items-center gap-2 mt-4 text-sm font-medium text-blue-600 hover:text-blue-700 transition">
 
-                            មើលមន្ត្រីដែលត្រូវវាយតម្លៃ
+                            មើលមន្ត្រី
 
                             <i data-lucide="arrow-right" class="w-4 h-4"></i>
 
                         </a>
+
                     </div>
                 @endforeach
+
             </div>
+
         @endif
     </div>
 

@@ -297,8 +297,8 @@
                                                 class="inline-flex items-center gap-1.5
                                                         px-3 py-1.5
                                                         rounded-full
-                                                        bg-yellow-200
-                                                        text-yellow-600
+                                                        bg-red-50
+                                                        text-red-600
                                                         text-xs
                                                         font-medium">
                                                 <i data-lucide="clock-3" class="w-3.5 h-3.5"></i>
@@ -331,9 +331,7 @@
                             class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-blue-600 text-white text-sm font-medium hover:bg-blue-700 transition">
 
                             <i data-lucide="eye" class="w-4 h-4"></i>
-
                             មើលការវាយតម្លៃ
-
                         </a>
                     @else
                         {{-- Not all users submitted --}}
