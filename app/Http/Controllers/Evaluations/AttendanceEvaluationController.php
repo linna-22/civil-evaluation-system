@@ -89,15 +89,15 @@ class AttendanceEvaluationController extends Controller
 
 
     /**
-     * View submitted attendance evaluations.
+     * Display submitted attendance evaluations.
      */
     public function view(
-        AttendanceEvaluationService $service,
-        ?int $office = null
+        Request $request,
+        AttendanceEvaluationService $service
     ) {
         return $service->view(
             auth()->user(),
-            $office
+            $request
         );
     }
 }

@@ -74,11 +74,18 @@
                                 <div class="w-11 h-11 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center">
                                     <i data-lucide="building-2" class="w-5 h-5"></i>
                                 </div>
-                                {{-- Office Code --}}
-                                @if (!empty($office->office_code))
-                                    <p class="text-sm text-gray-500">
-                                        {{ $office->office_code }}
-                                    </p>
+                                 @if ($office->evaluation_completed)
+                                    <span
+                                        class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-green-50 text-green-700 text-xs font-medium">
+                                        <i data-lucide="check-circle" class="w-3.5 h-3.5"></i>
+                                        វាយតម្លៃរួច
+                                    </span>
+                                @else
+                                     <span
+                                        class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-red-50 text-red-600 text-xs font-medium">
+                                        <i data-lucide="hourglass" class="w-3.5 h-3.5"></i>
+                                        រងចាំការវាយតម្លៃ
+                                    </span>
                                 @endif
                             </div>
                                 {{-- Office Name --}}

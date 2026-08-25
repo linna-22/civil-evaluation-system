@@ -136,7 +136,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (isLastUser) {
 
             nextUserBtn.innerHTML = `
-                មើលជាមុន
+                ពិនិត្យឡើងវិញ
 
                 <i
                     data-lucide="eye"
