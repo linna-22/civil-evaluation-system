@@ -122,6 +122,7 @@ Route::middleware('auth')->group(function () {
 
     // Work Performance evaluation
     Route::prefix('evaluations/work-performance')
+        ->middleware('role:super_admin,organization_admin,department_admin')
         ->name('evaluations.work-performance.')
         ->group(function () {
 
@@ -137,6 +138,7 @@ Route::middleware('auth')->group(function () {
         });
     // Attendance evaluation
     Route::prefix('evaluations/attendance')
+        ->middleware('role:super_admin,organization_admin,department_admin')
         ->name('evaluations.attendance.')
         ->group(function () {
             // Department / Office
