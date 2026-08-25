@@ -14,8 +14,9 @@
         <p class="mt-1 text-sm text-gray-500">
             សូមជ្រើសរើសការិយាល័យ ដើម្បីបន្តការវាយតម្លៃ
         </p>
+        @else
+        <h1 class="text-xl font-title text-gray-800">ការវាយតម្លៃសមិទ្ធកម្មការងារ</h1>
         @endif
-        <span>ការវាយតម្លៃសមិទ្ធកម្មការងារ</span>
         </div>
         @if (!$evaluationPeriod)
             <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-8 text-center">
