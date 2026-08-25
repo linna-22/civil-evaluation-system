@@ -254,24 +254,13 @@ class BehaviorEvaluationService
 
                     $evaluation = Evaluation::create([
 
-                        'evaluation_period_id' =>
-                            $evaluationPeriod->evaluation_period_id,
-
-                        'evaluator_id' =>
-                            $evaluator->user_id,
-
-                        'evaluatee_id' =>
-                            $evaluatee->user_id,
-
-                        'evaluation_status' =>
-                            'submitted',
-
-                        'submitted_at' =>
-                            now(),
-
-                        'created_by' =>
-                            $evaluator->user_id,
-
+                        'evaluation_period_id' => $evaluationPeriod->evaluation_period_id,
+                        'evaluator_id' => $evaluator->user_id,
+                        'evaluatee_id' => $evaluatee->user_id,
+                        'evaluation_type' => 'behavior',
+                        'evaluation_status' => 'submitted',
+                        'submitted_at' => now(),
+                        'created_by' => $evaluator->user_id,
                     ]);
 
                 }
