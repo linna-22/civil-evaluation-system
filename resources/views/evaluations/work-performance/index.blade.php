@@ -8,28 +8,28 @@
         {{-- Page Header --}}
         <div class="mb-6">
             <h1 class="text-xl font-title text-gray-800">
-             {{ $evaluationPeriod->name_kh }} <span class="text-blue-500">(សមិទ្ធកម្មការងារ)</span>
-            </h1>
-            <p class="mt-1 text-sm text-gray-500">
-                សូមជ្រើសរើសការិយាល័យ ដើម្បីបន្តការវាយតម្លៃ
-            </p>
+            @if($evaluationPeriod)
+            {{ $evaluationPeriod->name_kh }} <span class="text-blue-500">(សមិទ្ធកម្មការងារ)</span>
+        </h1>
+        <p class="mt-1 text-sm text-gray-500">
+            សូមជ្រើសរើសការិយាល័យ ដើម្បីបន្តការវាយតម្លៃ
+        </p>
+        @endif
+        <span>ការវាយតម្លៃសមិទ្ធកម្មការងារ</span>
         </div>
         @if (!$evaluationPeriod)
             <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-8 text-center">
 
                 <div
-                    class="w-14 h-14 mx-auto rounded-full
-                   bg-gray-100 text-gray-400
-                   flex items-center justify-center">
-                    <i data-lucide="calendar-x" class="w-7 h-7"></i>
-                </div>
+                        class="w-12 h-12 mx-auto mb-4 rounded-full bg-amber-50 text-amber-600 flex items-center justify-center">
+                        <i data-lucide="calendar-x" class="w-6 h-6"></i>
+                    </div>
 
                 <h2 class="mt-4 text-lg font-semibold text-gray-800">
-                    មិនមានការវាយតម្លៃ
+                    មិនទាន់មានការវាយតម្លៃ
                 </h2>
-
                 <p class="mt-2 text-sm text-gray-500">
-                    បច្ចុប្បន្នមិនមានការវាយតម្លៃដែលបើកដំណើរការទេ។
+                    បច្ចុប្បន្នមិនមានការវាយតម្លៃដែលកំពុងបើកទេ។
                 </p>
 
             </div>
