@@ -1,41 +1,54 @@
 <aside
     id="sidebar"
-    class="sidebar
-           w-[290px]
-           bg-blue-500
-           text-white
-           flex
-           flex-col
-           transition-all
-           duration-300">
+    class="
+        sidebar
+        w-[290px]
+        lg:w-[290px]
+        bg-blue-500
+        text-white
+        flex
+        flex-col
+        transition-all
+        duration-300
+        fixed
+        lg:relative
+        inset-y-0
+        left-0
+        z-50
+        -translate-x-full
+        lg:translate-x-0
+    ">
+    
 
-    {{-- Toggle Button --}}
-    <div class="flex justify-end py-2">
+{{-- Toggle Button --}}
+<div class="flex justify-end py-2">
 
-        <button
-            id="sidebarToggle"
-            class="w-12
-                   h-12
-                   mx-6
-                   rounded-2xl
-                   flex
-                   hover:bg-white/30
-                   items-center
-                   justify-center
-                   transition
-                   cursor-pointer">
+    <button
+        id="sidebarToggle"
+        type="button"
+        class="
+            w-12
+            h-12
+            mx-4
+            lg:mx-6
+            rounded-2xl
+            flex
+            items-center
+            justify-center
+            hover:bg-white/30
+            transition
+            cursor-pointer
+        "
+    >
 
-            <i
-                data-lucide="panel-left-close"
-                class="w-6 h-6">
-            </i>
+        <i
+            data-lucide="panel-left-close"
+            class="w-6 h-6"
+        ></i>
 
-        </button>
-        <!-- class remove from button -->
-        <!-- bg-white/10
-        hover:bg-white/30 -->
+    </button>
 
-    </div>
+</div>
 
     {{-- Menu --}}
     <!-- <div class="flex-1 overflow-hidden">
