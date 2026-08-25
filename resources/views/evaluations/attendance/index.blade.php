@@ -113,7 +113,7 @@
                                         ['office' => $office->office_id]
                                     ) }}"
                                     class="inline-flex items-center gap-2 mt-4 text-sm font-medium text-blue-600 hover:text-blue-700 transition">
-                                    មើលមន្ត្រី
+                                    លម្អិត
                                     <i
                                         data-lucide="arrow-right"
                                         class="w-4 h-4">

@@ -104,7 +104,6 @@
                             <span class="font-semibold text-blue-700">
                                 {{ $office->users_count }}
                             </span>
-
                         </div>
 
 
