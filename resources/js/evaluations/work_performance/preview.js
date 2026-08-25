@@ -438,108 +438,114 @@ document.addEventListener("DOMContentLoaded", () => {
     // =====================================================
 
     if (submitButton) {
-
-        submitButton.addEventListener(
-            "click",
-            async () => {
-
-                // -------------------------------------------------
-                // Prepare data
-                // -------------------------------------------------
-
-                const submitData = {
-                    users: users.map(user => ({
-                        user_id: user.user_id,
-                        answers: answers[user.user_id] || {
+        submitButton.addEventListener("click", async () => {
+            // Confirmation Alert
+            const confirmation = await Swal.fire({
+                icon: "question",
+                title: "បញ្ជូនការវាយតម្លៃ",
+                text:
+                    "តើអ្នកប្រាកដទេថាចង់បញ្ជូនការវាយតម្លៃ?",
+                showCancelButton: true,
+                confirmButtonText: "បញ្ជូន",
+                cancelButtonText: "បោះបង់",
+                confirmButtonColor: "#2563eb",
+                cancelButtonColor: "#6b7280",
+                reverseButtons: true
+            });
+            // User Cancelled
+            if (!confirmation.isConfirmed) {
+                return;
+            }
+            // Prepare data
+            const submitData = {
+                users: users.map(user => ({
+                    user_id: user.user_id,
+                    answers:
+                        answers[user.user_id] || {
                             performances: []
                         }
-                    }))
-                };
+                }))
+            };
 
-                // Loading state
-                submitButton.disabled = true;
-                const originalText = submitButton.innerHTML;
-                submitButton.innerHTML = `កំពុងបញ្ជូន...`;
-
-
-                try {
-
-                    // -------------------------------------------------
-                    // Send to Laravel
-                    // -------------------------------------------------
-
-                    const response =
-                        await fetch(
-                            "/evaluations/work-performance/submit",
-                            {
-                                method: "POST",
-
-                                headers: {
-                                    "Content-Type":
-                                        "application/json",
-
-                                    "Accept":
-                                        "application/json",
-
-                                    "X-CSRF-TOKEN":
-                                        document
-                                            .querySelector(
-                                                'meta[name="csrf-token"]'
-                                            )
-                                            ?.getAttribute(
-                                                "content"
-                                            )
-                                },
-
-                                body:
-                                    JSON.stringify(
-                                        submitData
+            // Loading state
+            submitButton.disabled = true;
+            const originalText = submitButton.innerHTML;
+            submitButton.innerHTML = `កំពុងបញ្ជូន...`;
+            try {
+                // Send to Laravel
+                const response = await fetch("/evaluations/work-performance/submit",
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Accept": "application/json",
+                            "X-CSRF-TOKEN":
+                                document
+                                    .querySelector(
+                                        'meta[name="csrf-token"]'
                                     )
-                            }
-                        );
-                    const result = await response.json();
-                    // Error
-                    if (!response.ok || !result.success) {
-                        throw new Error(
-                            result.message || "មានបញ្ហាក្នុងការបញ្ជូនទិន្នន័យ។"
-                        );
+                                    ?.getAttribute(
+                                        "content"
+                                    )
+                        },
+                        body:
+                            JSON.stringify(
+                                submitData
+                            )
                     }
-                    // Success
-                    await Swal.fire({
-                        icon: "success",
-                        title: "បញ្ជូនជោគជ័យ",
-                        text: result.message || "ការវាយតម្លៃត្រូវបានរក្សាទុកដោយជោគជ័យ។",
-                        confirmButtonText: "យល់ព្រម",
-                        confirmButtonColor: "#2563eb"
-
-                    });
-                    // Clear temporary data
-                    sessionStorage.removeItem("workPerformanceEvaluationData");
-                    // Go back to Work Performance page
-                    window.location.href = "/evaluations/work-performance";
-                } catch (error) {
-                    console.error("Submit evaluation error:", error);
-                    await Swal.fire({
-                        icon: "error",
-                        title: "បញ្ជូនមិនបានជោគជ័យ",
-                        text: error.message || "មានបញ្ហាក្នុងការបញ្ជូនទិន្នន័យ។",
-                        confirmButtonText: "យល់ព្រម",
-                        confirmButtonColor: "#dc2626"
-
-                    });
-
-
-                } finally {
-
-                    // Restore button
-                    submitButton.disabled = false;
-                    submitButton.innerHTML = originalText;
-                    refreshIcons();
+                );
+                const result = await response.json();
+                // Error
+                if (!response.ok || !result.success) {
+                    throw new Error(
+                        result.message ||
+                        "មានបញ្ហាក្នុងការបញ្ជូនទិន្នន័យ។"
+                    );
                 }
+                // Success Alert
+                await Swal.fire({
+                    icon: "success",
+                    title: "បញ្ជូនជោគជ័យ",
+                    text: result.message || "ការវាយតម្លៃត្រូវបានរក្សាទុកដោយជោគជ័យ។",
+                    confirmButtonText: "យល់ព្រម",
+                    confirmButtonColor: "#2563eb"
+                });
+                // Clear temporary data
+                sessionStorage.removeItem("workPerformanceEvaluationData");
+                // Loading before redirect
+                Swal.fire({
+                    title: "កំពុងត្រឡប់...",
+                    text: "សូមមេត្តារង់ចាំ",
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                    showConfirmButton: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
 
+                // Redirect
+                window.location.href = "/evaluations/work-performance";
+            } catch (error) {
+                console.error(
+                    "Submit evaluation error:",
+                    error
+                );
+                // Error Alert
+                await Swal.fire({
+                    icon: "error",
+                    title: "បញ្ជូនមិនបានជោគជ័យ",
+                    text: error.message || "មានបញ្ហាក្នុងការបញ្ជូនទិន្នន័យ។",
+                    confirmButtonText: "យល់ព្រម",
+                    confirmButtonColor: "#dc2626"
+                });
+            } finally {
+                // Restore button
+                submitButton.disabled = false;
+                submitButton.innerHTML = originalText;
+                refreshIcons();
             }
+        }
         );
-
     }
-
 });

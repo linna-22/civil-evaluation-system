@@ -286,20 +286,12 @@
                    bg-blue-600
                    text-white
                    hover:bg-blue-700
-                   transition"
-        >
-
+                   transition
+                   cursor-pointer">
             បញ្ជូនការវាយតម្លៃ
-
-            <i
-                data-lucide="send"
-                class="w-4 h-4"
-            ></i>
-
+            <i data-lucide="send" class="w-4 h-4"></i>
         </button>
-
     </div>
-
 </div>
 
 

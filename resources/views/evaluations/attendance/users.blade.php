@@ -1,14 +1,14 @@
 @extends('layouts.app')
 
-@section('title', 'វាយតម្លៃមន្ត្រី')
+@section('title', 'មន្ត្រីដែលត្រូវវាយតម្លៃវត្តមាន')
 
 @section('content')
 
     <div class="max-w-7xl mx-auto px-6 py-6">
 
-        {{-- ==========================================
+        {{-- =====================================================
             Page Header
-        =========================================== --}}
+        ====================================================== --}}
 
         <div class="mb-6">
 
@@ -35,7 +35,7 @@
 
                 {{-- Back Button --}}
 
-                <a href="{{ route('evaluations.work-performance.index') }}"
+                <a href="{{ route('evaluations.attendance.index') }}"
                     class="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-300 text-gray-600 text-sm font-medium hover:bg-gray-50 transition">
 
                     <i data-lucide="arrow-left" class="w-4 h-4"></i>
@@ -49,9 +49,9 @@
         </div>
 
 
-        {{-- ==========================================
+        {{-- =====================================================
             Location Information
-        =========================================== --}}
+        ====================================================== --}}
 
         <div class="bg-white rounded-xl border border-gray-200 shadow-sm mb-6">
 
@@ -109,12 +109,11 @@
         </div>
 
 
-        {{-- ==========================================
+        {{-- =====================================================
             User Table
-        =========================================== --}}
+        ====================================================== --}}
 
         <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-
 
             {{-- Table Header --}}
 
@@ -124,7 +123,7 @@
 
                     <h2 class="text-lg font-medium text-gray-800">
 
-                        បញ្ជីមន្ត្រីដែលត្រូវវាយតម្លៃសមិទ្ធកម្មការងារ
+                        បញ្ជីមន្ត្រីដែលត្រូវវាយតម្លៃវត្តមាន
 
                     </h2>
 
@@ -147,9 +146,9 @@
 
             @if ($users->isEmpty())
 
-                {{-- ==========================================
+                {{-- =================================================
                     No Users
-                =========================================== --}}
+                ================================================== --}}
 
                 <div class="px-6 py-12 text-center">
 
@@ -164,9 +163,9 @@
 
                 </div>
             @else
-                {{-- ==========================================
-    User Table
-=========================================== --}}
+                {{-- =================================================
+                    User Table
+                ================================================== --}}
 
                 <div class="overflow-x-auto">
 
@@ -196,10 +195,6 @@
                                     តួនាទី
                                 </th>
 
-                                {{-- Status --}}
-                                <th class="px-6 py-4 text-center font-medium text-gray-600">
-                                    ស្ថានភាព
-                                </th>
                             </tr>
 
                         </thead>
@@ -208,10 +203,6 @@
                         <tbody class="divide-y divide-gray-100">
 
                             @foreach ($users as $index => $user)
-                                @php
-                                    $isSubmitted = in_array($user->user_id, $submittedUserIds);
-                                @endphp
-
                                 <tr class="hover:bg-gray-50 transition">
 
                                     {{-- Number --}}
@@ -270,42 +261,6 @@
 
                                     </td>
 
-
-                                    {{-- ==========================================
-                                        Status
-                                    =========================================== --}}
-
-                                    <td class="px-6 py-4 text-center">
-
-                                        @if ($isSubmitted)
-                                            <span
-                                                class="inline-flex items-center gap-1.5
-                                                    px-3 py-1.5
-                                                    rounded-full
-                                                    bg-green-50
-                                                    text-green-700
-                                                    text-xs
-                                                    font-medium">
-
-                                                <i data-lucide="circle-check" class="w-3.5 h-3.5"></i>
-
-                                                បានវាយតម្លៃរួច
-
-                                            </span>
-                                        @else
-                                            <span
-                                                class="inline-flex items-center gap-1.5
-                                                        px-3 py-1.5
-                                                        rounded-full
-                                                        bg-red-50
-                                                        text-red-600
-                                                        text-xs
-                                                        font-medium">
-                                                <i data-lucide="clock-3" class="w-3.5 h-3.5"></i>
-                                                រងចាំការវាយតម្លៃ
-                                            </span>
-                                        @endif
-                                    </td>
                                 </tr>
                             @endforeach
 
@@ -316,29 +271,23 @@
                 </div>
 
 
-                {{-- ==========================================
+                {{-- =================================================
                     Start Evaluation
-                =========================================== --}}
+                ================================================== --}}
 
                 <div class="px-6 py-5 border-t border-gray-200 flex justify-end">
 
-                    @if (count($submittedUserIds) === $users->count())
-                        {{-- All users submitted --}}
-
-                        <a href="{{ $office
-                            ? route('evaluations.work-performance.view', ['office' => $office->office_id])
-                            : route('evaluations.work-performance.view') }}"
+                    @if ($office)
+                        <a href="{{ route('evaluations.attendance.create', ['office' => $office->office_id]) }}"
                             class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-blue-600 text-white text-sm font-medium hover:bg-blue-700 transition">
 
-                            <i data-lucide="eye" class="w-4 h-4"></i>
-                            មើលការវាយតម្លៃ
+                            <i data-lucide="clipboard-pen" class="w-4 h-4"></i>
+
+                            ចាប់ផ្ដើមវាយតម្លៃ
+
                         </a>
                     @else
-                        {{-- Not all users submitted --}}
-
-                        <a href="{{ $office
-                            ? route('evaluations.work-performance.create', ['office' => $office->office_id])
-                            : route('evaluations.work-performance.create') }}"
+                        <a href="{{ route('evaluations.attendance.create') }}"
                             class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-blue-600 text-white text-sm font-medium hover:bg-blue-700 transition">
 
                             <i data-lucide="clipboard-pen" class="w-4 h-4"></i>
@@ -349,8 +298,11 @@
                     @endif
 
                 </div>
+
             @endif
+
         </div>
+
     </div>
 
 @endsection

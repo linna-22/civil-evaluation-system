@@ -10,6 +10,7 @@ use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\EvaluationController;
 use App\Http\Controllers\EvaluationPeriodController;
 use App\Http\Controllers\EvaluationReportController;
+use App\Http\Controllers\Evaluations\AttendanceEvaluationController;
 use App\Http\Controllers\Evaluations\WorkPerformanceEvaluationController;
 use App\Http\Controllers\OfficeController;
 use App\Http\Controllers\OrganizationController;
@@ -133,6 +134,20 @@ Route::middleware('auth')->group(function () {
             Route::post('/submit', [WorkPerformanceEvaluationController::class, 'submit'])->name('submit');
             Route::get('/view/{office?}', [WorkPerformanceEvaluationController::class, 'view'])->name('view');
 
+        });
+    // Attendance evaluation
+    Route::prefix('evaluations/attendance')
+        ->name('evaluations.attendance.')
+        ->group(function () {
+            // Department / Office
+            Route::get('/', [AttendanceEvaluationController::class, 'index'])->name('index');
+            Route::get('/department/{department}/users', [AttendanceEvaluationController::class, 'usersByDepartment'])->name('department.users');
+            Route::get('/office/{office}/users', [AttendanceEvaluationController::class, 'usersByOffice'])->name('office.users');
+            // Evaluation
+            Route::get('/create/{office?}', [AttendanceEvaluationController::class, 'create'])->name('create');
+            Route::get('/preview', [AttendanceEvaluationController::class, 'preview'])->name('preview');
+            Route::post('/submit', [AttendanceEvaluationController::class, 'submit'])->name('submit');
+            Route::get('/view/{office?}', [AttendanceEvaluationController::class, 'view'])->name('view');
         });
 
 
