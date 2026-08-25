@@ -33,6 +33,12 @@ return [
                 'url' => 'evaluations.work-performance.index',
             ],
             [
+                'icon' => 'calendar-check',
+                'title' => 'វាយតម្លៃវត្តមាន',
+                'route' => 'evaluations.attendance.*',
+                'url' => 'evaluations.attendance.index',
+            ],
+            [
                 'icon' => 'settings-2',
                 'title' => 'កំណត់ការវាយតម្លៃ',
                 'route' => 'evaluation-periods.*',

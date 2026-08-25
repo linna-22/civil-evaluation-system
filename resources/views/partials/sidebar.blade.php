@@ -152,6 +152,7 @@
                 $allowedRoutes = [
                     'dashboard',
                     'evaluations.work-performance.*',
+                    'evaluations.attendance.*',
                     'evaluations.work-performance.offices',
                     'users.profile',
                 ];
@@ -160,7 +161,6 @@
 
                 // super_admin & department_admin
                 $allowedRoutes = null;
-
                 break;
         }
 
