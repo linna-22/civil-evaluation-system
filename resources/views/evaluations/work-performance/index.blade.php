@@ -37,15 +37,6 @@
         @else
             {{-- Your existing office cards here --}}
         @endif
-        {{-- Department Cards --}}
-        {{-- @if ($offices->isEmpty())
-            <div class="bg-white rounded-xl border border-gray-200 shadow-sm px-6 py-12 text-center">
-                <i data-lucide="building-2" class="w-10 h-10 mx-auto text-gray-300 mb-3"></i>
-                <p class="text-gray-500">
-                    មិនមានការិយាល័យសម្រាប់វាយតម្លៃទេ
-                </p>
-            </div>
-        @else --}}
         @if ($offices)
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -83,7 +74,7 @@
                                 @else
                                      <span
                                         class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-red-50 text-red-600 text-xs font-medium">
-                                        <i data-lucide="clock-3" class="w-3.5 h-3.5"></i>
+                                        <i data-lucide="hourglass" class="w-3.5 h-3.5"></i>
                                         រងចាំការវាយតម្លៃ
                                     </span>
                                 @endif
@@ -113,7 +104,6 @@
                             <span class="font-semibold text-blue-700">
                                 {{ $office->users_count }}
                             </span>
-
                         </div>
 
 

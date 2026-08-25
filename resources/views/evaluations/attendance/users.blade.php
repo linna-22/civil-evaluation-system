@@ -34,7 +34,7 @@
 
 
                 {{-- Back Button --}}
-
+                @if ($office)
                 <a href="{{ route('evaluations.attendance.index') }}"
                     class="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-300 text-gray-600 text-sm font-medium hover:bg-gray-50 transition">
 
@@ -43,6 +43,7 @@
                     ត្រឡប់ក្រោយ
 
                 </a>
+                @endif
 
             </div>
 
@@ -174,25 +175,20 @@
                         <thead class="bg-gray-50 border-b border-gray-200">
 
                             <tr>
-
                                 <th class="px-6 py-4 text-left font-medium text-gray-600">
                                     ល.រ
                                 </th>
-
-                                <th class="px-6 py-4 text-left font-medium text-gray-600">
-                                    អត្តលេខ
-                                </th>
-
                                 <th class="px-6 py-4 text-left font-medium text-gray-600">
                                     ឈ្មោះមន្ត្រី
                                 </th>
-
                                 <th class="px-6 py-4 text-left font-medium text-gray-600">
                                     ភេទ
                                 </th>
-
                                 <th class="px-6 py-4 text-left font-medium text-gray-600">
                                     តួនាទី
+                                </th>
+                                <th class="px-6 py-4 text-left font-medium text-gray-600">
+                                    ស្ថានភាព
                                 </th>
 
                             </tr>
@@ -212,16 +208,6 @@
                                         {{ $index + 1 }}
 
                                     </td>
-
-
-                                    {{-- ID Code --}}
-
-                                    <td class="px-6 py-4 text-gray-600">
-
-                                        {{ $user->id_code ?? '-' }}
-
-                                    </td>
-
 
                                     {{-- Name --}}
 
@@ -260,14 +246,43 @@
                                         {{ $user->position ?? '-' }}
 
                                     </td>
+                                    <td class="px-6 py-4 ">
 
+                                        @if (in_array($user->user_id, $evaluatedUserIds))
+                                            <span
+                                                class="inline-flex items-center gap-1.5
+                                                        px-3 py-1.5
+                                                        rounded-full
+                                                        bg-green-50
+                                                        text-green-700
+                                                        text-xs
+                                                        font-medium">
+                                                <i data-lucide="circle-check" class="w-3.5 h-3.5">
+                                                </i>
+                                                បានវាយតម្លៃរួច
+                                            </span>
+                                        @else
+                                            <span
+                                                class="inline-flex items-center gap-1.5
+                                                    px-3 py-1.5
+                                                    rounded-full
+                                                    bg-red-50
+                                                    text-red-600
+                                                    text-xs
+                                                    font-medium">
+
+                                                <i data-lucide="clock-3" class="w-3.5 h-3.5">
+                                                </i>
+
+                                                រង់ចាំការវាយតម្លៃ
+
+                                            </span>
+                                        @endif
+                                    </td>
                                 </tr>
                             @endforeach
-
                         </tbody>
-
                     </table>
-
                 </div>
 
 
@@ -277,32 +292,55 @@
 
                 <div class="px-6 py-5 border-t border-gray-200 flex justify-end">
 
-                    @if ($office)
-                        <a href="{{ route('evaluations.attendance.create', ['office' => $office->office_id]) }}"
-                            class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-blue-600 text-white text-sm font-medium hover:bg-blue-700 transition">
+                    @if (in_array($user->user_id, $evaluatedUserIds))
 
-                            <i data-lucide="clipboard-pen" class="w-4 h-4"></i>
+                       @if ($office)
 
-                            ចាប់ផ្ដើមវាយតម្លៃ
+                            <a href="{{ route('evaluations.attendance.view', [
+                                'office' => $office->office_id
+                            ]) }}"
+                                class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-blue-600 text-white text-sm font-medium hover:bg-blue-700 transition">
 
-                        </a>
+                                <i data-lucide="eye" class="w-4 h-4"></i>
+
+                                ពិនិត្យលទ្ធផលវាយតម្លៃ
+
+                            </a>
+
+                        @else
+
+                            <a href="{{ route('evaluations.attendance.view', [
+                                'department' => $department->department_id
+                            ]) }}"
+                                class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-blue-600 text-white text-sm font-medium hover:bg-blue-700 transition">
+
+                                <i data-lucide="eye" class="w-4 h-4"></i>
+
+                                ពិនិត្យលទ្ធផលវាយតម្លៃ
+
+                            </a>
+
+                        @endif
                     @else
-                        <a href="{{ route('evaluations.attendance.create') }}"
-                            class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-blue-600 text-white text-sm font-medium hover:bg-blue-700 transition">
-
-                            <i data-lucide="clipboard-pen" class="w-4 h-4"></i>
-
-                            ចាប់ផ្ដើមវាយតម្លៃ
-
-                        </a>
+                        {{-- Not Evaluated Yet --}}
+                        @if ($office)
+                            {{-- User has Office --}}
+                            <a href="{{ route('evaluations.attendance.create', ['office' => $office->office_id, ]) }}"
+                                class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-blue-600 text-white text-sm font-medium hover:bg-blue-700 transition">
+                                <i data-lucide="clipboard-pen" class="w-4 h-4"></i>
+                                ចាប់ផ្ដើមវាយតម្លៃ
+                            </a>
+                        @else
+                            {{-- User has No Office --}}
+                            <a href="{{ route('evaluations.attendance.create') }}"
+                                class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-blue-600 text-white text-sm font-medium hover:bg-blue-700 transition">
+                                <i data-lucide="clipboard-pen" class="w-4 h-4"></i>
+                                ចាប់ផ្ដើមវាយតម្លៃ
+                            </a>
+                        @endif
                     @endif
-
                 </div>
-
             @endif
-
         </div>
-
     </div>
-
 @endsection

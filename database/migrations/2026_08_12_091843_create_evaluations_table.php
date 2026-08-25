@@ -33,6 +33,11 @@ return new class extends Migration
             // Evaluation Status
             // ==========================================
 
+            $table->enum('evaluation_type', [
+                'behavior',
+                'work_performance',
+                'attendance'
+            ]);
             $table->enum('evaluation_status', [
                 'not_submitted',
                 'submitted'

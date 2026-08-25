@@ -17,6 +17,7 @@ return new class extends Migration
                     'evaluation_period_id',
                     'evaluator_id',
                     'evaluatee_id',
+                    'evaluation_type',
                 ],
                 'evaluations_period_evaluator_evaluatee_unique'
             );
