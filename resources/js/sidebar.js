@@ -168,4 +168,195 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         }
     );
+    // =====================================================
+    // Sidebar Dropdown Menus
+    // =====================================================
+
+    const dropdownToggles = document.querySelectorAll(
+        ".sidebar-dropdown-toggle"
+    );
+
+    dropdownToggles.forEach((button) => {
+
+        button.addEventListener("click", () => {
+
+            const submenu =
+                button.nextElementSibling;
+
+            const arrow =
+                button.querySelector(
+                    ".sidebar-dropdown-arrow"
+                );
+
+            if (!submenu) return;
+
+
+            const isOpen =
+                !submenu.classList.contains("hidden");
+
+
+            // Close all other dropdowns
+            document
+                .querySelectorAll(".sidebar-submenu")
+                .forEach((menu) => {
+
+                    if (menu !== submenu) {
+
+                        menu.classList.add("hidden");
+
+                    }
+
+                });
+
+
+            // Reset other arrows
+            document
+                .querySelectorAll(
+                    ".sidebar-dropdown-arrow"
+                )
+                .forEach((item) => {
+
+                    if (item !== arrow) {
+
+                        item.classList.remove(
+                            "rotate-90"
+                        );
+
+                    }
+
+                });
+
+
+            // Toggle current dropdown
+            if (isOpen) {
+
+                submenu.classList.add("hidden");
+
+                arrow?.classList.remove(
+                    "rotate-90"
+                );
+
+                button.setAttribute(
+                    "aria-expanded",
+                    "false"
+                );
+
+            } else {
+
+                submenu.classList.remove("hidden");
+
+                arrow?.classList.add(
+                    "rotate-90"
+                );
+
+                button.setAttribute(
+                    "aria-expanded",
+                    "true"
+                );
+
+            }
+
+            // Re-render Lucide icons
+            if (window.lucide) {
+                lucide.createIcons();
+            }
+
+        });
+
+    });
+    // =====================================================
+    // Close Mobile Sidebar After Clicking Menu
+    // =====================================================
+
+    document
+        .querySelectorAll("#sidebar a")
+        .forEach((link) => {
+
+            link.addEventListener("click", () => {
+
+                if (window.innerWidth < 1024) {
+
+                    closeMobileSidebar();
+
+                }
+
+            });
+
+        });
+
+    // =====================================================
+// Expand Sidebar When Clicking Icon
+// =====================================================
+
+const sidebarMenuItems = document.querySelectorAll(
+    "#sidebar .sidebar-item, #sidebar .sidebar-dropdown-toggle"
+);
+
+sidebarMenuItems.forEach((item) => {
+
+    item.addEventListener("click", (event) => {
+
+        // Only desktop
+        if (window.innerWidth < 1024) {
+            return;
+        }
+
+        // Sidebar is collapsed
+        if (sidebar.classList.contains("collapsed")) {
+
+            // Prevent navigation for normal links
+            if (item.classList.contains("sidebar-item")) {
+                event.preventDefault();
+            }
+
+            // Expand sidebar
+            expandSidebar();
+
+            // If dropdown button
+            if (
+                item.classList.contains(
+                    "sidebar-dropdown-toggle"
+                )
+            ) {
+
+                const submenu =
+                    item.nextElementSibling;
+
+                const arrow =
+                    item.querySelector(
+                        ".sidebar-dropdown-arrow"
+                    );
+
+                if (submenu) {
+
+                    submenu.classList.remove(
+                        "hidden"
+                    );
+
+                }
+
+                if (arrow) {
+
+                    arrow.classList.add(
+                        "rotate-90"
+                    );
+
+                }
+
+                item.setAttribute(
+                    "aria-expanded",
+                    "true"
+                );
+            }
+
+            // Re-render icons
+            if (window.lucide) {
+                lucide.createIcons();
+            }
+
+        }
+
+    });
+
+});
 });

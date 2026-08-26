@@ -1,10 +1,7 @@
 @extends('layouts.app')
-
 @section('title', 'Dashboard')
-
 @section('content')
     <div class="space-y-6">
-
         {{-- Greeting --}}
         <div class="text-center">
             <h2 class="font-body text-gray-500 mt-4 text-base sm:text-lg md:text-xl lg:text-2xl align-middle">
@@ -28,7 +25,7 @@
                 <x-stat-card title="មន្ត្រីរាជការ" value="{{ number_format($statistics['users']) }}" icon="users" color="blue" />
                 <x-stat-card title="អង្គភាព" value="{{ number_format($statistics['organizations']) }}" icon="building-2" color="orange" />
                 <x-stat-card title="នាយកដ្ឋាន" value="{{ number_format($statistics['departments']) }}" icon="building" color="green" />
-                {{-- <x-stat-card title="ការវាយតម្លៃ" value="{{ number_format($statistics['evaluations']) }}" icon="clipboard-check" color="purple" /> --}}
+                <x-stat-card title="ការវាយតម្លៃ" value="{{ number_format($statistics['evaluations']) }}" icon="clipboard-check" color="purple" />
             </div>
         @endif
     </div>

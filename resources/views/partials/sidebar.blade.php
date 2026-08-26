@@ -1,9 +1,9 @@
-<aside
-    id="sidebar"
+<aside id="sidebar"
     class="
         sidebar
-        w-[290px]
+         w-[290px]
         lg:w-[290px]
+        shrink-0
         bg-blue-500
         text-white
         flex
@@ -18,15 +18,13 @@
         -translate-x-full
         lg:translate-x-0
     ">
-    
 
-{{-- Toggle Button --}}
-<div class="flex justify-end py-2">
 
-    <button
-        id="sidebarToggle"
-        type="button"
-        class="
+    {{-- Toggle Button --}}
+    <div class="flex justify-end py-2">
+
+        <button id="sidebarToggle" type="button"
+            class="
             w-12
             h-12
             mx-4
@@ -38,17 +36,13 @@
             hover:bg-white/30
             transition
             cursor-pointer
-        "
-    >
+        ">
 
-        <i
-            data-lucide="panel-left-close"
-            class="w-6 h-6"
-        ></i>
+            <i data-lucide="panel-left-close" class="w-6 h-6"></i>
 
-    </button>
+        </button>
 
-</div>
+    </div>
 
     {{-- Menu --}}
     <!-- <div class="flex-1 overflow-hidden">
@@ -106,7 +100,7 @@
 
     <div class="flex-1 overflow-y-auto">
 
-    {{-- @php
+        {{-- @php
         $user = auth()->user();
         $sidebar = config('sidebar');
 
@@ -137,98 +131,97 @@
                 ->toArray();
         }
     @endphp --}}
-    @php
-        $user = auth()->user();
-        $sidebar = config('sidebar');
+        @php
+            $user = auth()->user();
+            $sidebar = config('sidebar');
 
-        switch ($user->role) {
-            case 'user':
-                $allowedRoutes = [
-                    'dashboard',
-                    'users.profile',
-                    'evaluations.behavior.index',
-                    // 'evaluations.history',
-                    'evaluations.evaluations.create',
-                    'logout',
-                ];
-                break;
-            case 'organization_admin':
-                $allowedRoutes = [
-                    'dashboard',
-                    'evaluations.history',
-                    'evaluations.work-attendance.*',
-                    'evaluations.work-attendance.offices',
-                    'users.profile',
-                ];
-                break;
-            case 'department_admin':
-                $allowedRoutes = [
-                    'dashboard',
-                    'evaluations.work-performance.*',
-                    'evaluations.attendance.*',
-                    'evaluations.work-performance.offices',
-                    'users.profile',
-                ];
-                break;
-            default:
+            switch ($user->role) {
+                case 'user':
+                    $allowedRoutes = [
+                        'dashboard',
+                        'users.profile',
+                        'evaluations.behavior.index',
+                        // 'evaluations.history',
+                        'evaluations.evaluations.create',
+                        'logout',
+                    ];
+                    break;
+                case 'organization_admin':
+                    $allowedRoutes = [
+                        'dashboard',
+                        'evaluations.history',
+                        'evaluations.work-attendance.*',
+                        'evaluations.work-attendance.offices',
+                        'users.profile',
+                    ];
+                    break;
+                case 'department_admin':
+                    $allowedRoutes = [
+                        'dashboard',
+                        'evaluations.work-performance.*',
+                        'evaluations.attendance.*',
+                        'evaluations.work-performance.offices',
+                        'users.profile',
+                    ];
+                    break;
+                default:
+                    // super_admin & department_admin
+                    $allowedRoutes = null;
+                    break;
+            }
 
-                // super_admin & department_admin
-                $allowedRoutes = null;
-                break;
-        }
+            if ($allowedRoutes !== null) {
+                $sidebar = collect($sidebar)
+                    ->map(function ($section) use ($allowedRoutes) {
+                        $section['items'] = collect($section['items'])
+                            ->map(function ($item) use ($allowedRoutes) {
+                                // No children
+                                if (empty($item['children'])) {
+                                    return in_array($item['route'], $allowedRoutes) ? $item : null;
+                                }
+                                // Filter children
+                                $item['children'] = collect($item['children'])
+                                    ->filter(function ($child) use ($allowedRoutes) {
+                                        return in_array($child['route'], $allowedRoutes);
+                                    })
+                                    ->values()
+                                    ->toArray();
+                                // Keep parent if it has children
+                                if (!empty($item['children'])) {
+                                    return $item;
+                                }
+                                // Or keep parent itself
+                                if (in_array($item['route'], $allowedRoutes)) {
+                                    return $item;
+                                }
+                                return null;
+                            })
+                            ->filter()
+                            ->values()
+                            ->toArray();
+                        return $section;
+                    })
+                    ->filter(function ($section) {
+                        return !empty($section['items']);
+                    })
+                    ->values()
+                    ->toArray();
+            }
+        @endphp
+        @foreach ($sidebar as $section)
+            <x-sidebar-section :title="$section['title']">
 
-        if ($allowedRoutes !== null) {
+                @foreach ($section['items'] as $item)
+                    <x-sidebar-item :icon="$item['icon']" :title="$item['title']" :route="$item['route']" :url="$item['url']"
+                        :children="$item['children'] ?? []" />
+                @endforeach
 
-            $sidebar = collect($sidebar)
-                ->map(function ($section) use ($allowedRoutes) {
+            </x-sidebar-section>
 
-                    $section['items'] = collect($section['items'])
-                        ->filter(function ($item) use ($allowedRoutes) {
+            @if (!$loop->last)
+                <hr class="border-white/20 my-3 mx-5">
+            @endif
+        @endforeach
 
-                            return in_array($item['route'], $allowedRoutes);
-
-                        })
-                        ->values()
-                        ->toArray();
-
-                    return $section;
-
-                })
-                ->filter(function ($section) {
-
-                    return !empty($section['items']);
-
-                })
-                ->values()
-                ->toArray();
-        }
-    @endphp
-
-    @foreach($sidebar as $section)
-
-        <x-sidebar-section :title="$section['title']">
-
-            @foreach($section['items'] as $item)
-
-                <x-sidebar-item
-                    :icon="$item['icon']"
-                    :title="$item['title']"
-                    :route="$item['route']"
-                    :url="$item['url'] === '#'
-                        ? '#'
-                        : route($item['url'])" />
-
-            @endforeach
-
-        </x-sidebar-section>
-
-        @if(!$loop->last)
-
-            <hr class="border-white/20 my-3 mx-5">
-
-        @endif
-
-    @endforeach
-
-</div>
+    </div>
 </aside>

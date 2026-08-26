@@ -244,3 +244,46 @@ body {
 .data-table-scroll::-webkit-scrollbar-thumb:hover {
     background: #94a3b8;
 }
+/* =====================================================
+   Sidebar Collapsed
+===================================================== */
+
+.sidebar.collapsed {
+    width: 80px;
+}
+
+/* Hide text */
+.sidebar.collapsed .sidebar-text {
+    display: none;
+}
+
+/* Center normal menu icons */
+.sidebar.collapsed .sidebar-item,
+.sidebar.collapsed .sidebar-dropdown-toggle {
+    justify-content: center;
+    gap: 0;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+/* Hide dropdown arrow */
+.sidebar.collapsed .sidebar-dropdown-arrow {
+    display: none;
+}
+
+/* Hide section titles */
+.sidebar.collapsed .sidebar-section-title {
+    display: none;
+}
+
+/* Hide submenu when sidebar is collapsed */
+.sidebar.collapsed .sidebar-submenu {
+    display: none;
+}
+
+/* Make icons slightly bigger */
+.sidebar.collapsed .sidebar-item > i,
+.sidebar.collapsed .sidebar-dropdown-toggle > i {
+    width: 24px;
+    height: 24px;
+}
