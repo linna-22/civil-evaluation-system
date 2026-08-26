@@ -29,6 +29,9 @@ class BehaviorEvaluationService
     public function getEligiblePeers()
     {
         $user = auth()->user();
+        if ($user->role !== 'user') {
+            abort(403);
+        }
         // ==========================================
         // Leaders do not participate in evaluation
         // ==========================================
