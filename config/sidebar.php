@@ -39,6 +39,11 @@ return [
                 'children' => [
 
                     [
+                        'title' => 'កំណត់ការវាយតម្លៃ',
+                        'route' => 'evaluation-periods.*',
+                        'url' => 'evaluation-periods.index',
+                    ],
+                    [
                         'title' => 'វាយតម្លៃសមិទ្ធកម្មការងារ',
                         'route' => 'evaluations.work-performance.*',
                         'url' => 'evaluations.work-performance.index',
