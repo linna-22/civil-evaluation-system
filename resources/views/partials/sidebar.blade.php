@@ -140,7 +140,7 @@
                     $allowedRoutes = [
                         'dashboard',
                         'users.profile',
-                        'evaluations.behavior.index',
+                        'evaluations.behavior.*',
                         // 'evaluations.history',
                         'evaluations.evaluations.create',
                         'logout',

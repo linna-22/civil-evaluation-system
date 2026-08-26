@@ -12,7 +12,7 @@
                         {{ $evaluationPeriod->name_kh }} <span class="text-blue-500">(វាយតម្លៃវត្តមាន)</span>
                     </h1>
                      <p class="mt-1 text-sm text-gray-500">
-                        ជ្រើសរើសការិយាល័យដែលត្រូវវាយ
+                        សូមជ្រើសរើសការិយាល័យ ដើម្បីបន្តការវាយតម្លៃ
                     </p>
                     @else
                     <h1 class="text-xl font-title text-gray-800">ការវាយតម្លៃវត្តមាន</h1>
