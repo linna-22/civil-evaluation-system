@@ -34,7 +34,6 @@ Route::middleware('auth')->group(function () {
     // Organization 
     Route::prefix('organizations')
         ->name('organizations.')
-        ->middleware('auth')
         ->group(function () {
 
             Route::get('/', [OrganizationController::class, 'index'])->name('index');
@@ -48,7 +47,6 @@ Route::middleware('auth')->group(function () {
     // Department
     Route::prefix('departments')
         ->name('departments.')
-        ->middleware('auth')
         ->group(function () {
 
             Route::get('/', [DepartmentController::class, 'index'])->name('index');
@@ -63,7 +61,6 @@ Route::middleware('auth')->group(function () {
     // Department
     Route::prefix('offices')
         ->name('offices.')
-        ->middleware('auth')
         ->group(function () {
 
             Route::get('/', [OfficeController::class, 'index'])->name('index');
@@ -79,7 +76,6 @@ Route::middleware('auth')->group(function () {
     // User
     Route::prefix('users')
         ->name('users.')
-        ->middleware('auth')
         ->group(function () {
 
             Route::get('/', [UserController::class, 'index'])->name('index');
@@ -95,8 +91,7 @@ Route::middleware('auth')->group(function () {
         });
     // Evaluation Period
     Route::prefix('evaluation-periods')
-        ->name('evaluation-periods.')
-        ->middleware('auth')
+        ->name('evaluation-periods.')   
         ->group(function () {
             Route::get('/', [EvaluationPeriodController::class, 'index'])->name('index');
             Route::get('/data', [EvaluationPeriodController::class, 'data'])->name('data');

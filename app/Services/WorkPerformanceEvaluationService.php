@@ -289,18 +289,26 @@ class WorkPerformanceEvaluationService
     public function getSubmittedUserIds(array $userIds): array
     {
         $evaluationPeriod = $this->getOpenEvaluationPeriod();
-
         if (!$evaluationPeriod || empty($userIds)) {
             return [];
         }
-
         return Evaluation::query()
             ->where(
                 'evaluation_period_id',
                 $evaluationPeriod->evaluation_period_id
             )
-            ->where('evaluation_status', 'submitted')
-            ->whereIn('evaluatee_id', $userIds)
+            ->where(
+                'evaluation_type',
+                'work_performance'
+            )
+            ->where(
+                'evaluation_status',
+                'submitted'
+            )
+            ->whereIn(
+                'evaluatee_id',
+                $userIds
+            )
             ->pluck('evaluatee_id')
             ->toArray();
     }
@@ -315,7 +323,7 @@ class WorkPerformanceEvaluationService
         if (empty($userIds)) {
             return false;
         }
-    
+
         $submittedUserIds =
             $this->getSubmittedUserIds($userIds);
 

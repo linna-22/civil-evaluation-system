@@ -17,6 +17,7 @@ class EvaluationPeriod extends Model
         'name_en',
         'month',
         'year',
+        'close_type',
         'start_date',
         'end_date',
         'status',
