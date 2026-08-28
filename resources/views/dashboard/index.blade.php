@@ -18,7 +18,7 @@
                 </span>
             </h2>
         </div>
-        @if (auth()->user()->role === 'super_admin')
+        @if (auth()->user()->role === 'super_admin' || auth()->user()->role === 'organization_admin')
             {{-- Statistics --}}
             <div
                 class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">

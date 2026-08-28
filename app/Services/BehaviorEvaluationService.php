@@ -397,6 +397,7 @@ class BehaviorEvaluationService
             ->where('evaluation_period_id', $evaluationPeriod->evaluation_period_id)
             ->where('evaluator_id', $user->user_id)
             ->where('evaluation_status', 'submitted')
+            ->where('evaluation_type', 'behavior')
             ->get();
-    }
+    }   
 }
