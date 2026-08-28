@@ -12,9 +12,9 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call([
-            // OrganizationSeeder::class,
+            AdminSeeder::class,
+            OrganizationStructureSeeder::class,
             UserSeeder::class,
-            GeneralDepartmentofAdministrationandFinanceSeeder::class,
         ]);
     }
 }
