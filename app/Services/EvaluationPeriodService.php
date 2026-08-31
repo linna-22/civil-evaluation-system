@@ -2,12 +2,14 @@
 
 namespace App\Services;
 
+use App\Models\Evaluation;
 use App\Models\EvaluationPeriod;
 use App\Models\EvaluationPeriodUser;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
+use App\Services\EvaluationSummaryService;
 
 class EvaluationPeriodService
 {
@@ -58,6 +60,7 @@ class EvaluationPeriodService
 
         $activeUserIds = User::query()
             ->where('status', 'active')
+            ->where('role', '!=', 'super_admin')
             ->pluck('user_id');
 
         if ($activeUserIds->isEmpty()) {
@@ -334,29 +337,287 @@ class EvaluationPeriodService
         });
     }
 
-
     /**
      * Close an evaluation period.
      */
-    public function close(EvaluationPeriod $evaluationPeriod): EvaluationPeriod
-    {
-        return DB::transaction(function () use ($evaluationPeriod) {
+    // public function close(EvaluationPeriod $evaluationPeriod, EvaluationSummaryService $summaryService): EvaluationPeriod 
+    // {
+    //     return DB::transaction(function () use ($evaluationPeriod, $summaryService) {
+
+    //         // ==========================================
+    //         // Check Already Closed
+    //         // ==========================================
+
+    //         if ($evaluationPeriod->status === 'closed') {
+
+    //             throw ValidationException::withMessages([
+    //                 'evaluation_period' =>
+    //                     'វគ្គវាយតម្លៃនេះបានបិទរួចហើយ។',
+    //             ]);
+
+    //         }
+
+
+    //         // ==========================================
+    //         // Calculate All Evaluation Summaries
+    //         // ==========================================
+
+    //         $summaryService->calculate(
+    //             $evaluationPeriod
+    //         );
+
+
+    //         // ==========================================
+    //         // Close Evaluation Period
+    //         // ==========================================
+
+    //         $evaluationPeriod->update([
+
+    //             'status' => 'closed',
+
+    //             'closed_by' => auth()->id(),
+
+    //             'close_type' => 'manual',
+
+    //             'close_at' => now(),
+
+    //         ]);
+
+
+    //         // ==========================================
+    //         // Return Updated Period
+    //         // ==========================================
+
+    //         return $evaluationPeriod->refresh();
+
+    //     });
+    // }
+    /**
+     * Close an evaluation period.
+     */
+    public function close(EvaluationPeriod $evaluationPeriod, EvaluationSummaryService $summaryService): EvaluationPeriod {
+        return DB::transaction(function () use ($evaluationPeriod, $summaryService) {
+            // ==========================================
+            // Check Already Closed
+            // ==========================================
             if ($evaluationPeriod->status === 'closed') {
                 throw ValidationException::withMessages([
                     'evaluation_period' =>
                         'វគ្គវាយតម្លៃនេះបានបិទរួចហើយ។',
                 ]);
             }
-
+            // ==========================================
+            // Check All Evaluations Completed
+            // ==========================================
+            $this->checkAllEvaluationsCompleted(
+                $evaluationPeriod
+            );
+            // ==========================================
+            // Calculate All Evaluation Summaries
+            // ==========================================
+            $summaryService->calculate(
+                $evaluationPeriod
+            );
+            // ==========================================
+            // Close Evaluation Period
+            // ==========================================
             $evaluationPeriod->update([
                 'status' => 'closed',
                 'closed_by' => auth()->id(),
+                'close_type' => 'manual',
                 'close_at' => now(),
             ]);
-
+            // ==========================================
+            // Return Updated Period
+            // ==========================================
             return $evaluationPeriod->refresh();
-
         });
+    }
+    /**
+     * Check whether all required evaluations
+     * have been completed before closing.
+     */
+    private function checkAllEvaluationsCompleted(
+        EvaluationPeriod $evaluationPeriod
+    ): void {
+
+        // ==========================================
+        // Get Evaluation Participants
+        // ==========================================
+
+        $periodUsers = EvaluationPeriodUser::query()
+            ->with('user')
+            ->where(
+                'evaluation_period_id',
+                $evaluationPeriod->evaluation_period_id
+            )
+            ->get();
+
+
+        // ==========================================
+        // No Participants
+        // ==========================================
+
+        if ($periodUsers->isEmpty()) {
+
+            throw ValidationException::withMessages([
+                'evaluation_period' =>
+                    'មិនមានមន្ត្រីក្នុងវគ្គវាយតម្លៃនេះទេ។',
+            ]);
+
+        }
+
+
+        // ==========================================
+        // Check Every Employee
+        // ==========================================
+
+        $missing = [];
+
+
+        foreach ($periodUsers as $periodUser) {
+
+            $user = $periodUser->user;
+
+
+            // ------------------------------------------
+            // Skip Leaders
+            // ------------------------------------------
+
+            if (
+                !$user ||
+                $user->status !== 'active' ||
+                $user->is_leader
+            ) {
+                continue;
+            }
+
+
+            // ==========================================
+            // 1. Work Performance
+            // ==========================================
+
+            $workCompleted = Evaluation::query()
+                ->where(
+                    'evaluation_period_id',
+                    $evaluationPeriod->evaluation_period_id
+                )
+                ->where(
+                    'evaluatee_id',
+                    $user->user_id
+                )
+                ->where(
+                    'evaluation_type',
+                    'work_performance'
+                )
+                ->where(
+                    'evaluation_status',
+                    'submitted'
+                )
+                ->exists();
+
+
+            // ==========================================
+            // 2. Attendance
+            // ==========================================
+
+            $attendanceCompleted = Evaluation::query()
+                ->where(
+                    'evaluation_period_id',
+                    $evaluationPeriod->evaluation_period_id
+                )
+                ->where(
+                    'evaluatee_id',
+                    $user->user_id
+                )
+                ->where(
+                    'evaluation_type',
+                    'attendance'
+                )
+                ->where(
+                    'evaluation_status',
+                    'submitted'
+                )
+                ->exists();
+            // ==========================================
+            // 3. Behavior
+            // ==========================================
+            $behaviorCount = Evaluation::query()
+                ->where(
+                    'evaluation_period_id',
+                    $evaluationPeriod->evaluation_period_id
+                )
+                ->where(
+                    'evaluatee_id',
+                    $user->user_id
+                )
+                ->where(
+                    'evaluation_type',
+                    'behavior'
+                )
+                ->where(
+                    'evaluation_status',
+                    'submitted'
+                )
+                ->count();
+            // ==========================================
+            // Check Missing Evaluations
+            // ==========================================
+            $missingItems = [];
+            if (!$workCompleted) {
+                $missingItems[] = 'Work Performance';
+            }
+            if (!$attendanceCompleted) {
+                $missingItems[] = 'Attendance';
+
+            }
+            if ($behaviorCount === 0) {
+
+                $missingItems[] = 'Peer Behavior';
+
+            }
+
+
+            // ==========================================
+            // Store Missing Employee
+            // ==========================================
+
+            if (!empty($missingItems)) {
+
+                $missing[] = [
+                    'user' => $user->name_en ?? $user->name_kh,
+                    'items' => $missingItems,
+                ];
+
+            }
+        }
+
+
+        // ==========================================
+        // Cannot Close
+        // ==========================================
+
+        if (!empty($missing)) {
+
+            $messages = collect($missing)
+                ->map(function ($item) {
+
+                    return $item['user']
+                        . ': '
+                        . implode(', ', $item['items']);
+
+                })
+                ->implode('; ');
+
+
+            throw ValidationException::withMessages([
+                'evaluation_period' =>
+                    'មិនអាចបិទវគ្គវាយតម្លៃបានទេ។ '
+                    . 'មន្ត្រីមួយចំនួនមិនទាន់បំពេញការវាយតម្លៃ៖ '
+                    . $messages,
+            ]);
+
+        }
     }
 
 }

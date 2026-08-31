@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\Http\Requests\EvaluationPeriodRequest;
 use App\Models\EvaluationPeriod;
 use App\Services\EvaluationPeriodService;
+use App\Services\EvaluationSummaryService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+
 
 class EvaluationPeriodController extends Controller
 {
@@ -87,16 +89,19 @@ class EvaluationPeriodController extends Controller
                 'ការវាយតម្លៃត្រូវបានកែប្រែដោយជោគជ័យ'
             );
     }
-    public function close(EvaluationPeriod $evaluationPeriod, EvaluationPeriodService $service)
+    public function close(EvaluationPeriod $evaluationPeriod, EvaluationPeriodService $service, EvaluationSummaryService $summaryService) 
     {
-        $service->close($evaluationPeriod);
+        $service->close(
+            $evaluationPeriod,
+            $summaryService
+        );
 
         return response()->json([
             'success' => true,
             'message' => 'វគ្គវាយតម្លៃត្រូវបានបិទដោយជោគជ័យ។',
         ]);
     }
-    public function show(EvaluationPeriod $evaluationPeriod, EvaluationPeriodService $service) 
+    public function show(EvaluationPeriod $evaluationPeriod, EvaluationPeriodService $service)
     {
         $evaluationPeriod = $service->find(
             $evaluationPeriod

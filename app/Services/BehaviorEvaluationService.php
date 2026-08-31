@@ -144,6 +144,9 @@ class BehaviorEvaluationService
                     'evaluatee_id',
                     $peer->user_id
                 )
+                ->where(
+                    'evaluation_type',
+                    'behavior')
                 ->first();
 
             $peer->evaluation_status =
@@ -247,6 +250,7 @@ class BehaviorEvaluationService
                     ->where('evaluation_period_id', $evaluationPeriod->evaluation_period_id)
                     ->where('evaluator_id', $evaluator->user_id)
                     ->where('evaluatee_id', $evaluatee->user_id)
+                    ->where('evaluation_type', 'behavior')
                     ->first();
 
                 // ==========================================
