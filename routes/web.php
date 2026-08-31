@@ -10,6 +10,7 @@ use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\EvaluationController;
 use App\Http\Controllers\EvaluationPeriodController;
 use App\Http\Controllers\EvaluationReportController;
+use App\Http\Controllers\EvaluationResult\UserEvaluationResultController;
 use App\Http\Controllers\Evaluations\AttendanceEvaluationController;
 use App\Http\Controllers\Evaluations\WorkPerformanceEvaluationController;
 use App\Http\Controllers\OfficeController;
@@ -154,6 +155,9 @@ Route::middleware('auth')->group(function () {
             Route::get('/evaluations/export-word', [EvaluationReportController::class, 'exportWord'])->name('evaluations.export.word');
         });
 
+    // evaluation result
+    Route::get('/my-evaluation-results', [UserEvaluationResultController::class, 'index'])->name('my-evaluation-results.index');
+    Route::get('/my-evaluation-results/{evaluationPeriod}', [UserEvaluationResultController::class, 'show'])->name('my-evaluation-results.show');
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::post('/logout', [LogoutController::class, 'logout'])->name('logout');
