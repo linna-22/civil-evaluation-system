@@ -102,6 +102,7 @@ class UserSeeder extends Seeder
                 'email' => 'sothy.oudom@gmail.com',
                 'position' => 'ប្រធានលេខាធិការដ្ឋាន',
                 'is_leader' => true,
+                'role' => 'department_admin',
             ],
             [
                 'id_code' => '2890800141',
@@ -113,6 +114,7 @@ class UserSeeder extends Seeder
                 'email' => 'soth.rathana@gmail.com',
                 'position' => 'អនុប្រធានលេខាធិការដ្ឋាន',
                 'is_leader' => true,
+                'role' => 'user',
             ],
             [
                 'id_code' => '1931200133',
@@ -124,6 +126,7 @@ class UserSeeder extends Seeder
                 'email' => 'thong.mengdavid@gmail.com',
                 'position' => 'អនុប្រធានលេខាធិការដ្ឋាន',
                 'is_leader' => true,
+                'role' => 'user',
             ],
             [
                 'id_code' => '2931300091',
@@ -135,6 +138,7 @@ class UserSeeder extends Seeder
                 'email' => 'doung.channdy@gmail.com',
                 'position' => 'មន្ត្រី',
                 'is_leader' => false,
+                'role' => 'user',
             ],
             [
                 'id_code' => '1932100423',
@@ -146,6 +150,7 @@ class UserSeeder extends Seeder
                 'email' => 'yi.puthdun@gmail.com',
                 'position' => 'មន្ត្រី',
                 'is_leader' => false,
+                'role' => 'user',
             ],
         ];
         foreach ($department2users as $department2user) {
@@ -164,7 +169,7 @@ class UserSeeder extends Seeder
                 'position' => $department2user['position'],
                 'is_leader' => $department2user['is_leader'],
                 'password' => 'password',
-                'role' => 'user',
+                'role' => $department2user['role'],
                 'status' => 'active',
             ]);
         }
@@ -177,7 +182,7 @@ class UserSeeder extends Seeder
 
         User::create([
             'organization_id' => $organization1->organization_id,
-            'department_id' => $department2->department_id,
+            'department_id' => $department1->department_id,
             'office_id' => null,
             'id_code' => '1810600169',
             'name_kh' => 'គង់ ធារ័ត្ន',
@@ -255,6 +260,17 @@ class UserSeeder extends Seeder
                 'gender' => 'male',
                 'phone' => '092225182',
                 'email' => 'pin.sopheak@email.com',
+                'position' => 'មន្ត្រី',
+                'is_leader' => false,
+            ],
+            [
+                'id_code' => '2940600180',
+                'name_kh' => 'កែន សុគន្ធា',
+                'name_en' => 'KEN SOKUNTHEA',
+                'username' => 'ken.sokunthea',
+                'gender' => 'female',
+                'phone' => '010753378',
+                'email' => 'ken.sokunthea@email.com',
                 'position' => 'មន្ត្រី',
                 'is_leader' => false,
             ],
