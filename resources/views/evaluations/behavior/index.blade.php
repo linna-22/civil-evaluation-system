@@ -281,7 +281,7 @@
                                             </span>
                                         @else
                                             <span
-                                                class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-gray-100 text-yellow-500 text-xs font-medium">
+                                                class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-red-50 text-red-600 text-xs font-medium">
                                                 <i data-lucide="clock-3" class="w-4 h-4"></i>
                                                 រង់ចាំការវាយតម្លៃ
                                             </span>

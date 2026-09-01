@@ -10,6 +10,8 @@ use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\EvaluationController;
 use App\Http\Controllers\EvaluationPeriodController;
 use App\Http\Controllers\EvaluationReportController;
+use App\Http\Controllers\EvaluationResult\DepartmentEvaluationResultController;
+use App\Http\Controllers\EvaluationResult\UserEvaluationResultController;
 use App\Http\Controllers\Evaluations\AttendanceEvaluationController;
 use App\Http\Controllers\Evaluations\WorkPerformanceEvaluationController;
 use App\Http\Controllers\OfficeController;
@@ -34,7 +36,6 @@ Route::middleware('auth')->group(function () {
     // Organization 
     Route::prefix('organizations')
         ->name('organizations.')
-        ->middleware('auth')
         ->group(function () {
 
             Route::get('/', [OrganizationController::class, 'index'])->name('index');
@@ -48,7 +49,6 @@ Route::middleware('auth')->group(function () {
     // Department
     Route::prefix('departments')
         ->name('departments.')
-        ->middleware('auth')
         ->group(function () {
 
             Route::get('/', [DepartmentController::class, 'index'])->name('index');
@@ -63,7 +63,6 @@ Route::middleware('auth')->group(function () {
     // Department
     Route::prefix('offices')
         ->name('offices.')
-        ->middleware('auth')
         ->group(function () {
 
             Route::get('/', [OfficeController::class, 'index'])->name('index');
@@ -79,7 +78,6 @@ Route::middleware('auth')->group(function () {
     // User
     Route::prefix('users')
         ->name('users.')
-        ->middleware('auth')
         ->group(function () {
 
             Route::get('/', [UserController::class, 'index'])->name('index');
@@ -95,8 +93,7 @@ Route::middleware('auth')->group(function () {
         });
     // Evaluation Period
     Route::prefix('evaluation-periods')
-        ->name('evaluation-periods.')
-        ->middleware('auth')
+        ->name('evaluation-periods.')   
         ->group(function () {
             Route::get('/', [EvaluationPeriodController::class, 'index'])->name('index');
             Route::get('/data', [EvaluationPeriodController::class, 'data'])->name('data');
@@ -122,6 +119,7 @@ Route::middleware('auth')->group(function () {
 
     // Work Performance evaluation
     Route::prefix('evaluations/work-performance')
+        ->middleware('role:super_admin,organization_admin,department_admin')
         ->name('evaluations.work-performance.')
         ->group(function () {
 
@@ -137,6 +135,7 @@ Route::middleware('auth')->group(function () {
         });
     // Attendance evaluation
     Route::prefix('evaluations/attendance')
+        ->middleware('role:super_admin,organization_admin,department_admin')
         ->name('evaluations.attendance.')
         ->group(function () {
             // Department / Office
@@ -150,22 +149,6 @@ Route::middleware('auth')->group(function () {
             Route::get('/view/{office?}', [AttendanceEvaluationController::class, 'view'])->name('view');
         });
 
-
-    // Evaluation 
-    Route::prefix('evaluations')
-        ->name('evaluations.')
-        ->group(function () {
-
-            Route::get('/', [EvaluationController::class, 'index'])->name('index');
-            Route::get('/create', [EvaluationController::class, 'create'])->name('evaluations.create');
-            Route::get('/history', [EvaluationController::class, 'history'])->name('history');
-            Route::get('/list', [EvaluationController::class, 'list'])->middleware('role:super_admin,organization_admin,department_admin')->name('list');
-            Route::get('/{evaluation}', [EvaluationController::class, 'show'])->name('show');
-            Route::post('/', [EvaluationController::class, 'store'])->name('store');
-            Route::get('/departments', [EvaluationController::class, 'departments'])->name('departments');
-
-        });
-
     // Evaluation Report
     Route::prefix('reports')->name('reports.')->middleware(['role:super_admin,organization_admin,department_admin'])
         ->group(function () {
@@ -173,6 +156,14 @@ Route::middleware('auth')->group(function () {
             Route::get('/evaluations/export-word', [EvaluationReportController::class, 'exportWord'])->name('evaluations.export.word');
         });
 
+    // evaluation result
+    Route::get('/my-evaluation-results', [UserEvaluationResultController::class, 'index'])->name('my-evaluation-results.index');
+    Route::get('/my-evaluation-results/{evaluationPeriod}', [UserEvaluationResultController::class, 'show'])->name('my-evaluation-results.show');
+
+    // Department evaluation result
+    Route::get('/department-evaluation-results', [DepartmentEvaluationResultController::class, 'index'])->name('department-evaluation-results.index');
+    Route::get('department-evaluation-results/{evaluationPeriod}/data', [DepartmentEvaluationResultController::class, 'data'])->name('department-evaluation-results.data');
+    Route::get('/department-evaluation-results/{evaluationPeriod}', [DepartmentEvaluationResultController::class, 'show'])->name('department-evaluation-results.show');
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::post('/logout', [LogoutController::class, 'logout'])->name('logout');

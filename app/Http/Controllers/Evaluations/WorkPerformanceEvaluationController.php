@@ -29,7 +29,8 @@ class WorkPerformanceEvaluationController extends Controller
         $evaluationPeriod = $service->getOpenEvaluationPeriod();
         // No Open Evaluation Period
         if (!$evaluationPeriod) {
-            return view('evaluations.work-performance.index',
+            return view(
+                'evaluations.work-performance.index',
                 [
                     'offices' => collect(),
                     'evaluationPeriod' => null,
@@ -66,6 +67,10 @@ class WorkPerformanceEvaluationController extends Controller
                     $evaluationPeriod->evaluation_period_id
                 )
                 ->where(
+                    'evaluation_type',
+                    'work_performance'
+                )
+                ->where(
                     'evaluation_status',
                     'submitted'
                 )
@@ -90,14 +95,13 @@ class WorkPerformanceEvaluationController extends Controller
     /**
      * Display users under a department.
      */
-    public function usersByDepartment(Department $department, WorkPerformanceEvaluationService $service) 
+    public function usersByDepartment(Department $department, WorkPerformanceEvaluationService $service)
     {
         $user = auth()->user();
         if ($user->role !== 'department_admin') {
             abort(403);
         }
-        if ($department->department_id !== $user->department_id) 
-        {
+        if ($department->department_id !== $user->department_id) {
             abort(403);
         }
         $users = $department->users()
@@ -109,7 +113,8 @@ class WorkPerformanceEvaluationController extends Controller
         $submittedUserIds = $service->getSubmittedUserIds($users->pluck('user_id')->toArray());
         $allUsersSubmitted = $service->allUsersSubmitted($users->pluck('user_id')->toArray());
         $office = null;
-        return view('evaluations.work-performance.users',
+        return view(
+            'evaluations.work-performance.users',
             compact(
                 'department',
                 'office',
@@ -124,14 +129,13 @@ class WorkPerformanceEvaluationController extends Controller
     /**
      * Display users under an office.
      */
-    public function usersByOffice(Office $office, WorkPerformanceEvaluationService $service) 
+    public function usersByOffice(Office $office, WorkPerformanceEvaluationService $service)
     {
         $user = auth()->user();
         if ($user->role !== 'department_admin') {
             abort(403);
         }
-        if ($office->department_id !== $user->department_id) 
-        {
+        if ($office->department_id !== $user->department_id) {
             abort(403);
         }
         $department = $office->department;
@@ -142,7 +146,8 @@ class WorkPerformanceEvaluationController extends Controller
             ->get();
         $submittedUserIds = $service->getSubmittedUserIds($users->pluck('user_id')->toArray());
         $allUsersSubmitted = $service->allUsersSubmitted($users->pluck('user_id')->toArray());
-        return view('evaluations.work-performance.users',
+        return view(
+            'evaluations.work-performance.users',
             compact(
                 'department',
                 'office',
@@ -183,7 +188,7 @@ class WorkPerformanceEvaluationController extends Controller
                 abort(403);
             }
         }
-       
+
         // Start evaluation for selected scope
         $sessionOfficeId = session('work_performance_office_id');
         /*
@@ -192,8 +197,7 @@ class WorkPerformanceEvaluationController extends Controller
         | - selected office changed
         | - evaluation period changed
         */
-        if (!session()->has('work_performance_user_ids') || $sessionOfficeId != $office || session('work_performance_evaluation_period_id') != $evaluationPeriod->evaluation_period_id) 
-        {
+        if (!session()->has('work_performance_user_ids') || $sessionOfficeId != $office || session('work_performance_evaluation_period_id') != $evaluationPeriod->evaluation_period_id) {
             $service->startEvaluation($office);
         }
         // Get current user
@@ -212,9 +216,10 @@ class WorkPerformanceEvaluationController extends Controller
         $currentUserNumber = $service->getCurrentUserNumber();
         $totalUsers = $service->getTotalUsers();
         $users = $service->getEligibleUsers($office);
-        
+
         // Return view
-        return view('evaluations.work-performance.create',
+        return view(
+            'evaluations.work-performance.create',
             compact(
                 'currentUser',
                 'currentUserNumber',
@@ -281,10 +286,10 @@ class WorkPerformanceEvaluationController extends Controller
         }
         // Get Evaluation Period
         $evaluationPeriod = EvaluationPeriod::query()->where('evaluation_period_id', $evaluationPeriodId)
-                            ->where('status', 'open')
-                            ->whereDate('start_date', '<=', now()->toDateString())
-                            ->whereDate('end_date', '>=', now()->toDateString())
-                            ->first();
+            ->where('status', 'open')
+            ->whereDate('start_date', '<=', now()->toDateString())
+            ->whereDate('end_date', '>=', now()->toDateString())
+            ->first();
         if (!$evaluationPeriod) {
             return response()->json([
                 'success' => false,
@@ -314,8 +319,18 @@ class WorkPerformanceEvaluationController extends Controller
                 }
                 // Prevent Duplicate Evaluation
                 $existingEvaluation = Evaluation::query()
-                    ->where('evaluation_period_id', $evaluationPeriod->evaluation_period_id)
-                    ->where('evaluatee_id', $evaluateeId)
+                    ->where(
+                        'evaluation_period_id',
+                        $evaluationPeriod->evaluation_period_id
+                    )
+                    ->where(
+                        'evaluatee_id',
+                        $evaluateeId
+                    )
+                    ->where(
+                        'evaluation_type',
+                        'work_performance'
+                    )
                     ->first();
                 if ($existingEvaluation) {
                     throw new \Exception(
@@ -327,6 +342,7 @@ class WorkPerformanceEvaluationController extends Controller
                     'evaluation_period_id' => $evaluationPeriod->evaluation_period_id,
                     'evaluator_id' => $user->user_id,
                     'evaluatee_id' => $evaluateeId,
+                    'evaluation_type' => 'work_performance',
                     'evaluation_status' => 'submitted',
                     'submitted_at' => now(),
                     'created_by' => $user->user_id,
@@ -445,8 +461,8 @@ class WorkPerformanceEvaluationController extends Controller
         } else {
             // Users without Office
             $department = Department::query()
-                    ->where('department_id', $user->department_id)
-                    ->firstOrFail();
+                ->where('department_id', $user->department_id)
+                ->firstOrFail();
             $users =
                 $department->users()
                     ->whereNull('office_id')
@@ -457,25 +473,30 @@ class WorkPerformanceEvaluationController extends Controller
         }
         // Get Submitted Evaluations
         $evaluations = Evaluation::query()
-                ->with([
-                    'evaluatee',
-                    'workPerformance'
-                ])
-                ->where(
-                    'evaluation_period_id',
-                    $evaluationPeriod->evaluation_period_id
-                )
-                ->where(
-                    'evaluation_status',
-                    'submitted'
-                )
-                ->whereIn(
-                    'evaluatee_id',
-                    $users->pluck('user_id')
-                )
-                ->get()
-                ->keyBy('evaluatee_id');
-        return view('evaluations.work-performance.view',
+            ->with([
+                'evaluatee',
+                'workPerformance'
+            ])
+            ->where(
+                'evaluation_period_id',
+                $evaluationPeriod->evaluation_period_id
+            )
+            ->where(
+                'evaluation_type',
+                'work_performance'
+            )
+            ->where(
+                'evaluation_status',
+                'submitted'
+            )
+            ->whereIn(
+                'evaluatee_id',
+                $users->pluck('user_id')
+            )
+            ->get()
+            ->keyBy('evaluatee_id');
+        return view(
+            'evaluations.work-performance.view',
             compact(
                 'users',
                 'evaluations',
