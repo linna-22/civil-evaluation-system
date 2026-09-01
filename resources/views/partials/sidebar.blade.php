@@ -143,6 +143,7 @@
                         'evaluations.behavior.*',
                         // 'evaluations.history',
                         'evaluations.evaluations.create',
+                        'my-evaluation-results.*',
                         'logout',
                     ];
                     break;

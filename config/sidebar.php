@@ -60,6 +60,11 @@ return [
                         'route' => 'evaluations.behavior.*',
                         'url' => 'evaluations.behavior.index',
                     ],
+                    [
+                        'title' => 'លទ្ធផលការវាយតម្លៃ',
+                        'route' => 'my-evaluation-results.*',
+                        'url' => 'my-evaluation-results.index',
+                    ],
 
                 ],
             ],

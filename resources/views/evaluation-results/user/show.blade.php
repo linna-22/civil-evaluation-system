@@ -200,7 +200,7 @@
                                                rounded-full
                                                bg-emerald-500"></span>
 
-                                        បានបញ្ចប់
+                                        បានបញ្ចប់ការវាយតម្លៃ
 
                                     </span>
 
