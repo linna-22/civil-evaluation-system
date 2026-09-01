@@ -26,31 +26,9 @@
 
     <div class="min-h-screen bg-[#f5f8ff]">
         <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
-
-
-            {{-- =========================================================
-            PAGE HEADER
-        ========================================================== --}}
-            <x-page-header title="លទ្ធផលវាយតម្លៃ" description="">
-
-                <x-slot:actions>
-
-                    <x-action-btn href="{{ route('my-evaluation-results.index') }}" icon="arrow-left" variant="secondary">
-
-                        ត្រឡប់ក្រោយ
-
-                    </x-action-btn>
-
-                </x-slot:actions>
-
-            </x-page-header>
-
-
-
-            {{-- =========================================================
-            PERIOD LIST
-        ========================================================== --}}
-
+            {{-- PAGE HEADER --}}
+            <x-page-header title="លទ្ធផលវាយតម្លៃ" description=""></x-page-header>
+            {{-- PERIOD LIST --}}
             @if ($periods->count())
                 <div class="space-y-4 py-3">
 
@@ -63,118 +41,80 @@
                                hover:border-blue-200
                                transition-all duration-200
                                overflow-hidden">
-
                             <div
                                 class="p-5 sm:p-6
                                    flex flex-col lg:flex-row
                                    lg:items-center
                                    lg:justify-between
                                    gap-5">
-
-
                                 {{-- =================================================
                                 PERIOD INFORMATION
                             ================================================== --}}
-
                                 <div class="flex items-start gap-4">
-
                                     {{-- Icon --}}
-
                                     <div
                                         class="w-12 h-12
                                            shrink-0
                                            rounded-xl
                                            bg-blue-50
                                            flex items-center justify-center">
-
                                         <svg class="w-6 h-6 text-[#287cfb]" fill="none" stroke="currentColor"
                                             viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
                                                 d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                                         </svg>
-
                                     </div>
-
-
                                     {{-- Information --}}
-
                                     <div>
-
                                         <h2 class="text-lg font-bold text-gray-800">
                                             លទ្ធផល{{ $period->name_kh }}
                                         </h2>
-
-
                                         <div
                                             class="flex flex-wrap
                                                items-center
                                                gap-x-5 gap-y-2
                                                mt-2">
-
                                             {{-- Month / Year --}}
-
                                             <div
                                                 class="flex items-center gap-1.5
                                                    text-sm text-gray-500">
-
                                                 <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor"
                                                     viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
                                                         d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                                                 </svg>
-
                                                 <span>
                                                     ខែ{{ $months[$period->month] }}
                                                     ឆ្នាំ
                                                     {{ DateHelper::toKhmerNumber($period->year) }}
                                                 </span>
-
                                             </div>
-
-
                                             {{-- Date --}}
-
                                             <div
                                                 class="flex items-center gap-1.5
                                                    text-sm text-gray-500">
-
                                                 <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor"
                                                     viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
                                                         d="M12 8v4l3 2m6-2a9 9 0 11-18 0 9 9 0 0118 0z" />
                                                 </svg>
-
                                                 <span>
-
                                                     {{ DateHelper::toKhmerNumber(Carbon::parse($period->start_date)->format('d/m/Y')) }}
-
                                                     -
-
                                                     {{ DateHelper::toKhmerNumber(Carbon::parse($period->end_date)->format('d/m/Y')) }}
-
                                                 </span>
-
                                             </div>
-
                                         </div>
-
                                     </div>
-
                                 </div>
-
-
-
                                 {{-- =================================================
                                 RIGHT SIDE
                             ================================================== --}}
-
                                 <div
                                     class="flex flex-col sm:flex-row
                                        sm:items-center
                                        gap-3">
-
                                     {{-- Status --}}
-
                                     @if ($period->status === 'closed')
                                         <span
                                             class="inline-flex
@@ -182,18 +122,12 @@
                                                gap-2
                                                px-3 py-2
                                                rounded-lg
-                                               bg-green-50
-                                               border border-green-100
-                                               text-green-700
+                                               bg-red-50
+                                               border border-red-100
+                                               text-red-700
                                                text-sm font-medium">
-
-                                            <span
-                                                class="w-2 h-2
-                                                   rounded-full
-                                                   bg-green-500"></span>
-
-                                            បានបិទការវាយតម្លៃ
-
+                                            <span class="w-2 h-2 rounded-full bg-red-500"></span>
+                                            ការវាយតម្លៃបានបិទ
                                         </span>
                                     @else
                                         <span
@@ -250,10 +184,6 @@
 
                 </div>
             @else
-                {{-- =========================================================
-                EMPTY STATE
-            ========================================================== --}}
-
                 <div
                     class="bg-white
                        rounded-2xl
@@ -289,9 +219,7 @@
 
                 </div>
             @endif
-
         </div>
-
     </div>
 
 @endsection
