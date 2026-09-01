@@ -10,6 +10,7 @@ use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\EvaluationController;
 use App\Http\Controllers\EvaluationPeriodController;
 use App\Http\Controllers\EvaluationReportController;
+use App\Http\Controllers\EvaluationResult\DepartmentEvaluationResultController;
 use App\Http\Controllers\EvaluationResult\UserEvaluationResultController;
 use App\Http\Controllers\Evaluations\AttendanceEvaluationController;
 use App\Http\Controllers\Evaluations\WorkPerformanceEvaluationController;
@@ -158,6 +159,11 @@ Route::middleware('auth')->group(function () {
     // evaluation result
     Route::get('/my-evaluation-results', [UserEvaluationResultController::class, 'index'])->name('my-evaluation-results.index');
     Route::get('/my-evaluation-results/{evaluationPeriod}', [UserEvaluationResultController::class, 'show'])->name('my-evaluation-results.show');
+
+    // Department evaluation result
+    Route::get('/department-evaluation-results', [DepartmentEvaluationResultController::class, 'index'])->name('department-evaluation-results.index');
+    Route::get('department-evaluation-results/{evaluationPeriod}/data', [DepartmentEvaluationResultController::class, 'data'])->name('department-evaluation-results.data');
+    Route::get('/department-evaluation-results/{evaluationPeriod}', [DepartmentEvaluationResultController::class, 'show'])->name('department-evaluation-results.show');
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::post('/logout', [LogoutController::class, 'logout'])->name('logout');

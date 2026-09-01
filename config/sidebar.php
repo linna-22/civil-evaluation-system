@@ -60,11 +60,6 @@ return [
                         'route' => 'evaluations.behavior.*',
                         'url' => 'evaluations.behavior.index',
                     ],
-                    [
-                        'title' => 'លទ្ធផលការវាយតម្លៃ',
-                        'route' => 'my-evaluation-results.*',
-                        'url' => 'my-evaluation-results.index',
-                    ],
 
                 ],
             ],
@@ -79,9 +74,14 @@ return [
                 'children' => [
 
                     [
-                        'title' => 'របាយការណ៍ការវាយតម្លៃ',
-                        'route' => 'reports.evaluations.*',
-                        'url' => '#',
+                        'title' => 'លទ្ធផលការវាយតម្លៃ',
+                        'route' => 'my-evaluation-results.*',
+                        'url' => 'my-evaluation-results.index',
+                    ],
+                    [
+                        'title' => 'លទ្ធផលការវាយតម្លៃរបស់មន្ត្រី',
+                        'route' => 'department-evaluation-results.*',
+                        'url' => 'department-evaluation-results.index',
                     ],
 
                 ],
