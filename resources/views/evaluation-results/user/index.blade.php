@@ -192,7 +192,7 @@
                                                    rounded-full
                                                    bg-green-500"></span>
 
-                                            បានបិទ
+                                            បានបិទការវាយតម្លៃ
 
                                         </span>
                                     @else
