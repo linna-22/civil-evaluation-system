@@ -10,36 +10,39 @@ use Illuminate\View\View;
 class UserEvaluationResultController extends Controller
 {
     public function index(
-    UserEvaluationResultService $service
-): View {
+        UserEvaluationResultService $service
+    ): View {
 
-    $periods = $service->getClosedPeriods();
+        if (auth()->user()->role !== 'user') {
+            abort(403);
+        }
+        $periods = $service->getClosedPeriods();
 
-    return view(
-        'evaluation-results.user.index',
-        compact('periods')
-    );
-}
+        return view(
+            'evaluation-results.user.index',
+            compact('periods')
+        );
+    }
 
 
-public function show(
-    EvaluationPeriod $evaluationPeriod,
-    UserEvaluationResultService $service
-): View {
+    public function show(
+        EvaluationPeriod $evaluationPeriod,
+        UserEvaluationResultService $service
+    ): View {
 
-    $user = auth()->user();
+        $user = auth()->user();
 
-    $result = $service->getResultForPeriod(
-        $user,
-        $evaluationPeriod
-    );
+        $result = $service->getResultForPeriod(
+            $user,
+            $evaluationPeriod
+        );
 
-    return view(
-        'evaluation-results.user.show',
-        compact(
-            'result',
-            'evaluationPeriod'
-        )
-    );
-}
+        return view(
+            'evaluation-results.user.show',
+            compact(
+                'result',
+                'evaluationPeriod'
+            )
+        );
+    }
 }
