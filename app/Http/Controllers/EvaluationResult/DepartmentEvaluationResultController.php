@@ -4,6 +4,7 @@ namespace App\Http\Controllers\EvaluationResult;
 
 use App\Http\Controllers\Controller;
 use App\Models\EvaluationPeriod;
+use App\Models\EvaluationSummary;
 use App\Services\DepartmentEvaluationResultService;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -65,4 +66,23 @@ class DepartmentEvaluationResultController extends Controller
             compact('evaluationPeriod')
         );
     }
+
+    public function updateRemark(
+    Request $request,
+    EvaluationSummary $evaluationSummary,
+    DepartmentEvaluationResultService $service
+) {
+    $request->validate([
+        'remarks' => ['nullable', 'string', 'max:1000'],
+    ]);
+
+    $service->updateRemark(
+        $evaluationSummary,
+        $request->input('remarks')
+    );
+
+    return response()->json([
+        'message' => 'មូលវិចារណ៍ត្រូវបានរក្សាទុកដោយជោគជ័យ។',
+    ]);
+}
 }

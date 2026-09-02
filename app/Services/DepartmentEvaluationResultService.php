@@ -171,4 +171,47 @@ class DepartmentEvaluationResultService
                 }
             )->first();
     }
+    public function updateRemark(
+        EvaluationSummary $evaluationSummary,
+        ?string $remarks
+    ): void {
+        $user = auth()->user();
+
+        if ($user->role !== 'department_admin') {
+            abort(403, 'Unauthorized.');
+        }
+
+        $evaluationPeriodUser =
+            $evaluationSummary->evaluationPeriodUser;
+
+        if (!$evaluationPeriodUser) {
+            abort(404, 'Evaluation record not found.');
+        }
+
+        $employee = $evaluationPeriodUser->user;
+
+        if (!$employee) {
+            abort(404, 'User not found.');
+        }
+
+        // Department admin can only update
+        // users in their own department.
+        if ($employee->department_id !== $user->department_id) {
+            abort(403, 'Unauthorized.');
+        }
+
+        // Only normal users can appear in department results.
+        if (
+            $employee->role !== 'user' ||
+            $employee->is_leader != 0
+        ) {
+            abort(403, 'Unauthorized.');
+        }
+
+        $evaluationSummary->update([
+            'remarks' => $remarks !== null
+                ? trim($remarks)
+                : null,
+        ]);
+    }
 }

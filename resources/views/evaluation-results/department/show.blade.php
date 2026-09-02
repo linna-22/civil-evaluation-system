@@ -6,10 +6,7 @@
 
     <div class="space-y-6">
 
-        <x-page-header
-            title="លទ្ធផលការវាយតម្លៃ"
-            description="បង្ហាញលទ្ធផលការវាយតម្លៃរបស់មន្ត្រីក្នុងនាយកដ្ឋាន"
-        />
+        <x-page-header title="លទ្ធផលការវាយតម្លៃ" description="បង្ហាញលទ្ធផលការវាយតម្លៃរបស់មន្ត្រីក្នុងនាយកដ្ឋាន" />
 
         {{-- Search Card --}}
         <div class="bg-white rounded-2xl shadow-sm p-3">
@@ -45,10 +42,6 @@
                             ឈ្មោះឡាតាំង
                         </th>
 
-                        <th class="px-6 py-3 text-left">
-                            តួនាទី
-                        </th>
-
                         <th class="px-6 py-3 text-center">
                             សមិទ្ធកម្មការងារ
                         </th>
@@ -63,6 +56,12 @@
 
                         <th class="px-6 py-3 text-center">
                             ពិន្ទុវាយតម្លៃសរុប
+                        </th>
+                        <th class="px-6 py-3 text-left">
+                            មូលវិចារណ៍
+                        </th>
+                        <th class="px-6 py-3 text-left">
+                            សកម្មភាព
                         </th>
                     </x-slot:head>
 
@@ -83,11 +82,12 @@
         {{-- Pagination --}}
         <div id="department-result-pagination" class="mt-6">
         </div>
+        <x-remarks-modal />
 
     </div>
     <script>
-    window.departmentEvaluationPeriodId =
-        @json($evaluationPeriod->evaluation_period_id);
-</script>
-@vite(['resources/js/pages/department-evaluation-results/index.js'])
+        window.departmentEvaluationPeriodId =
+            @json($evaluationPeriod->evaluation_period_id);
+    </script>
+    @vite(['resources/js/pages/department-evaluation-results/index.js'])
 @endsection

@@ -17,6 +17,7 @@ class EvaluationSummary extends Model
         'attendance_score',
         'behavior_score',
         'total_score',
+        'remarks',
         'calculated_at',
     ];
 
