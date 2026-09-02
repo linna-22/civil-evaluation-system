@@ -66,9 +66,9 @@
                     class="w-full resize-none rounded-xl border border-gray-300 px-4 py-3 text-sm text-gray-700 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
                 ></textarea>
 
-                <p class="mt-1 text-xs text-gray-400">
+                {{-- <p class="mt-1 text-xs text-gray-400">
                     មូលវិចារណ៍នេះមិនតម្រូវឱ្យបញ្ចូលទេ។
-                </p>
+                </p> --}}
 
                 {{-- Hidden ID --}}
                 <input
