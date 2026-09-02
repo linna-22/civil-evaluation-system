@@ -5,6 +5,7 @@ namespace App\Http\Controllers\EvaluationResult;
 use App\Http\Controllers\Controller;
 use App\Models\EvaluationPeriod;
 use App\Models\EvaluationSummary;
+use App\Models\User;
 use App\Services\DepartmentEvaluationResultService;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -68,21 +69,52 @@ class DepartmentEvaluationResultController extends Controller
     }
 
     public function updateRemark(
-    Request $request,
-    EvaluationSummary $evaluationSummary,
-    DepartmentEvaluationResultService $service
-) {
-    $request->validate([
-        'remarks' => ['nullable', 'string', 'max:1000'],
-    ]);
+        Request $request,
+        EvaluationSummary $evaluationSummary,
+        DepartmentEvaluationResultService $service
+    ) {
+        $request->validate([
+            'remarks' => ['nullable', 'string', 'max:1000'],
+        ]);
 
-    $service->updateRemark(
-        $evaluationSummary,
-        $request->input('remarks')
-    );
+        $service->updateRemark(
+            $evaluationSummary,
+            $request->input('remarks')
+        );
 
-    return response()->json([
-        'message' => 'មូលវិចារណ៍ត្រូវបានរក្សាទុកដោយជោគជ័យ។',
-    ]);
-}
+        return response()->json([
+            'message' => 'មូលវិចារណ៍ត្រូវបានរក្សាទុកដោយជោគជ័យ។',
+        ]);
+    }
+    public function print(
+        EvaluationPeriod $evaluationPeriod,
+        User $user,
+        DepartmentEvaluationResultService $service
+    ): View {
+
+        $departmentAdmin = auth()->user();
+        if ($departmentAdmin->role !== 'department_admin') {
+            abort(403);
+        }
+
+        $result = $service->getUserResult(
+            $departmentAdmin,
+            $evaluationPeriod,
+            $user
+        );
+
+        if (!$result) {
+            abort(404, 'Evaluation result not found.');
+        }
+
+        return view(
+            'evaluation-results.department.print',
+            compact(
+                'evaluationPeriod',
+                'result',
+                'departmentAdmin'
+
+            )
+        );
+    }
 }

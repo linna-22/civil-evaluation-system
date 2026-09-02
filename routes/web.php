@@ -165,6 +165,7 @@ Route::middleware('auth')->group(function () {
     Route::get('department-evaluation-results/{evaluationPeriod}/data', [DepartmentEvaluationResultController::class, 'data'])->name('department-evaluation-results.data');
     Route::get('/department-evaluation-results/{evaluationPeriod}', [DepartmentEvaluationResultController::class, 'show'])->name('department-evaluation-results.show');
     Route::patch('/department-evaluation-results/remarks/{evaluationSummary}', [DepartmentEvaluationResultController::class, 'updateRemark'])->name('department-evaluation-results.remarks.update');
+    Route::get('/department-evaluation-results/{evaluationPeriod}/user/{user}/print', [DepartmentEvaluationResultController::class, 'print'])->name('department-evaluation-results.print');
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::post('/logout', [LogoutController::class, 'logout'])->name('logout');

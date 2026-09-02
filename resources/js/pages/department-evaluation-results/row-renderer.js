@@ -55,7 +55,16 @@ export function renderDepartmentResultRow(result, no) {
                 </button>
 
             </td>
-
+            <td class="px-6 py-4 text-center">
+                <a
+                    href="/department-evaluation-results/${window.departmentEvaluationPeriodId}/user/${user?.user_id}/print"
+                    target="_blank"
+                    class="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-blue-600 text-white text-xs hover:bg-blue-700 transition"
+                >
+                    <i data-lucide="file-down" class="w-3.5 h-3.5"></i>
+                    pdf
+                </a>
+            </td>
         </tr>
     `;
 }
