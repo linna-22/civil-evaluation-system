@@ -27,7 +27,7 @@
                         id="remarks-modal-title"
                         class="text-lg font-semibold text-gray-800"
                     >
-                        បន្ថែមមូលវិចារណ៍
+                        មូលវិចារណ៍
                     </h2>
 
                     <p
@@ -48,27 +48,81 @@
 
             </div>
 
+
             {{-- Body --}}
             <div class="px-6 py-5">
 
-                <label
-                    for="remarks-input"
-                    class="mb-2 block text-sm font-medium text-gray-700"
-                >
+                <label class="mb-3 block text-sm font-medium text-gray-700">
                     មូលវិចារណ៍
                 </label>
 
-                <textarea
-                    id="remarks-input"
-                    rows="5"
-                    maxlength="1000"
-                    placeholder="សូមបញ្ចូលមូលវិចារណ៍..."
-                    class="w-full resize-none rounded-xl border border-gray-300 px-4 py-3 text-sm text-gray-700 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
-                ></textarea>
 
-                {{-- <p class="mt-1 text-xs text-gray-400">
-                    មូលវិចារណ៍នេះមិនតម្រូវឱ្យបញ្ចូលទេ។
-                </p> --}}
+                {{-- Preset Remark Buttons --}}
+                <div
+                    id="remarks-options"
+                    class="grid grid-cols-2 gap-3"
+                >
+
+                    <button
+                        type="button"
+                        class="remark-option rounded-xl border border-gray-300 px-4 py-3 text-sm font-medium text-gray-700 transition hover:border-blue-500 hover:bg-blue-50 hover:text-blue-600"
+                        data-value="ល្អណាស់"
+                    >
+                        ល្អណាស់
+                    </button>
+
+                    <button
+                        type="button"
+                        class="remark-option rounded-xl border border-gray-300 px-4 py-3 text-sm font-medium text-gray-700 transition hover:border-blue-500 hover:bg-blue-50 hover:text-blue-600"
+                        data-value="ល្អបង្គួរ"
+                    >
+                        ល្អបង្គួរ
+                    </button>
+
+                    <button
+                        type="button"
+                        class="remark-option rounded-xl border border-gray-300 px-4 py-3 text-sm font-medium text-gray-700 transition hover:border-blue-500 hover:bg-blue-50 hover:text-blue-600"
+                        data-value="មធ្យម"
+                    >
+                        មធ្យម
+                    </button>
+
+                    <button
+                        type="button"
+                        class="remark-option rounded-xl border border-gray-300 px-4 py-3 text-sm font-medium text-gray-700 transition hover:border-blue-500 hover:bg-blue-50 hover:text-blue-600"
+                        data-value="ខ្សោយ"
+                    >
+                        ខ្សោយ
+                    </button>
+
+                    {{-- Manual option --}}
+                    <button
+                        type="button"
+                        id="remarks-manual-option"
+                        class="remark-option col-span-2 rounded-xl border border-gray-300 px-4 py-3 text-sm font-medium text-gray-700 transition hover:border-blue-500 hover:bg-blue-50 hover:text-blue-600"
+                        data-value="manual"
+                    >
+                        បញ្ចូលដោយដៃ
+                    </button>
+
+                </div>
+
+
+                {{-- Manual Input --}}
+                <div
+                    id="remarks-manual-input-wrapper"
+                    class="mt-4 hidden"
+                >
+
+                    <textarea
+                        id="remarks-input"
+                        rows="4"
+                        maxlength="1000"
+                        placeholder="សូមបញ្ចូលមូលវិចារណ៍..."
+                        class="w-full resize-none rounded-xl border border-gray-300 px-4 py-3 text-sm text-gray-700 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                    ></textarea>
+                </div>
+
 
                 {{-- Hidden ID --}}
                 <input
@@ -76,7 +130,14 @@
                     id="remarks-evaluation-summary-id"
                 >
 
+                {{-- Selected remark --}}
+                <input
+                    type="hidden"
+                    id="remarks-selected-value"
+                >
+
             </div>
+
 
             {{-- Footer --}}
             <div class="flex justify-end gap-3 border-t border-gray-100 px-6 py-4">
