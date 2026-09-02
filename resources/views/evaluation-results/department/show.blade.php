@@ -39,7 +39,7 @@
                         </th>
 
                         <th class="px-6 py-3 text-left">
-                            ឈ្មោះឡាតាំង
+                             ភេទ
                         </th>
 
                         <th class="px-6 py-3 text-center">

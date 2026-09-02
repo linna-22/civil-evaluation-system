@@ -18,7 +18,7 @@ export function renderDepartmentResultRow(result, no) {
             </td>
 
             <td class="px-6 py-4">
-                ${user?.name_en ?? "មិនមាន"}
+                ${user?.gender === 'male' ? 'ប្រុស' : user?.gender === 'female' ? 'ស្រី' : 'មិនមាន'}
             </td>
 
             <td class="px-6 py-4 text-center">

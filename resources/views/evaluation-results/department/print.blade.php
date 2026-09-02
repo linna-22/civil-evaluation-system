@@ -148,7 +148,7 @@
                     </td>
 
                     <td>
-                        មន្ត្រី
+                        {{ $result->evaluationPeriodUser?->user?->position ?? 'មិនមាន' }}
                     </td>
 
                     <td>
