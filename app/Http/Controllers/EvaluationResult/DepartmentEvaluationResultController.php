@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\EvaluationResult;
 
+use App\Exports\DepartmentEvaluationWordExport;
 use App\Http\Controllers\Controller;
 use App\Models\EvaluationPeriod;
 use App\Models\EvaluationSummary;
@@ -37,8 +38,7 @@ class DepartmentEvaluationResultController extends Controller
     /**
      * Display all closed evaluation periods.
      */
-    public function index(
-        DepartmentEvaluationResultService $service
+    public function index(DepartmentEvaluationResultService $service
     ): View {
 
         if (auth()->user()->role !== 'department_admin') {
@@ -57,11 +57,7 @@ class DepartmentEvaluationResultController extends Controller
      * Display evaluation results
      * for users in the department.
      */
-    public function show(
-        EvaluationPeriod $evaluationPeriod,
-        DepartmentEvaluationResultService $service
-    ): View {
-
+    public function show(EvaluationPeriod $evaluationPeriod, DepartmentEvaluationResultService $service): View {
         return view(
             'evaluation-results.department.show',
             compact('evaluationPeriod')
@@ -86,11 +82,7 @@ class DepartmentEvaluationResultController extends Controller
             'message' => 'មូលវិចារណ៍ត្រូវបានរក្សាទុកដោយជោគជ័យ។',
         ]);
     }
-    public function print(
-        EvaluationPeriod $evaluationPeriod,
-        User $user,
-        DepartmentEvaluationResultService $service
-    ): View {
+    public function print(EvaluationPeriod $evaluationPeriod, User $user, DepartmentEvaluationResultService $service): View {
 
         $departmentAdmin = auth()->user();
         if ($departmentAdmin->role !== 'department_admin') {
@@ -116,5 +108,30 @@ class DepartmentEvaluationResultController extends Controller
 
             )
         );
+    }
+    public function downloadWord(EvaluationPeriod $evaluationPeriod, User $user, DepartmentEvaluationResultService $service) {
+        $departmentAdmin = auth()->user();
+
+        if ($departmentAdmin->role !== 'department_admin') {
+            abort(403);
+        }
+
+        $result = $service->getUserResult(
+            $departmentAdmin,
+            $evaluationPeriod,
+            $user
+        );
+
+        if (!$result) {
+            abort(404, 'Evaluation result not found.');
+        }
+
+        $export = new DepartmentEvaluationWordExport(
+            $evaluationPeriod,
+            $result,
+            $departmentAdmin
+        );
+
+        return $export->download();
     }
 }

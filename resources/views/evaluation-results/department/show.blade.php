@@ -60,8 +60,8 @@
                         <th class="px-6 py-3 text-left">
                             មូលវិចារណ៍
                         </th>
-                        <th class="px-6 py-3 text-left">
-                            សកម្មភាព
+                        <th class="px-6 py-3 text-center">
+                            ទាញយក
                         </th>
                     </x-slot:head>
 

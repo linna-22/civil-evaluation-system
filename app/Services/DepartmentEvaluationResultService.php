@@ -145,7 +145,6 @@ class DepartmentEvaluationResultService
                             'evaluation_period_id',
                             $evaluationPeriod->evaluation_period_id
                         )
-
                         ->where(
                             'user_id',
                             $user->user_id
