@@ -1,68 +1,67 @@
-
-        /* ==========================================
+/* ==========================================
            A4 Landscape
         ========================================== */
-        @page {
-            size: A4 portrait;
-            margin: 15mm 15mm;
-        }
-        * {
-            box-sizing: border-box;
-        }
-        html,
-        body {
-            margin: 0;
-            padding: 0;
-            background: white;
-        }
-        body {
-            color: #000;
-            font-family: "Siemreap", Arial, sans-serif;
-            font-size: 13px;
-        }
-        .print-container {
-            width: 100%;
-            max-width: 180mm;
-            margin: 0 auto;
-        }
-        /* ==========================================
+@page {
+    size: A4 portrait;
+    margin: 15mm 15mm;
+}
+* {
+    box-sizing: border-box;
+}
+html,
+body {
+    margin: 0;
+    padding: 0;
+    background: white;
+}
+body {
+    color: #000;
+    font-family: "Siemreap", Arial, sans-serif;
+    font-size: 13px;
+}
+.print-container {
+    width: 100%;
+    max-width: 180mm;
+    margin: 0 auto;
+}
+/* ==========================================
            Print Button
         ========================================== */
-        .print-actions {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 100;
-        }
-        .print-button {
-            border: none;
-            border-radius: 8px;
-            padding: 10px 18px;
-            background: #2563eb;
-            color: white;
-            font-size: 14px;
-            cursor: pointer;
-        }
-        .print-button:hover {
-            background: #1d4ed8;
-        }
-        /* ==========================================
+.print-actions {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 100;
+}
+.print-button {
+    border: none;
+    border-radius: 8px;
+    padding: 10px 18px;
+    background: #2563eb;
+    color: white;
+    font-size: 14px;
+    cursor: pointer;
+}
+.print-button:hover {
+    background: #1d4ed8;
+}
+/* ==========================================
            Header
         ========================================== */
-        .official-header {
-            position: relative;
-            min-height: 48mm;
-            margin-bottom: 4mm;
-        }
-        /* Logo / left side */
-        .header-left {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 75mm;
-            text-align: center;
-        }
-        /*
+.official-header {
+    position: relative;
+    min-height: 48mm;
+    margin-bottom: 4mm;
+}
+/* Logo / left side */
+.header-left {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 75mm;
+    text-align: center;
+}
+/*
          * Put your ministry/logo image here later.
          *
          * Example:
@@ -72,147 +71,150 @@
          *     class="ministry-logo"
          * >
          */
-        .ministry-logo {
-            display: block;
-            width: 24mm;
-            height: auto;
-            object-fit: contain;
-            margin: 0 auto 2mm;
-        }
-        .ministry-name {
-            font-family: "Moul", serif;
-            font-size: 14px;
-            font-weight: normal;
-            line-height: 1.6;
-            text-align: center;
-        }
-        /* National heading / right side */
-        .header-right {
-            position: absolute;
-            top: 0;
-            right: 0;
-            width: 90mm;
-            text-align: center;
-            font-family: "Moul", serif;
-            font-size: 13px;
-            font-weight: normal;
-            line-height: 1.7;
-        }
-        .header-right-divider {
-            display: block;
-            width: 28mm;
-            height: auto;
-            margin: 2mm auto 0;
-        }
-        /* ==========================================
+.ministry-logo {
+    display: block;
+    width: 24mm;
+    height: auto;
+    object-fit: contain;
+    margin: 0 auto 2mm;
+}
+.ministry-name {
+    font-family: "Moul", serif;
+    font-size: 14px;
+    font-weight: normal;
+    line-height: 1.6;
+    text-align: center;
+}
+/* National heading / right side */
+.header-right {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 90mm;
+    text-align: center;
+    font-family: "Moul", serif;
+    font-size: 13px;
+    font-weight: normal;
+    line-height: 1.7;
+}
+.header-right-divider {
+    display: block;
+    width: 28mm;
+    height: auto;
+    margin: 2mm auto 0;
+}
+/* ==========================================
            Report Title
         ========================================== */
-        .report-title {
-            position: absolute;
-            left: 50%;
-            bottom: 0;
-            transform: translateX(-50%);
-            width: 180mm;
-            text-align: center;
-            font-family: "Moul", serif;
-            font-size: 16px;
-            font-weight: normal;
-            line-height: 1.8;
-            margin-top: 2mm;
-        }
-        /* ==========================================
+.report-title {
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    transform: translateX(-50%);
+    width: 180mm;
+    text-align: center;
+    font-family: "Moul", serif;
+    font-size: 16px;
+    font-weight: normal;
+    line-height: 1.8;
+    margin-top: 2mm;
+}
+/* ==========================================
            Evaluation Table
         ========================================== */
-        .report-table {
-            width: 100%;
-            border-collapse: collapse;
-            table-layout: fixed;
-            margin-top: 3mm;
-        }
-        .report-table th,
-        .report-table td {
-            border: 1px solid #000;
-            padding: 4px 6px;
-            text-align: center;
-            vertical-align: middle;
-            line-height: 1.5;
-        }
-        .report-table th {
-            font-family: "Moul", serif;
-            font-weight: normal;
-            font-size: 12px;
-        }
-        .report-table td {
-            font-size: 13px;
-        }
-        /* Column widths */
-        .col-no {
-            width: 5%;
-        }
-        .col-name {
-            width: 19%;
-        }
-        .col-position {
-            width: 10%;
-        }
-        .col-performance {
-            width: 14%;
-        }
-        .col-attendance {
-            width: 11%;
-        }
-        .col-behavior {
-            width: 13%;
-        }
-        .col-total {
-            width: 13%;
-        }
-        .col-remarks {
-            width: 15%;
-        }
-        .text-left {
-            text-align: left !important;
-        }
-        .total-score {
-            font-family: "Siemreap", sans-serif;
-            font-weight: bold;
-        }
-        /* ==========================================
+.report-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    margin-top: 3mm;
+}
+.report-table th,
+.report-table td {
+    border: 1px solid #000;
+    padding: 4px 6px;
+    text-align: center;
+    vertical-align: middle;
+    line-height: 1.5;
+}
+.report-table th {
+    font-family: "Moul", serif;
+    font-weight: normal;
+    font-size: 12px;
+}
+.report-table td {
+    font-size: 13px;
+}
+/* Column widths */
+.col-no {
+    width: 5%;
+}
+.col-name {
+    width: 19%;
+}
+.col-position {
+    width: 10%;
+}
+.col-performance {
+    width: 14%;
+}
+.col-attendance {
+    width: 11%;
+}
+.col-behavior {
+    width: 13%;
+}
+.col-total {
+    width: 13%;
+}
+.col-remarks {
+    width: 15%;
+}
+.text-left {
+    text-align: left !important;
+}
+.total-score {
+    font-family: "Siemreap", sans-serif;
+    font-weight: bold;
+}
+/* ==========================================
            Bottom Date / Signature
         ========================================== */
-        .bottom-section {
-            margin-top: 18mm;
-            display: flex;
-            justify-content: flex-end;
-        }
-        .date-signature {
-            width: 80mm;
-            text-align: center;
-            line-height: 1.8;
-            font-size: 12px;
-        }
-        .signature-space {
-            height: 18mm;
-        }
-        .evaluator {
-            font-family: "Moul", serif;
-            font-weight: normal;
-        }
-        /* ==========================================
+.bottom-section {
+    width: 100%;
+    margin-top: 5mm;
+    display: flex;
+    justify-content: flex-end;
+}
+.date-signature {
+    width: 80mm;
+    text-align: center;
+    font-size: 12px;
+}
+.date-signature > div {
+    white-space: nowrap;
+}
+.signature-space {
+    height: 18mm;
+}
+.evaluator {
+    font-family: "Moul", serif;
+    font-weight: normal;
+}
+/* ==========================================
            Print
         ========================================== */
-        @media print {
-            .print-actions {
-                display: none !important;
-            }
-            body {
-                background: white;
-            }
-            .print-container {
-                width: 100%;
-                max-width: none;
-            }
-            .report-table {
-                page-break-inside: avoid;
-            }
-        }
+@media print {
+    .print-actions {
+        display: none !important;
+    }
+    body {
+        background: white;
+    }
+    .print-container {
+        width: 100%;
+        max-width: none;
+    }
+    .report-table {
+        page-break-inside: avoid;
+    }
+}

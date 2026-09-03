@@ -29,33 +29,24 @@ class DepartmentEvaluationResultService
      * in the Department Admin's department
      * for a specific evaluation period.
      */
-    public function getDepartmentResults(
-        User $admin,
-        EvaluationPeriod $evaluationPeriod,
-        Request $request
-    ): LengthAwarePaginator {
-
+    public function getDepartmentResults(User $admin, EvaluationPeriod $evaluationPeriod, Request $request): LengthAwarePaginator
+    {
         return EvaluationSummary::query()
-
             ->with([
                 'evaluationPeriodUser.user',
                 'evaluationPeriodUser.evaluationPeriod',
             ])
-
             ->whereHas(
                 'evaluationPeriodUser',
                 function ($query) use ($admin, $evaluationPeriod) {
-
                     $query
                         ->where(
                             'evaluation_period_id',
                             $evaluationPeriod->evaluation_period_id
                         )
-
                         ->whereHas(
                             'user',
                             function ($userQuery) use ($admin) {
-
                                 $userQuery
                                     ->where(
                                         'department_id',
@@ -69,49 +60,57 @@ class DepartmentEvaluationResultService
                         );
                 }
             )
-
+            // ==========================================================
+            // Office Filter
+            // ==========================================================
+            ->when(
+                $request->office_id,
+                function ($query) use ($request) {
+                    $query->whereHas(
+                        'evaluationPeriodUser.user',
+                        function ($userQuery) use ($request) {
+                            $userQuery->where(
+                                'office_id',
+                                $request->office_id
+                            );
+                        }
+                    );
+                }
+            )
+            // ==========================================================
             // Search
+            // ==========================================================
             ->when(
                 $request->search,
                 function ($query) use ($request) {
-
                     $search = $request->search;
-
                     $query->whereHas(
                         'evaluationPeriodUser.user',
                         function ($userQuery) use ($search) {
-
                             $userQuery->where(function ($q) use ($search) {
-
                                 $q->where(
                                     'name_kh',
                                     'like',
                                     "%{$search}%"
                                 )
-
                                     ->orWhere(
                                         'name_en',
                                         'like',
                                         "%{$search}%"
                                     )
-
                                     ->orWhere(
                                         'id_code',
                                         'like',
                                         "%{$search}%"
                                     );
-
                             });
-
                         }
                     );
 
                 }
             )
-
             // Highest score first
             ->orderByDesc('total_score')
-
             // Pagination
             ->paginate(
                 $request->input('per_page', 10)
@@ -169,6 +168,117 @@ class DepartmentEvaluationResultService
 
                 }
             )->first();
+    }
+    /**
+     * Get all evaluation results for export.
+     *
+     * Returns all matching employees without pagination.
+     * Search filter is applied when provided.
+     */
+    public function getDepartmentResultsForExport(
+        User $admin,
+        EvaluationPeriod $evaluationPeriod,
+        Request $request
+    ): Collection {
+
+        return EvaluationSummary::query()
+
+            ->with([
+                'evaluationPeriodUser.user',
+                'evaluationPeriodUser.evaluationPeriod',
+            ])
+
+            ->whereHas(
+                'evaluationPeriodUser',
+                function ($query) use ($admin, $evaluationPeriod) {
+
+                    $query
+                        ->where(
+                            'evaluation_period_id',
+                            $evaluationPeriod->evaluation_period_id
+                        )
+
+                        ->whereHas(
+                            'user',
+                            function ($userQuery) use ($admin) {
+
+                                $userQuery
+                                    ->where(
+                                        'department_id',
+                                        $admin->department_id
+                                    )
+
+                                    // Only normal users
+                                    ->where('role', 'user')
+
+                                    // Exclude leaders
+                                    ->where('is_leader', 0);
+                            }
+                        );
+                }
+            )
+            // ==========================================================
+            // Office Filter
+            // ==========================================================
+            ->when(
+                $request->office_id,
+                function ($query) use ($request) {
+                    $query->whereHas(
+                        'evaluationPeriodUser.user',
+                        function ($userQuery) use ($request) {
+                            $userQuery->where(
+                                'office_id',
+                                $request->office_id
+                            );
+                        }
+                    );
+                }
+            )
+            // Search
+            ->when(
+                $request->search,
+                function ($query) use ($request) {
+
+                    $search = $request->search;
+
+                    $query->whereHas(
+                        'evaluationPeriodUser.user',
+                        function ($userQuery) use ($search) {
+
+                            $userQuery->where(function ($q) use ($search) {
+
+                                $q->where(
+                                    'name_kh',
+                                    'like',
+                                    "%{$search}%"
+                                )
+
+                                    ->orWhere(
+                                        'name_en',
+                                        'like',
+                                        "%{$search}%"
+                                    )
+
+                                    ->orWhere(
+                                        'id_code',
+                                        'like',
+                                        "%{$search}%"
+                                    );
+
+                            });
+
+                        }
+                    );
+
+                }
+            )
+
+            // Highest score first
+            ->orderByDesc('total_score')
+
+            // IMPORTANT:
+            // No paginate() here.
+            ->get();
     }
     public function updateRemark(
         EvaluationSummary $evaluationSummary,

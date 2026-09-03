@@ -93,7 +93,7 @@ Route::middleware('auth')->group(function () {
         });
     // Evaluation Period
     Route::prefix('evaluation-periods')
-        ->name('evaluation-periods.')   
+        ->name('evaluation-periods.')
         ->group(function () {
             Route::get('/', [EvaluationPeriodController::class, 'index'])->name('index');
             Route::get('/data', [EvaluationPeriodController::class, 'data'])->name('data');
@@ -170,6 +170,7 @@ Route::middleware('auth')->group(function () {
             Route::patch('/remarks/{evaluationSummary}', [DepartmentEvaluationResultController::class, 'updateRemark'])->name('remarks.update');
             Route::get('/{evaluationPeriod}/user/{user}/print', [DepartmentEvaluationResultController::class, 'print'])->name('print');
             Route::get('/{evaluationPeriod}/user/{user}/word', [DepartmentEvaluationResultController::class, 'downloadWord'])->name('word.download');
+            Route::get('/{evaluationPeriod}/download/pdf', [DepartmentEvaluationResultController::class, 'downloadPdf'])->name('download.pdf');
         });
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');

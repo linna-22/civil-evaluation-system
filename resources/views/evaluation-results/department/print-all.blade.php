@@ -1,15 +1,20 @@
 @php
     use App\Helpers\KhmerHelper;
 @endphp
+
 <!DOCTYPE html>
 <html lang="km">
 
 <head>
+
     <meta charset="UTF-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>
         របាយការណ៍វាយតម្លៃ
     </title>
+
     @vite(['resources/css/app.css'])
     @vite(['resources/css/print.css'])
 
@@ -17,15 +22,27 @@
 
 
 <body>
+
     {{-- ==========================================
          Print Button
     ========================================== --}}
+
     <div class="print-actions">
-        <button type="button" class="print-button" onclick="window.print()">
+
+        <button
+            type="button"
+            class="print-button"
+            onclick="window.print()"
+        >
             🖨 បោះពុម្ព
         </button>
+
     </div>
 
+
+    {{-- ==========================================
+         Print Container
+    ========================================== --}}
 
     <div class="print-container">
 
@@ -41,9 +58,11 @@
 
             <div class="header-left">
 
-                {{-- logo --}}
-
-                <img src="{{ asset('images/logo.png') }}" class="ministry-logo" alt="Logo">
+                <img
+                    src="{{ asset('images/logo.png') }}"
+                    class="ministry-logo"
+                    alt="Logo"
+                >
 
                 <div class="ministry-name">
                     ក្រសួងការងារនិងបណ្តុះបណ្តាលវិជ្ជាជីវៈ
@@ -64,12 +83,16 @@
                     ជាតិ សាសនា ព្រះមហាក្សត្រ
                 </div>
 
-                <img src="{{ asset('images/taktaing.png') }}" class="header-right-divider" alt="Taktaing">
+                <img
+                    src="{{ asset('images/taktaing.png') }}"
+                    class="header-right-divider"
+                    alt="Taktaing"
+                >
 
             </div>
 
 
-            {{-- Center title --}}
+            {{-- Center Title --}}
 
             <div class="report-title">
 
@@ -77,7 +100,7 @@
 
                 <br>
 
-                {{ $result->evaluationPeriodUser?->user?->department?->name_kh ?? '' }}
+                {{ $evaluationPeriod->department?->name_kh ?? $results->first()?->evaluationPeriodUser?->user?->department?->name_kh ?? '' }}
 
                 ប្រចាំខែ
                 {{ KhmerHelper::month($evaluationPeriod->month) }}
@@ -92,6 +115,7 @@
         {{-- ==========================================
              Evaluation Table
         ========================================== --}}
+
         <table class="report-table">
 
             <thead>
@@ -103,7 +127,7 @@
                     </th>
 
                     <th class="col-name">
-                        គោត្តនាម និងនាម
+                        គោត្តមនាម និងនាម
                     </th>
 
                     <th class="col-position">
@@ -137,45 +161,48 @@
 
             <tbody>
 
-                <tr>
+                {{-- ==========================================
+                     ALL EMPLOYEES
+                ========================================== --}}
 
-                    <td>
-                        ១
-                    </td>
-
-                    <td class="text-left">
-                        {{ $result->evaluationPeriodUser?->user?->name_kh ?? 'មិនមាន' }}
-                    </td>
-
-                    <td>
-                        {{ $result->evaluationPeriodUser?->user?->position ?? 'មិនមាន' }}
-                    </td>
-
-                    <td>
-                        {{ number_format($result->work_performance_score ?? 0, 2) }}
-                    </td>
-
-                    <td>
-                        {{ number_format($result->attendance_score ?? 0, 2) }}
-                    </td>
-
-                    <td>
-                        {{ number_format($result->behavior_score ?? 0, 2) }}
-                    </td>
-
-                    <td class="total-score">
-                        {{ number_format($result->total_score ?? 0, 2) }}/100
-                    </td>
-
-                    <td class="text-left">
-                        {{ $result->remarks ?? '' }}
-                    </td>
-                </tr>
+                @foreach ($results as $index => $result)
+                    <tr>
+                        {{-- No. --}}
+                        <td>
+                            {{ KhmerHelper::number($index + 1) }}
+                        </td>
+                        {{-- Name --}}
+                        <td class="text-left">
+                            {{ $result->evaluationPeriodUser?->user?->name_kh ?? 'មិនមាន' }}
+                        </td>
+                        {{-- Position --}}
+                        <td>
+                            {{ $result->evaluationPeriodUser?->user?->position ?? 'មិនមាន' }}
+                        </td>
+                        {{-- Work Performance --}}
+                        <td>
+                            {{ number_format($result->work_performance_score ?? 0, 2) }}
+                        </td>
+                        {{-- Attendance --}}
+                        <td>
+                            {{ number_format($result->attendance_score ?? 0, 2) }}
+                        </td>
+                        {{-- Behavior --}}
+                        <td>
+                            {{ number_format($result->behavior_score ?? 0, 2) }}
+                        </td>
+                        {{-- Total --}}
+                        <td class="total-score">
+                            {{ number_format($result->total_score ?? 0, 2) }}/100
+                        </td>
+                        {{-- Remarks --}}
+                        <td class="text-left">
+                            {{ $result->remarks ?? '' }}
+                        </td>
+                    </tr>
+                @endforeach
             </tbody>
-
         </table>
-
-
         {{-- ==========================================
              Date / Signature
         ========================================== --}}
@@ -199,9 +226,13 @@
     </div>
 
     <script>
+
         window.addEventListener("load", () => {
+
             window.print();
+
         });
+
     </script>
 
 </body>

@@ -316,7 +316,7 @@ class DepartmentEvaluationWordExport
                 $this->result->total_score ?? 0,
                 2
             ) . '/100',
-            $this->result->remarks ?? 'មិនមាន',
+            $this->result->remarks ?? '',
         ];
 
         foreach ($values as $index => $value) {
