@@ -171,6 +171,7 @@ Route::middleware('auth')->group(function () {
             Route::get('/{evaluationPeriod}/user/{user}/print', [DepartmentEvaluationResultController::class, 'print'])->name('print');
             Route::get('/{evaluationPeriod}/user/{user}/word', [DepartmentEvaluationResultController::class, 'downloadWord'])->name('word.download');
             Route::get('/{evaluationPeriod}/download/pdf', [DepartmentEvaluationResultController::class, 'downloadPdf'])->name('download.pdf');
+            Route::get('/{evaluationPeriod}/download/word', [DepartmentEvaluationResultController::class, 'downloadWordAll'])->name('download.word');
         });
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');

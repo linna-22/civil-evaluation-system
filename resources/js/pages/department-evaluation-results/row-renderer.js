@@ -55,7 +55,7 @@ export function renderDepartmentResultRow(result, no) {
                 </button>
 
             </td>
-            <td class="px-6 py-4 text-center">
+            <td class="px-6 py-5 text-center">
                 <div class="flex items-center justify-center gap-2">
                     <a
                         href="/department-evaluation-results/${window.departmentEvaluationPeriodId}/user/${user?.user_id}/print"

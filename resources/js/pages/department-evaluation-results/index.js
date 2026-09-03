@@ -37,6 +37,29 @@ if (tableBody) {
         table.load();
     });
 
+    // Download Dropdown
+    const downloadDropdown = document.querySelector(
+        "#department-result-download-dropdown"
+    );
+
+    const downloadMenu = document.querySelector(
+        "#department-result-download-menu"
+    );
+
+    downloadDropdown?.addEventListener("click", () => {
+        downloadMenu?.classList.toggle("hidden");
+    });
+
+    // Close dropdown when clicking outside
+    document.addEventListener("click", (event) => {
+        if (
+            !downloadDropdown?.contains(event.target) &&
+            !downloadMenu?.contains(event.target)
+        ) {
+            downloadMenu?.classList.add("hidden");
+        }
+    });
+
     // ==========================================================
     // Bulk PDF / Word Export
     // ==========================================================
@@ -74,15 +97,15 @@ if (tableBody) {
 
     // Word
     wordButton?.addEventListener("click", () => {
-
         const search = searchInput?.value?.trim() || "";
-
+        const officeId = officeSelect?.value || "";
         const params = new URLSearchParams();
-
         if (search) {
             params.set("search", search);
         }
-
+        if (officeId) {
+            params.set("office_id", officeId);
+        }
         const url =
             `/department-evaluation-results/${periodId}/download/word` +
             (params.toString() ? `?${params.toString()}` : "");

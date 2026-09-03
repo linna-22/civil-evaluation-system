@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\EvaluationResult;
 
+use App\Exports\DepartmentEvaluationWordBulkExport;
 use App\Exports\DepartmentEvaluationWordExport;
 use App\Http\Controllers\Controller;
 use App\Models\EvaluationPeriod;
@@ -167,5 +168,25 @@ class DepartmentEvaluationResultController extends Controller
                 'departmentAdmin'
             )
         );
+    }
+    public function downloadWordAll(Request $request, EvaluationPeriod $evaluationPeriod, DepartmentEvaluationResultService $service) {
+        $departmentAdmin = auth()->user();
+        if ($departmentAdmin->role !== 'department_admin') {
+            abort(403);
+        }
+        $results = $service->getDepartmentResultsForExport(
+            $departmentAdmin,
+            $evaluationPeriod,
+            $request
+        );
+        if ($results->isEmpty()) {
+            abort(404, 'No evaluation results found.');
+        }
+        $export = new DepartmentEvaluationWordBulkExport(
+            $evaluationPeriod,
+            $results,
+            $departmentAdmin
+        );
+        return $export->download();
     }
 }

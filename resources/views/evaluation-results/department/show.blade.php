@@ -19,7 +19,9 @@
                     <x-search-box id="department-result-search" />
 
                     {{-- Office Filter --}}
-                    <x-filters.office-filter id="department-result-office" :offices="$offices" />
+                    @if ($offices->isNotEmpty())
+                        <x-filters.office-filter id="department-result-office" :offices="$offices" />
+                    @endif
 
                 </div>
 
@@ -29,88 +31,105 @@
                     {{-- Per Page --}}
                     <x-per-page id="department-result-per-page" />
 
-                    {{-- Bulk PDF --}}
-                    <button type="button" id="department-result-download-pdf"
-                        class="cursor-pointer inline-flex items-center gap-2 rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700 transition">
-                        <i data-lucide="file-down" class="w-4 h-4"></i>
-                        ទាញយក PDF
-                    </button>
+                    {{-- Download Dropdown --}}
+                    <div class="relative">
+                        <button type="button" id="department-result-download-dropdown"
+                            class="cursor-pointer inline-flex items-center gap-2 rounded-2xl bg-green-700 px-4 py-2 text-sm font-medium text-white hover:bg-green-800 transition">
+                            <i data-lucide="folder-input" class="w-4 h-4"></i>  
+                            នាំចេញ
+                            <i data-lucide="chevron-down" class="w-4 h-4"></i>
+                        </button>
 
-                    {{-- Bulk Word --}}
-                    <button type="button" id="department-result-download-word"
-                        class="cursor-pointer inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 transition">
-                        <i data-lucide="file-text" class="w-4 h-4"></i>
-                        ទាញយក Word
-                    </button>
+                        {{-- Dropdown Menu --}}
+                        <div id="department-result-download-menu"
+                            class="hidden absolute right-0 z-50 mt-2 w-44 rounded-xl bg-white border border-gray-200 shadow-lg overflow-hidden">
+
+                            {{-- PDF --}}
+                            <button type="button" id="department-result-download-pdf"
+                                class="cursor-pointer w-full flex items-center gap-3 px-4 py-3 text-sm text-gray-700 hover:bg-gray-100 transition">
+                                <i data-lucide="file-down" class="w-4 h-4 text-red-600"></i>
+                                ទម្រង់ PDF
+                            </button>
+
+                            {{-- Word --}}
+                            <button type="button" id="department-result-download-word"
+                                class="cursor-pointer w-full flex items-center gap-3 px-4 py-3 text-sm text-gray-700 hover:bg-gray-100 transition">
+                                <i data-lucide="file-text" class="w-4 h-4 text-blue-600"></i>
+                                ទម្រង់ Word
+                            </button>
+
+                        </div>
+                    </div>
 
                 </div>
-
             </div>
 
         </div>
 
-        {{-- Table --}}
-        <div class="bg-white rounded-2xl">
+    </div>
 
-            <div class="data-table-scroll">
+    {{-- Table --}}
+    <div class="bg-white rounded-2xl">
 
-                <x-data-table bodyId="department-result-table-body">
+        <div class="data-table-scroll">
 
-                    <x-slot:head>
+            <x-data-table bodyId="department-result-table-body">
 
-                        <th class="px-6 py-3 text-left w-20">
-                            ល.រ
-                        </th>
+                <x-slot:head>
 
-                        <th class="px-6 py-3 text-left">
-                            គោត្តនាមនិងនាម
-                        </th>
+                    <th class="px-6 py-3 text-left w-20">
+                        ល.រ
+                    </th>
 
-                        <th class="px-6 py-3 text-left">
-                            ភេទ
-                        </th>
+                    <th class="px-6 py-3 text-left">
+                        គោត្តនាមនិងនាម
+                    </th>
 
-                        <th class="px-6 py-3 text-center">
-                            សមិទ្ធកម្មការងារ
-                        </th>
+                    <th class="px-6 py-3 text-left">
+                        ភេទ
+                    </th>
 
-                        <th class="px-6 py-3 text-center">
-                            វត្តមាន
-                        </th>
+                    <th class="px-6 py-3 text-center">
+                        សមិទ្ធកម្មការងារ
+                    </th>
 
-                        <th class="px-6 py-3 text-center">
-                            អាកប្បកិរិយា
-                        </th>
+                    <th class="px-6 py-3 text-center">
+                        វត្តមាន
+                    </th>
 
-                        <th class="px-6 py-3 text-center">
-                            ពិន្ទុវាយតម្លៃសរុប
-                        </th>
-                        <th class="px-6 py-3 text-left">
-                            មូលវិចារណ៍
-                        </th>
-                        <th class="px-6 py-3 text-center">
-                            ទាញយក
-                        </th>
-                    </x-slot:head>
+                    <th class="px-6 py-3 text-center">
+                        អាកប្បកិរិយា
+                    </th>
 
-                    <x-slot:body>
+                    <th class="px-6 py-3 text-center">
+                        ពិន្ទុវាយតម្លៃសរុប
+                    </th>
+                    <th class="px-6 py-3 text-left">
+                        មូលវិចារណ៍
+                    </th>
+                    <th class="px-6 py-3 text-center">
+                        នាំចេញ
+                    </th>
+                </x-slot:head>
 
-                        <tbody id="department-result-table-body">
+                <x-slot:body>
 
-                        </tbody>
+                    <tbody id="department-result-table-body">
 
-                    </x-slot:body>
+                    </tbody>
 
-                </x-data-table>
+                </x-slot:body>
 
-            </div>
+            </x-data-table>
 
         </div>
 
-        {{-- Pagination --}}
-        <div id="department-result-pagination" class="mt-6">
-        </div>
-        <x-remarks-modal />
+    </div>
+
+    {{-- Pagination --}}
+    <div id="department-result-pagination" class="mt-6">
+    </div>
+    <x-remarks-modal />
 
     </div>
     <script>
