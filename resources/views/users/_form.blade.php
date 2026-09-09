@@ -74,14 +74,18 @@
         @if(auth()->user()->role === 'super_admin')
             <x-forms.select label="Role" name="role" :selected="old('role', $user->role ?? 'user')" :options="[
             'super_admin' => 'Super Admin',
+            'evaluation_admin' => 'អ្នកកំណត់ការវាយតម្លៃ',
             'organization_admin' => 'អ្នកគ្រប់គ្រងអង្គភាព',
             'department_admin' => 'អ្នកគ្រប់គ្រងនាយកដ្ឋាន',
+            'office_admin' => 'អ្នកគ្រប់គ្រងការិយាល័យ',
             'user' => 'អ្នកប្រើប្រាស់',
         ]" />
         @else 
          <x-forms.select label="Role" name="role" :selected="old('role', $user->role ?? 'user')" :options="[
             'organization_admin' => 'អ្នកគ្រប់គ្រងអង្គភាព',
+            'evaluation_admin' => 'អ្នកកំណត់ការវាយតម្លៃ',
             'department_admin' => 'អ្នកគ្រប់គ្រងនាយកដ្ឋាន',
+            'office_admin' => 'អ្នកគ្រប់គ្រងការិយាល័យ',
             'user' => 'អ្នកប្រើប្រាស់',
         ]" />
         @endif
