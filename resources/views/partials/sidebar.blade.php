@@ -141,10 +141,17 @@
                         'dashboard',
                         'users.profile',
                         'evaluations.behavior.*',
-                        // 'evaluations.history',
                         'evaluations.evaluations.create',
-                        'my-evaluation-results.*',
+                        // 'my-evaluation-results.*',
                         'logout',
+                    ];
+                    break;
+                case 'evaluation_admin':
+                    $allowedRoutes = [
+                        'dashboard',
+                        'evaluations.*',
+                        'users.profile',
+                        'evaluation-periods.*',
                     ];
                     break;
                 case 'organization_admin':
@@ -154,6 +161,7 @@
                         'evaluations.work-attendance.*',
                         'evaluations.work-attendance.offices',
                         'users.profile',
+                        'department-evaluation-results.*',
                     ];
                     break;
                 case 'department_admin':
@@ -167,7 +175,6 @@
                     ];
                     break;
                 default:
-                    // super_admin & department_admin
                     $allowedRoutes = null;
                     break;
             }

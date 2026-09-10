@@ -97,11 +97,13 @@ Route::middleware('auth')->group(function () {
         ->group(function () {
             Route::get('/', [EvaluationPeriodController::class, 'index'])->name('index');
             Route::get('/data', [EvaluationPeriodController::class, 'data'])->name('data');
-            Route::get('/create', [EvaluationPeriodController::class, 'create'])->name('create');
-            Route::post('/', [EvaluationPeriodController::class, 'store'])->name('store');
-            Route::get('/{evaluationPeriod}/edit', [EvaluationPeriodController::class, 'edit'])->name('edit');
-            Route::put('/{evaluationPeriod}', [EvaluationPeriodController::class, 'update'])->name('update');
-            Route::patch('/{evaluationPeriod}/close', [EvaluationPeriodController::class, 'close'])->name('close');
+            Route::middleware('role:evaluation_admin')->group(function () {
+                Route::get('/create', [EvaluationPeriodController::class, 'create'])->name('create');
+                Route::post('/', [EvaluationPeriodController::class, 'store'])->name('store');
+                Route::get('/{evaluationPeriod}/edit', [EvaluationPeriodController::class, 'edit'])->name('edit');
+                Route::put('/{evaluationPeriod}', [EvaluationPeriodController::class, 'update'])->name('update');
+                Route::patch('/{evaluationPeriod}/close', [EvaluationPeriodController::class, 'close'])->name('close');
+            });
             Route::get('/{evaluationPeriod}', [EvaluationPeriodController::class, 'show'])->name('show');
 
         });

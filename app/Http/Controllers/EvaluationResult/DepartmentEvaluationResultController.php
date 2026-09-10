@@ -44,7 +44,7 @@ class DepartmentEvaluationResultController extends Controller
         DepartmentEvaluationResultService $service
     ): View {
 
-        if (auth()->user()->role !== 'department_admin') {
+        if (auth()->user()->role == 'user' || auth()->user()->position == 'មន្ត្រី' || auth()->user()->role == 'super_admin') {
             abort(403);
         }
         $periods = $service->getClosedPeriods();
