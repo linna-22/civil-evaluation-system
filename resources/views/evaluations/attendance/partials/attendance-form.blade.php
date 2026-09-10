@@ -36,9 +36,9 @@
         </div>
     </div>
 
-        {{-- Attendance Form --}}
+    {{-- Attendance Form --}}
     <div id="attendanceForm" class="space-y-8 hidden">
-            {{-- Leave Information --}}
+        {{-- Leave Information --}}
         <div>
             <h3 class="mb-5 border-b pb-2 text-lg font-semibold text-gray-700">
                 ព័ត៌មានអំពីការឈប់
@@ -75,30 +75,56 @@
             <h3 class="mb-5 border-b pb-2 text-lg font-semibold text-gray-700">
                 ព័ត៌មានអំពីម៉ោង
             </h3>
-            <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
+
+            <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+
                 {{-- Late Arrival --}}
                 <div class="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
                     <label class="mb-2 block font-medium text-gray-700">
                         មកយឺត (ម៉ោង)
                     </label>
-                    <input type="number" min="0" step="1" name="late_hours" id="lateHours" value="0" max="8"
+
+                    <input type="number" min="0" step="0.5" name="late_hours" id="lateHours" value="0"
+                        max="8"
                         class="w-full rounded-lg border-gray-300 focus:border-indigo-500 focus:ring-indigo-500">
+
                     <p class="mt-2 text-xs text-gray-500">
                         បញ្ចូលចំនួនម៉ោងមកយឺតសរុបក្នុងខែនេះ។
                     </p>
                 </div>
+
+
                 {{-- Leave Early --}}
                 <div class="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
                     <label class="mb-2 block font-medium text-gray-700">
                         ចេញមុន (ម៉ោង)
                     </label>
-                    <input type="number" min="0" step="1" name="leave_early_hours" id="leaveEarlyHours" max="8"
-                        value="0"
+
+                    <input type="number" min="0" step="0.5" name="leave_early_hours" id="leaveEarlyHours"
+                        max="8" value="0"
                         class="w-full rounded-lg border-gray-300 focus:border-indigo-500 focus:ring-indigo-500">
+
                     <p class="mt-2 text-xs text-gray-500">
                         បញ្ចូលចំនួនម៉ោងចេញមុនសរុបក្នុងខែនេះ។
                     </p>
                 </div>
+
+
+                {{-- Overtime --}}
+                <div class="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
+                    <label class="mb-2 block font-medium text-gray-700">
+                        ម៉ោងលើស (ម៉ោង)
+                    </label>
+
+                    <input type="number" min="0" step="0.5" name="overtime_hours" id="overtimeHours"
+                        value="0"
+                        class="w-full rounded-lg border-gray-300 focus:border-indigo-500 focus:ring-indigo-500">
+
+                    <p class="mt-2 text-xs text-gray-500">
+                        បញ្ចូលចំនួនម៉ោងធ្វើការលើសសរុបក្នុងខែនេះ។
+                    </p>
+                </div>
+
             </div>
         </div>
     </div>

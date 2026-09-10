@@ -18,6 +18,7 @@ class EvaluationAttendance extends Model
         'unapproved_leave_count',
         'late_hours',
         'leave_early_hours',
+        'overtime_hours',
         'attendance_percent',
         'attendance_score',
     ];

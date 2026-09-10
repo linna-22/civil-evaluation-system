@@ -158,8 +158,7 @@
                     $allowedRoutes = [
                         'dashboard',
                         'evaluations.history',
-                        'evaluations.work-attendance.*',
-                        'evaluations.work-attendance.offices',
+                        'evaluations.attendance.*',
                         'users.profile',
                         'department-evaluation-results.*',
                     ];
@@ -169,7 +168,7 @@
                         'dashboard',
                         'evaluations.history',
                         'evaluations.work-performance.*',
-                        'evaluations.work-attendance.*',
+                        'evaluations.attendance.*',
                         'evaluations.work-attendance.offices',
                         'users.profile',
                     ];

@@ -20,13 +20,20 @@ class AttendanceEvaluationService
     public function index($user)
     {
         // =====================================================
-        // Only Department Admin
+        // Only Office Admin
         // =====================================================
 
-        if ($user->role !== 'department_admin') {
+        if ($user->role !== 'office_admin') {
             abort(403);
         }
 
+        // =====================================================
+        // Office Admin must have an office
+        // =====================================================
+
+        if (!$user->office_id) {
+            abort(404, 'មិនមានការិយាល័យសម្រាប់អ្នកប្រើប្រាស់នេះទេ។');
+        }
 
         // =====================================================
         // Get Open Evaluation Period
@@ -34,128 +41,75 @@ class AttendanceEvaluationService
 
         $evaluationPeriod = $this->getOpenEvaluationPeriod();
 
-
         // =====================================================
         // No Open Evaluation Period
         // =====================================================
 
         if (!$evaluationPeriod) {
-
             return view(
                 'evaluations.attendance.index',
                 [
-                    'offices' => collect(),
+                    'office' => null,
+                    'users' => collect(),
                     'evaluationPeriod' => null,
                 ]
             );
-
         }
 
+        // =====================================================
+        // Get Office Admin's Own Office
+        // =====================================================
+
+        $office = Office::query()
+            ->where('office_id', $user->office_id)
+            ->where('department_id', $user->department_id)
+            ->first();
+
+        if (!$office) {
+            abort(404, 'មិនមានការិយាល័យសម្រាប់អ្នកប្រើប្រាស់នេះទេ។');
+        }
 
         // =====================================================
-        // Get Offices + Active User Count
+        // Get Eligible Users in Own Office
         // =====================================================
 
-        $offices = Office::query()
-
-            ->where(
-                'department_id',
-                $user->department_id
-            )
-
-            ->withCount([
-                'users' => function ($query) {
-
-                    $query
-                        ->where('status', 'active')
-                        ->where('is_leader', false);
-
-                }
-            ])
-
-            ->orderBy('office_name_kh')
-
+        $users = $office->users()
+            ->where('status', 'active')
+            ->where('is_leader', false)
+            ->orderBy('name_kh')
             ->get();
 
-
         // =====================================================
-        // Department Has No Offices
-        // =====================================================
-
-        if ($offices->isEmpty()) {
-
-            return redirect()->route(
-                'evaluations.attendance.department.users',
-                $user->department_id
-            );
-
-        }
-
-
-        // =====================================================
-        // Get All Submitted Evaluatee IDs
+        // Get Submitted User IDs
         // =====================================================
 
         $submittedUserIds = Evaluation::query()
-
             ->where(
                 'evaluation_period_id',
                 $evaluationPeriod->evaluation_period_id
             )
             ->where(
+                'evaluation_type',
+                'attendance'
+            )
+            ->where(
                 'evaluation_status',
                 'submitted'
             )
-            ->where('evaluation_type', 'attendance')
-            ->whereHas('evaluatee', function ($query) use ($user) {
-                $query
-                    ->where(
-                        'department_id',
-                        $user->department_id
-                    )
-                    ->where('status', 'active')
-                    ->where('is_leader', false);
-            })
-            ->pluck('evaluatee_id');
-        // =====================================================
-        // Get Submitted Users Per Office
-        // =====================================================
-
-        $submittedPerOffice = User::query()
-            ->whereIn('user_id', $submittedUserIds)
-            ->where(
-                'department_id',
-                $user->department_id
+            ->whereIn(
+                'evaluatee_id',
+                $users->pluck('user_id')
             )
-            ->where('status', 'active')
-            ->where('is_leader', false)
-            ->selectRaw('office_id, COUNT(*) as submitted_count')
-            ->groupBy('office_id')
-            ->pluck('submitted_count', 'office_id');
-
+            ->pluck('evaluatee_id')
+            ->toArray();
 
         // =====================================================
-        // Attach Status
+        // Check Whether All Users Are Submitted
         // =====================================================
 
-        $offices->each(function ($office) use ($submittedPerOffice) {
-
-            $submittedCount =
-                (int) ($submittedPerOffice[$office->office_id] ?? 0);
-
-            $totalCount =
-                (int) $office->users_count;
-
-
-            $office->submitted_users_count =
-                $submittedCount;
-
-            $office->evaluation_completed =
-                $totalCount > 0 &&
-                $submittedCount === $totalCount;
-
-        });
-
+        $allUsersSubmitted =
+            $users->isNotEmpty() &&
+            count($submittedUserIds) === $users->count();
 
         // =====================================================
         // Return View
@@ -164,128 +118,15 @@ class AttendanceEvaluationService
         return view(
             'evaluations.attendance.index',
             compact(
-                'offices',
+                'office',
+                'users',
+                'submittedUserIds',
+                'allUsersSubmitted',
                 'evaluationPeriod'
             )
         );
     }
-    /**
-     * Display users without office.
-     */
-    public function usersByDepartment($user, Department $department)
-    {
-        // Only Department Admin
-        if ($user->role !== 'department_admin') {
-            abort(403);
-        }
 
-        // Department must belong to logged-in admin
-        if ($department->department_id !== $user->department_id) {
-            abort(403);
-        }
-
-        // Get Users Without Office
-        $users = $department->users()
-            ->whereNull('office_id')
-            ->where('status', 'active')
-            ->where('is_leader', false)
-            ->orderBy('name_kh')
-            ->get();
-
-        // Get Current Attendance Evaluation Period
-        $evaluationPeriodId = session()->get(
-            'attendance_evaluation_period_id'
-        );
-
-        // Get Submitted Attendance Evaluations
-        $evaluatedUserIds = [];
-
-        if ($evaluationPeriodId) {
-
-            $evaluatedUserIds = Evaluation::query()
-                ->where('evaluation_period_id', $evaluationPeriodId)
-                ->where('evaluation_type', 'attendance')
-                ->where('evaluation_status', 'submitted')
-                ->whereIn(
-                    'evaluatee_id',
-                    $users->pluck('user_id')
-                )
-                ->pluck('evaluatee_id')
-                ->toArray();
-        }
-
-        // No Office
-        $office = null;
-
-        return view(
-            'evaluations.attendance.users',
-            compact(
-                'department',
-                'office',
-                'users',
-                'evaluatedUserIds'
-            )
-        );
-    }
-
-
-    /**
-     * Display users under an office.
-     */
-    public function usersByOffice($user, Office $office)
-    {
-        // Only Department Admin
-        if ($user->role !== 'department_admin') {
-            abort(403);
-        }
-
-        // Office must belong to admin's department
-        if ($office->department_id !== $user->department_id) {
-            abort(403);
-        }
-
-        // Get Department
-        $department = $office->department;
-
-        // Get Users
-        $users = $office->users()
-            ->where('status', 'active')
-            ->where('is_leader', false)
-            ->orderBy('name_kh')
-            ->get();
-
-        // Get Current Attendance Evaluation Period
-        $evaluationPeriodId = session()->get(
-            'attendance_evaluation_period_id'
-        );
-
-        // Get Submitted Attendance Evaluations
-        $evaluatedUserIds = [];
-
-        if ($evaluationPeriodId) {
-
-            $evaluatedUserIds = Evaluation::query()
-                ->where('evaluation_period_id', $evaluationPeriodId)
-                ->where('evaluation_type', 'attendance')
-                ->where('evaluation_status', 'submitted')
-                ->whereIn(
-                    'evaluatee_id',
-                    $users->pluck('user_id')
-                )
-                ->pluck('evaluatee_id')
-                ->toArray();
-        }
-
-        return view(
-            'evaluations.attendance.users',
-            compact(
-                'department',
-                'office',
-                'users',
-                'evaluatedUserIds'
-            )
-        );
-    }
     /**
      * Get currently open evaluation period.
      */
@@ -309,73 +150,102 @@ class AttendanceEvaluationService
     /**
      * Create attendance evaluation.
      */
-    public function create($user, ?int $office = null)
+    public function create($user)
     {
-        // Only Department Admin
-        if ($user->role !== 'department_admin') {
+        // =====================================================
+        // Only Office Admin
+        // =====================================================
+
+        if ($user->role !== 'office_admin') {
             abort(403);
         }
+
+        // =====================================================
+        // Office Admin must have an office
+        // =====================================================
+
+        if (!$user->office_id) {
+            abort(
+                404,
+                'មិនមានការិយាល័យសម្រាប់អ្នកប្រើប្រាស់នេះទេ។'
+            );
+        }
+
+        // =====================================================
         // Get Open Evaluation Period
+        // =====================================================
 
         $evaluationPeriod = $this->getOpenEvaluationPeriod();
+
         if (!$evaluationPeriod) {
             abort(
                 404,
                 'បច្ចុប្បន្នមិនមានវគ្គវាយតម្លៃដែលកំពុងបើកទេ។'
             );
         }
-        // Get Users
-        if ($office) {
-            // Office
-            $officeModel = Office::query()
-                ->where('office_id', $office)
-                ->where(
-                    'department_id',
-                    $user->department_id
-                )
-                ->first();
-            if (!$officeModel) {
-                abort(403);
-            }
-            $department = $officeModel->department;
-            $users = $officeModel->users()
-                ->where('status', 'active')
-                ->where('is_leader', false)
-                ->orderBy('name_kh')
-                ->get();
-        } else {
 
-            // Users Without Office
-            $department = Department::query()
-                ->where('department_id', $user->department_id)
-                ->firstOrFail();
-            $users = $department->users()
-                ->whereNull('office_id')
-                ->where('status', 'active')
-                ->where('is_leader', false)
-                ->orderBy('name_kh')
-                ->get();
-            $officeModel = null;
+        // =====================================================
+        // Get Office Admin's Own Office
+        // =====================================================
+
+        $officeModel = Office::query()
+            ->where('office_id', $user->office_id)
+            ->where('department_id', $user->department_id)
+            ->first();
+
+        if (!$officeModel) {
+            abort(
+                404,
+                'មិនមានការិយាល័យសម្រាប់អ្នកប្រើប្រាស់នេះទេ។'
+            );
         }
 
+        // =====================================================
+        // Get All Eligible Users In Own Office
+        // =====================================================
+
+        $users = $officeModel->users()
+            ->where('status', 'active')
+            ->where('is_leader', false)
+            ->orderBy('name_kh')
+            ->get();
+
+        // =====================================================
         // No Users
+        // =====================================================
+
         if ($users->isEmpty()) {
-            abort(404, 'មិនមានមន្ត្រីសម្រាប់វាយតម្លៃទេ។');
+            abort(
+                404,
+                'មិនមានមន្ត្រីសម្រាប់វាយតម្លៃទេ។'
+            );
         }
 
+        // =====================================================
         // Store Temporary Evaluation Information
+        // =====================================================
+
         session([
             'attendance_user_ids' =>
                 $users->pluck('user_id')->values()->toArray(),
+
             'attendance_current_index' => 0,
-            'attendance_evaluation_period_id' => $evaluationPeriod->evaluation_period_id,
+
+            'attendance_evaluation_period_id' =>
+                $evaluationPeriod->evaluation_period_id,
+
+            'attendance_office_id' =>
+                $officeModel->office_id,
         ]);
+
+        // =====================================================
         // Return Create Page
+        // =====================================================
+
         return view(
             'evaluations.attendance.create',
             compact(
                 'users',
-                'department',
                 'officeModel',
                 'evaluationPeriod'
             )
@@ -388,7 +258,7 @@ class AttendanceEvaluationService
     {
         // Only Department Admin
 
-        if ($user->role !== 'department_admin') {
+        if ($user->role !== 'office_admin') {
             abort(403);
         }
         // Get Evaluation Period From Session
@@ -501,24 +371,45 @@ class AttendanceEvaluationService
 
     public function submit($user, array $data)
     {
-        // Only Department Admin
-        if ($user->role !== 'department_admin') {
+        // =====================================================
+        // Only Office Admin
+        // =====================================================
+
+        if ($user->role !== 'office_admin') {
             abort(403);
         }
+
+        // =====================================================
+        // Office Admin must have an office
+        // =====================================================
+
+        if (!$user->office_id) {
+            return response()->json([
+                'success' => false,
+                'message' => 'មិនមានការិយាល័យសម្រាប់អ្នកប្រើប្រាស់នេះទេ។'
+            ], 422);
+        }
+
+        // =====================================================
         // Evaluation Period
-        $evaluationPeriodId =
-            session()->get(
-                'attendance_evaluation_period_id'
-            );
+        // =====================================================
+
+        $evaluationPeriodId = session()->get(
+            'attendance_evaluation_period_id'
+        );
+
         if (!$evaluationPeriodId) {
             return response()->json([
                 'success' => false,
-                'message' =>
-                    'មិនមានព័ត៌មានវគ្គវាយតម្លៃទេ។'
+                'message' => 'មិនមានព័ត៌មានវគ្គវាយតម្លៃទេ។'
             ], 404);
         }
+
         $evaluationPeriod = EvaluationPeriod::query()
-            ->where('evaluation_period_id', $evaluationPeriodId)
+            ->where(
+                'evaluation_period_id',
+                $evaluationPeriodId
+            )
             ->where('status', 'open')
             ->whereDate(
                 'start_date',
@@ -531,6 +422,7 @@ class AttendanceEvaluationService
                 now()->toDateString()
             )
             ->first();
+
         if (!$evaluationPeriod) {
             return response()->json([
                 'success' => false,
@@ -538,8 +430,13 @@ class AttendanceEvaluationService
                     'វគ្គវាយតម្លៃនេះមិនទាន់បើក ឬបានបិទរួចហើយ។'
             ], 404);
         }
+
+        // =====================================================
         // Attendance Data
+        // =====================================================
+
         $attendanceData = $data['attendance'] ?? [];
+
         if (empty($attendanceData)) {
             return response()->json([
                 'success' => false,
@@ -547,8 +444,16 @@ class AttendanceEvaluationService
                     'មិនមានទិន្នន័យវត្តមានសម្រាប់បញ្ជូនទេ។'
             ], 422);
         }
+
+        // =====================================================
         // Get User IDs From Session
-        $userIds = session()->get('attendance_user_ids', []);
+        // =====================================================
+
+        $userIds = session()->get(
+            'attendance_user_ids',
+            []
+        );
+
         if (empty($userIds)) {
             return response()->json([
                 'success' => false,
@@ -556,9 +461,15 @@ class AttendanceEvaluationService
                     'មិនមានមន្ត្រីសម្រាប់វាយតម្លៃទេ។'
             ], 422);
         }
-        // Validate All Users
+
+        // =====================================================
+        // Validate All Users Exist In Submitted Data
+        // =====================================================
+
         foreach ($userIds as $userId) {
+
             if (!isset($attendanceData[$userId])) {
+
                 return response()->json([
                     'success' => false,
                     'message' =>
@@ -566,62 +477,228 @@ class AttendanceEvaluationService
                 ], 422);
             }
         }
+
+        // =====================================================
         // Database Transaction
+        // =====================================================
+
         DB::beginTransaction();
+
         try {
+
             foreach ($userIds as $userId) {
-                $data = $attendanceData[$userId];
-                // Attendance Values
-                $approvedLeaveDays = (float) ($data['approved_leave_days'] ?? 0);
-                $unapprovedLeaveDays = (float) ($data['unapproved_leave_days'] ?? 0);
-                $lateHours = (float) ($data['late_hours'] ?? 0);
-                $leaveEarlyHours = (float) ($data['leave_early_hours'] ?? 0);
-                // Perfect Attendance
-                $perfectAttendance = (bool) ($data['perfectAttendance'] ?? false);
-                // Calculate Attendance Percent
-                if ($perfectAttendance) {
-                    $attendancePercent = 100;
-                } else {
-                    $attendancePercent = $this->calculateAttendancePercent([
-                        'approved_leave_days' => $approvedLeaveDays,
-                        'unapproved_leave_days' => $unapprovedLeaveDays,
-                        'late_hours' => $lateHours,
-                        'leave_early_hours' => $leaveEarlyHours,
-                    ]);
+
+                $attendance = $attendanceData[$userId];
+
+                // =================================================
+                // Security Check
+                // =================================================
+
+                $evaluatee = User::query()
+                    ->where('user_id', $userId)
+                    ->where(
+                        'department_id',
+                        $user->department_id
+                    )
+                    ->where(
+                        'office_id',
+                        $user->office_id
+                    )
+                    ->where('status', 'active')
+                    ->where('is_leader', false)
+                    ->first();
+
+                if (!$evaluatee) {
+
+                    throw new \Exception(
+                        'មន្ត្រីមិនត្រឹមត្រូវ។'
+                    );
                 }
+
+                // =================================================
+                // Prevent Duplicate Evaluation
+                // =================================================
+
+                $existingEvaluation = Evaluation::query()
+                    ->where(
+                        'evaluation_period_id',
+                        $evaluationPeriod->evaluation_period_id
+                    )
+                    ->where(
+                        'evaluatee_id',
+                        $userId
+                    )
+                    ->where(
+                        'evaluation_type',
+                        'attendance'
+                    )
+                    ->first();
+
+                if ($existingEvaluation) {
+
+                    throw new \Exception(
+                        "មន្ត្រី {$evaluatee->name_kh} បានវាយតម្លៃវត្តមានរួចហើយ។"
+                    );
+                }
+
+                // =================================================
+                // Attendance Values
+                // =================================================
+
+                $approvedLeaveDays =
+                    (float) ($attendance['approved_leave_days'] ?? 0);
+
+                $unapprovedLeaveDays =
+                    (float) ($attendance['unapproved_leave_days'] ?? 0);
+
+                $lateHours =
+                    (float) ($attendance['late_hours'] ?? 0);
+
+                $leaveEarlyHours =
+                    (float) ($attendance['leave_early_hours'] ?? 0);
+
+                // =================================================
+                // Overtime Hours
+                // IMPORTANT:
+                // This is stored only.
+                // It does NOT affect attendance calculation.
+                // =================================================
+
+                $overtimeHours =
+                    (float) ($attendance['overtime_hours'] ?? 0);
+
+                $overtimeHours = max(0, $overtimeHours);
+
+                // =================================================
+                // Perfect Attendance
+                // =================================================
+
+                $perfectAttendance =
+                    (bool) ($attendance['perfectAttendance'] ?? false);
+
+                // =================================================
+                // Calculate Attendance Percent
+                // =================================================
+
+                if ($perfectAttendance) {
+
+                    $attendancePercent = 100;
+
+                } else {
+
+                    $attendancePercent =
+                        $this->calculateAttendancePercent([
+                            'approved_leave_days' =>
+                                $approvedLeaveDays,
+
+                            'unapproved_leave_days' =>
+                                $unapprovedLeaveDays,
+
+                            'late_hours' =>
+                                $lateHours,
+
+                            'leave_early_hours' =>
+                                $leaveEarlyHours,
+                        ]);
+                }
+
+                // =================================================
                 // Calculate Attendance Score
-                $attendanceScore = $this->calculateAttendanceScore($attendancePercent);
+                // =================================================
+
+                $attendanceScore =
+                    $this->calculateAttendanceScore(
+                        $attendancePercent
+                    );
+
+                // =================================================
                 // Create Evaluation
+                // =================================================
+
                 $evaluation = Evaluation::create([
-                    'evaluation_period_id' => $evaluationPeriod->evaluation_period_id,
-                    'evaluator_id' => $user->user_id,
-                    'evaluatee_id' => $userId,
-                    'evaluation_type' => 'attendance',
-                    'evaluation_status' => 'submitted',
-                    'submitted_at' => now(),
-                    'created_by' => $user->user_id,
-                    'updated_by' => $user->user_id,
+                    'evaluation_period_id' =>
+                        $evaluationPeriod->evaluation_period_id,
+
+                    'evaluator_id' =>
+                        $user->user_id,
+
+                    'evaluatee_id' =>
+                        $userId,
+
+                    'evaluation_type' =>
+                        'attendance',
+
+                    'evaluation_status' =>
+                        'submitted',
+
+                    'submitted_at' =>
+                        now(),
+
+                    'created_by' =>
+                        $user->user_id,
+
+                    'updated_by' =>
+                        $user->user_id,
                 ]);
+
+                // =================================================
                 // Create Attendance
+                // =================================================
+
                 EvaluationAttendance::create([
-                    'evaluation_id' => $evaluation->evaluation_id,
-                    'approved_leave_count' => $approvedLeaveDays,
-                    'unapproved_leave_count' => $unapprovedLeaveDays,
-                    'late_hours' => $lateHours,
-                    'leave_early_hours' => $leaveEarlyHours,
-                    'attendance_percent' => $attendancePercent,
-                    'attendance_score' => $attendanceScore,
+                    'evaluation_id' =>
+                        $evaluation->evaluation_id,
+
+                    'approved_leave_count' =>
+                        $approvedLeaveDays,
+
+                    'unapproved_leave_count' =>
+                        $unapprovedLeaveDays,
+
+                    'late_hours' =>
+                        $lateHours,
+
+                    'leave_early_hours' =>
+                        $leaveEarlyHours,
+
+                    'overtime_hours' =>
+                        $overtimeHours,
+
+                    'attendance_percent' =>
+                        $attendancePercent,
+
+                    'attendance_score' =>
+                        $attendanceScore,
                 ]);
             }
+
+            // =====================================================
             // Commit
+            // =====================================================
+
             DB::commit();
+
+            // =====================================================
+            // Clear Temporary Session
+            // =====================================================
+
+            session()->forget([
+                'attendance_user_ids',
+                'attendance_current_index',
+                'attendance_evaluation_period_id',
+                'attendance_office_id',
+            ]);
+
             return response()->json([
                 'success' => true,
-                'message' => 'ការវាយតម្លៃវត្តមានត្រូវបានរក្សាទុកដោយជោគជ័យ។'
+                'message' =>
+                    'ការវាយតម្លៃវត្តមានត្រូវបានរក្សាទុកដោយជោគជ័យ។'
             ]);
+
         } catch (\Throwable $e) {
-            // Rollback
+
             DB::rollBack();
+
             Log::error(
                 'Attendance evaluation submit error',
                 [
@@ -629,11 +706,12 @@ class AttendanceEvaluationService
                     'error' => $e->getMessage(),
                 ]
             );
+
             return response()->json([
                 'success' => false,
                 'message' =>
-                    'មានបញ្ហាក្នុងការរក្សាទុកការវាយតម្លៃ។'
-            ], 500);
+                    $e->getMessage(),
+            ], 422);
         }
     }
     /**
@@ -642,7 +720,7 @@ class AttendanceEvaluationService
     public function view($user, Request $request)
     {
         // Only Department Admin
-        if ($user->role !== 'department_admin') {
+        if ($user->role !== 'office_admin') {
             abort(403);
         }
 

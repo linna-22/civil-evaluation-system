@@ -192,7 +192,8 @@ document.addEventListener("DOMContentLoaded", () => {
                         approved_leave_days: 0,
                         unapproved_leave_days: 0,
                         late_hours: 0,
-                        leave_early_hours: 0
+                        leave_early_hours: 0,
+                        overtime_hours: 0
                     };
 
 
@@ -258,6 +259,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
                     <td class="px-5 py-4 text-center text-gray-600">
                         ${data.leave_early_hours || 0}
+                    </td>
+                    <td class="px-5 py-4 text-center text-gray-600">
+                        ${data.overtime_hours || 0}
                     </td>
 
                     <td class="px-5 py-4 text-center">
