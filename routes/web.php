@@ -127,8 +127,6 @@ Route::middleware('auth')->group(function () {
 
             // Department cards
             Route::get('/', [WorkPerformanceEvaluationController::class, 'index'])->name('index');
-            Route::get('/department/{department}/users', [WorkPerformanceEvaluationController::class, 'usersByDepartment'])->name('department.users');
-            Route::get('/office/{office}/users', [WorkPerformanceEvaluationController::class, 'usersByOffice'])->name('office.users');
             Route::get('/create/{office?}', [WorkPerformanceEvaluationController::class, 'create'])->name('create');
             Route::get('/preview', [WorkPerformanceEvaluationController::class, 'preview'])->name('preview');
             Route::post('/submit', [WorkPerformanceEvaluationController::class, 'submit'])->name('submit');
@@ -137,15 +135,12 @@ Route::middleware('auth')->group(function () {
         });
     // Attendance evaluation
     Route::prefix('evaluations/attendance')
-        ->middleware('role:super_admin,organization_admin,department_admin')
+        ->middleware('role:office_admin')
         ->name('evaluations.attendance.')
         ->group(function () {
             // Department / Office
             Route::get('/', [AttendanceEvaluationController::class, 'index'])->name('index');
-            Route::get('/department/{department}/users', [AttendanceEvaluationController::class, 'usersByDepartment'])->name('department.users');
-            Route::get('/office/{office}/users', [AttendanceEvaluationController::class, 'usersByOffice'])->name('office.users');
-            // Evaluation
-            Route::get('/create/{office?}', [AttendanceEvaluationController::class, 'create'])->name('create');
+            Route::get('/create', [AttendanceEvaluationController::class, 'create'])->name('create');
             Route::get('/preview', [AttendanceEvaluationController::class, 'preview'])->name('preview');
             Route::post('/submit', [AttendanceEvaluationController::class, 'submit'])->name('submit');
             Route::get('/view/{office?}', [AttendanceEvaluationController::class, 'view'])->name('view');
