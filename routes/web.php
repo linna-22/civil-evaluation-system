@@ -121,7 +121,7 @@ Route::middleware('auth')->group(function () {
 
     // Work Performance evaluation
     Route::prefix('evaluations/work-performance')
-        ->middleware('role:super_admin,organization_admin,department_admin')
+        ->middleware('role:office_admin')
         ->name('evaluations.work-performance.')
         ->group(function () {
 

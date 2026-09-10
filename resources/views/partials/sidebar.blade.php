@@ -164,6 +164,16 @@
                         'department-evaluation-results.*',
                     ];
                     break;
+                case 'office_admin':
+                    $allowedRoutes = [
+                        'dashboard',
+                        'evaluations.history',
+                        'evaluations.work-performance.*',
+                        'evaluations.work-attendance.*',
+                        'evaluations.work-attendance.offices',
+                        'users.profile',
+                    ];
+                    break;
                 case 'department_admin':
                     $allowedRoutes = [
                         'dashboard',

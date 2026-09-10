@@ -48,39 +48,15 @@ class WorkPerformanceEvaluationService
     |
     */
 
-    public function getEligibleUsers(?int $officeId = null): Collection
+    public function getEligibleUsers(): Collection
     {
         $admin = auth()->user();
 
-        $query = User::query()
+        return User::query()
             ->where('department_id', $admin->department_id)
+            ->where('office_id', $admin->office_id)
             ->where('status', 'active')
-            ->where('is_leader', false);
-
-        /*
-        |--------------------------------------------------------------------------
-        | If an office is selected
-        |--------------------------------------------------------------------------
-        */
-
-        if ($officeId !== null) {
-
-            $query->where('office_id', $officeId);
-
-        } else {
-
-            /*
-            |--------------------------------------------------------------------------
-            | No office selected
-            | Only users directly under the department
-            |--------------------------------------------------------------------------
-            */
-
-            $query->whereNull('office_id');
-
-        }
-
-        return $query
+            ->where('is_leader', false)
             ->orderBy('name_kh')
             ->get();
     }
@@ -95,94 +71,49 @@ class WorkPerformanceEvaluationService
     |
     */
 
-    public function startEvaluation(?int $officeId = null): void
-    {
-        /*
-        |--------------------------------------------------------------------------
-        | Make sure an evaluation period is open
-        |--------------------------------------------------------------------------
-        */
+    public function startEvaluation(): void
+{
+    $evaluationPeriod = $this->getOpenEvaluationPeriod();
 
-        $evaluationPeriod = $this->getOpenEvaluationPeriod();
-
-        if (!$evaluationPeriod) {
-
-            abort(
-                404,
-                'បច្ចុប្បន្នមិនមានវគ្គវាយតម្លៃដែលកំពុងបើកទេ។'
-            );
-
-        }
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | Get eligible users
-        |--------------------------------------------------------------------------
-        */
-
-        $users = $this->getEligibleUsers($officeId);
-
-        if ($users->isEmpty()) {
-
-            abort(
-                404,
-                'មិនមានមន្ត្រីសម្រាប់វាយតម្លៃទេ'
-            );
-
-        }
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | Store evaluation period
-        |--------------------------------------------------------------------------
-        */
-
-        session()->put(
-            'work_performance_evaluation_period_id',
-            $evaluationPeriod->evaluation_period_id
-        );
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | Store selected office
-        |--------------------------------------------------------------------------
-        */
-
-        session()->put(
-            'work_performance_office_id',
-            $officeId
-        );
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | Store selected users
-        |--------------------------------------------------------------------------
-        */
-
-        session()->put(
-            'work_performance_user_ids',
-            $users
-                ->pluck('user_id')
-                ->values()
-                ->toArray()
-        );
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | Start from first user
-        |--------------------------------------------------------------------------
-        */
-
-        session()->put(
-            'work_performance_current_index',
-            0
+    if (!$evaluationPeriod) {
+        abort(
+            404,
+            'បច្ចុប្បន្នមិនមានវគ្គវាយតម្លៃដែលកំពុងបើកទេ។'
         );
     }
+
+    $users = $this->getEligibleUsers();
+
+    if ($users->isEmpty()) {
+        abort(
+            404,
+            'មិនមានមន្ត្រីសម្រាប់វាយតម្លៃទេ'
+        );
+    }
+
+    session()->put(
+        'work_performance_evaluation_period_id',
+        $evaluationPeriod->evaluation_period_id
+    );
+
+    session()->put(
+        'work_performance_office_id',
+        auth()->user()->office_id
+    );
+
+    session()->put(
+        'work_performance_user_ids',
+        $users
+            ->pluck('user_id')
+            ->values()
+            ->toArray()
+    );
+
+    session()->put(
+        'work_performance_current_index',
+        0
+    );
+}
 
 
     /*
