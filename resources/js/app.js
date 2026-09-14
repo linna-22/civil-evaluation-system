@@ -14,6 +14,7 @@ import "./session-flash";
 import "./plugins/tom-select";
 // import "./evaluation/performance-table";
 // import "./evaluation/evaluation-list";
+import "./../js/evaluations/behavior/index";
 
 
 import { refreshIcons } from "./utils/lucide";

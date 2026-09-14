@@ -113,6 +113,8 @@ Route::middleware('auth')->group(function () {
     Route::prefix('evaluations/behavior')->group(function () {
 
         Route::get('/', [BehaviorEvaluationController::class, 'index'])->name('evaluations.behavior.index');
+        Route::get('/data', [BehaviorEvaluationController::class, 'data'])
+            ->name('evaluations.behavior.data');
         Route::get('/create', [BehaviorEvaluationController::class, 'create'])->name('evaluations.behavior.create');
         Route::post('/', [BehaviorEvaluationController::class, 'store'])->name('evaluations.behavior.store');
         Route::get('/preview', [BehaviorEvaluationController::class, 'preview'])->name('evaluations.behavior.preview');
