@@ -18,7 +18,8 @@ class Evaluation extends Model
         'evaluatee_id',
         'evaluation_status',
         'evaluation_type',
-        'submitted_at',
+        'check_status',
+        'submitted_at', 
         'created_by',
         'updated_by'
 

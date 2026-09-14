@@ -175,15 +175,6 @@ Route::middleware('auth')->group(function () {
         });
 
 
-    // Review Evaluation
-    Route::prefix('evaluations/review')->group(function () {
-
-        Route::get('/', [EvaluationReviewController::class, 'index'])->name('evaluations.review.index');
-        Route::get('/data', [EvaluationReviewController::class, 'data'])->name('evaluations.review.data');
-
-
-    });
-
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::post('/logout', [LogoutController::class, 'logout'])->name('logout');
 
