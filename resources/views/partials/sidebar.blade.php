@@ -152,6 +152,7 @@
                         'evaluations.*',
                         'users.profile',
                         'evaluation-periods.*',
+                        
                     ];
                     break;
                 case 'organization_admin':
@@ -161,6 +162,7 @@
                         'evaluations.attendance.*',
                         'users.profile',
                         'department-evaluation-results.*',
+                        'evaluations.behavior.*',
                     ];
                     break;
                 case 'office_admin':
@@ -169,6 +171,7 @@
                         'evaluations.history',
                         'evaluations.work-performance.*',
                         'evaluations.attendance.*',
+                        'evaluations.behavior.*',
                         'evaluations.work-attendance.offices',
                         'users.profile',
                     ];
@@ -179,6 +182,7 @@
                         'evaluations.work-performance.*',
                         'evaluations.attendance.*',
                         'evaluations.work-performance.offices',
+                        'evaluations.behavior.*',
                         'department-evaluation-results.*',
                         'users.profile',
                     ];
