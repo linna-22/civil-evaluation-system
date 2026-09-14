@@ -14,12 +14,20 @@ class BehaviorEvaluationController extends Controller
     {
         return view('evaluations.behavior.index');
     }
+
     public function data(BehaviorEvaluationService $service)
     {
         $peers = $service->getPaginatedEligiblePeers(6);
 
+        $allPeers = $service->getEligiblePeers();
+
+        $hasPending = $allPeers->contains(function ($peer) {
+            return $peer->evaluation_status !== 'submitted';
+        });
+
         return response()->json([
             'data' => $peers,
+            'has_pending' => $hasPending,
         ]);
     }
 

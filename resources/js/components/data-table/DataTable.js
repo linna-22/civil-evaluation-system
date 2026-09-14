@@ -16,6 +16,8 @@ export default class DataTable {
 
         this.render = options.render;
 
+        this.onLoaded = options.onLoaded;
+
         this.state = new State();
 
 
@@ -154,44 +156,32 @@ export default class DataTable {
     // ==========================================
 
     async load(page = 1) {
+    this.showLoading();
 
-        this.showLoading();
+    try {
+        const response = await get(
+            `${this.url}?${this.state.toQueryString()}`
+        );
 
+        this.renderRows(
+            response.data.data,
+            response.data.from
+        );
 
-        try {
+        refreshIcons();
 
-            const response = await get(
-                `${this.url}?${this.state.toQueryString()}`
-            );
+        this.pagination.render(response.data);
 
-
-            this.renderRows(
-                response.data.data,
-                response.data.from
-            );
-
-
-            refreshIcons();
-
-
-            this.pagination.render(
-                response.data
-            );
-
-
-        } catch (error) {
-
-            this.showError(
-                error.message
-            );
-
-        } finally {
-
-            this.hideLoading();
-
+        if (this.onLoaded) {
+            this.onLoaded(response);
         }
 
+    } catch (error) {
+        this.showError(error.message);
+    } finally {
+        this.hideLoading();
     }
+}
 
 
     // ==========================================

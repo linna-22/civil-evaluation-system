@@ -29,9 +29,10 @@
                  Start Evaluation Button
                 =========================================== --}}
 
-                <div>
-
+                <div class="flex items-center gap-3">
+                    {{-- Start Evaluation --}}
                     <a
+                        id="startEvaluationButton"
                         href="{{ route('evaluations.behavior.create') }}"
                         class="
                             inline-flex
@@ -45,24 +46,40 @@
                             text-sm
                             font-medium
                             hover:bg-blue-700
-                            transition
-                        ">
-
+                            transition">
                         <i
                             data-lucide="clipboard-pen"
                             class="w-4 h-4">
                         </i>
-
                         ចាប់ផ្ដើមវាយតម្លៃ
-
                     </a>
-
+                    {{-- View Result --}}
+                    <a
+                        id="viewEvaluationButton"
+                        href="{{ route('evaluations.behavior.view') }}"
+                        class="
+                            inline-flex
+                            items-center
+                            gap-2
+                            px-5
+                            py-2.5
+                            rounded-lg
+                            bg-green-600
+                            text-white
+                            text-sm
+                            font-medium
+                            hover:bg-green-700
+                            transition"
+                        style="display: none;">
+                        <i
+                            data-lucide="eye"
+                            class="w-4 h-4">
+                        </i>
+                        មើលលទ្ធផលវាយតម្លៃ
+                    </a>
                 </div>
-
             </div>
-
         </div>
-
 
         {{-- ==========================================
          Peer Table
