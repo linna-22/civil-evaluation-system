@@ -183,6 +183,7 @@
                         'evaluations.attendance.*',
                         'evaluations.work-performance.offices',
                         'evaluations.behavior.*',
+                        'evaluations.review.*',
                         'department-evaluation-results.*',
                         'users.profile',
                     ];

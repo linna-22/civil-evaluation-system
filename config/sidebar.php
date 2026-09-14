@@ -66,6 +66,22 @@ return [
 
             // Reports
             [
+                'icon' => 'scan-eye',
+                'title' => 'ពិនិត្យការវាយតម្លៃ',
+                'route' => 'evaluations.review.*',
+                'url' => '#',
+
+                'children' => [
+
+                    [
+                        'title' => 'ត្រួតពិនិត្យការវាយតម្លៃ',
+                        'route' => 'evaluations.review.*',
+                        'url' => 'evaluations.review.index',
+                    ],
+
+                ],
+            ],
+            [
                 'icon' => 'chart-no-axes-combined',
                 'title' => 'របាយការណ៍',
                 'route' => 'reports.*',

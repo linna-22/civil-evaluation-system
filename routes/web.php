@@ -12,6 +12,7 @@ use App\Http\Controllers\EvaluationPeriodController;
 use App\Http\Controllers\EvaluationReportController;
 use App\Http\Controllers\EvaluationResult\DepartmentEvaluationResultController;
 use App\Http\Controllers\EvaluationResult\UserEvaluationResultController;
+use App\Http\Controllers\EvaluationReviewController;
 use App\Http\Controllers\Evaluations\AttendanceEvaluationController;
 use App\Http\Controllers\Evaluations\WorkPerformanceEvaluationController;
 use App\Http\Controllers\OfficeController;
@@ -172,6 +173,16 @@ Route::middleware('auth')->group(function () {
             Route::get('/{evaluationPeriod}/download/pdf', [DepartmentEvaluationResultController::class, 'downloadPdf'])->name('download.pdf');
             Route::get('/{evaluationPeriod}/download/word', [DepartmentEvaluationResultController::class, 'downloadWordAll'])->name('download.word');
         });
+
+
+    // Review Evaluation
+    Route::prefix('evaluations/review')->group(function () {
+
+        Route::get('/', [EvaluationReviewController::class, 'index'])->name('evaluations.review.index');
+        Route::get('/data', [EvaluationReviewController::class, 'data'])->name('evaluations.review.data');
+
+
+    });
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::post('/logout', [LogoutController::class, 'logout'])->name('logout');
