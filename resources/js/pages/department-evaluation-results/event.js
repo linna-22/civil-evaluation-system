@@ -1,51 +1,115 @@
 import Swal from "sweetalert2";
+
 export function registerDepartmentEvents(table) {
 
-    const modal = document.querySelector("#remarks-modal");
-    const backdrop = document.querySelector("#remarks-modal-backdrop");
-    const closeButton = document.querySelector("#remarks-modal-close");
-    const cancelButton = document.querySelector("#remarks-modal-cancel");
+    // ==========================================================
+    // Preview Employee Evaluation
+    // ==========================================================
 
-    const title = document.querySelector("#remarks-modal-title");
-    const employeeName = document.querySelector("#remarks-modal-employee");
-    const input = document.querySelector("#remarks-input");
-    const summaryId = document.querySelector(
-        "#remarks-evaluation-summary-id"
-    );
+    document.addEventListener("click", (e) => {
 
-    const selectedValue = document.querySelector(
-        "#remarks-selected-value"
-    );
+        const previewButton =
+            e.target.closest(".btn-department-result-preview");
 
-    const manualOption = document.querySelector(
-        "#remarks-manual-option"
-    );
+        if (!previewButton) {
+            return;
+        }
 
-    const manualInputWrapper = document.querySelector(
-        "#remarks-manual-input-wrapper"
-    );
+        const userId =
+            previewButton.dataset.userId;
 
-    const remarkOptions = document.querySelectorAll(
-        ".remark-option"
-    );
+        const periodId =
+            window.departmentEvaluationPeriodId;
 
+        if (!userId || !periodId) {
+            console.error(
+                "Missing evaluation period ID or user ID."
+            );
+
+            return;
+        }
+
+        const url =
+            `/department-evaluation-results/${periodId}` +
+            `/user/${encodeURIComponent(userId)}/review`;
+
+        window.location.href = url;
+    });
+
+
+    // ==========================================================
+    // Remarks Modal
+    // ==========================================================
+
+    const modal =
+        document.querySelector("#remarks-modal");
+
+    const backdrop =
+        document.querySelector("#remarks-modal-backdrop");
+
+    const closeButton =
+        document.querySelector("#remarks-modal-close");
+
+    const cancelButton =
+        document.querySelector("#remarks-modal-cancel");
+
+    const title =
+        document.querySelector("#remarks-modal-title");
+
+    const employeeName =
+        document.querySelector("#remarks-modal-employee");
+
+    const input =
+        document.querySelector("#remarks-input");
+
+    const summaryId =
+        document.querySelector(
+            "#remarks-evaluation-summary-id"
+        );
+
+    const selectedValue =
+        document.querySelector(
+            "#remarks-selected-value"
+        );
+
+    const manualOption =
+        document.querySelector(
+            "#remarks-manual-option"
+        );
+
+    const manualInputWrapper =
+        document.querySelector(
+            "#remarks-manual-input-wrapper"
+        );
+
+    const remarkOptions =
+        document.querySelectorAll(
+            ".remark-option"
+        );
+
+
+    // If the remarks modal does not exist,
+    // Preview still works because its handler
+    // was registered above.
     if (!modal) {
         return;
     }
 
 
-    // ==========================
+    // ==========================================================
     // Select Remark Option
-    // ==========================
+    // ==========================================================
 
-    function selectRemarkOption(value) {
+    function selectRemarkOption(value, { clearInput = true } = {}) {
+
         remarkOptions.forEach((button) => {
-            const isSelected = button.dataset.value === value;
+
+            const isSelected =
+                button.dataset.value === value;
 
             button.classList.toggle("border-blue-500", isSelected);
             button.classList.toggle("bg-blue-50", isSelected);
             button.classList.toggle("text-blue-600", isSelected);
-
             button.classList.toggle("border-gray-300", !isSelected);
             button.classList.toggle("text-gray-700", !isSelected);
         });
@@ -53,33 +117,46 @@ export function registerDepartmentEvents(table) {
         selectedValue.value = value;
 
         if (value === "manual") {
-            // Clear the previous predefined remark
-            input.value = "";
+
+            if (clearInput) {
+                // Clear only when the user is starting a fresh manual entry
+                input.value = "";
+            }
 
             manualInputWrapper.classList.remove("hidden");
+
             input.focus();
+
         } else {
-            // Hide manual input
+
             manualInputWrapper.classList.add("hidden");
         }
     }
 
 
-    // ==========================
-    // Open Modal
-    // ==========================
+    // ==========================================================
+    // Open Remarks Modal
+    // ==========================================================
 
     document.addEventListener("click", (e) => {
 
-        const remarkButton = e.target.closest(".btn-remark");
+        const remarkButton =
+            e.target.closest(".btn-remark");
 
         if (!remarkButton) {
             return;
         }
 
-        const id = remarkButton.dataset.id;
-        const nameKh = remarkButton.dataset.nameKh;
-        const remark = remarkButton.dataset.remark || "";
+
+        const id =
+            remarkButton.dataset.id;
+
+        const nameKh =
+            remarkButton.dataset.nameKh;
+
+        const remark =
+            remarkButton.dataset.remark || "";
+
 
         summaryId.value = id;
 
@@ -89,9 +166,9 @@ export function registerDepartmentEvents(table) {
         input.value = remark;
 
 
-        // ==========================
+        // ======================================================
         // Modal Title
-        // ==========================
+        // ======================================================
 
         if (remark.trim() !== "") {
 
@@ -105,30 +182,42 @@ export function registerDepartmentEvents(table) {
         }
 
 
-        // ==========================
+        // ======================================================
         // Determine Existing Remark
-        // ==========================
+        // ======================================================
 
         const predefinedRemarks = [
+            "ល្អ",
             "ល្អណាស់",
             "ល្អបង្គួរ",
             "មធ្យម",
             "ខ្សោយ",
         ];
 
-        if (predefinedRemarks.includes(remark.trim())) {
 
-            selectRemarkOption(remark.trim());
+        if (
+            predefinedRemarks.includes(
+                remark.trim()
+            )
+        ) {
 
-        } else if (remark.trim() !== "") {
+            selectRemarkOption(
+                remark.trim()
+            );
 
-            // Existing custom remark
-            selectRemarkOption("manual");
+        } else if (
+            remark.trim() !== ""
+        ) {
+
+            // Existing custom remark — restore it, don't clear
+            input.value = remark.trim();
+            selectRemarkOption("manual", { clearInput: false });
 
         } else {
 
             // No remark yet
             selectedValue.value = "";
+
 
             remarkOptions.forEach((button) => {
 
@@ -144,16 +233,22 @@ export function registerDepartmentEvents(table) {
                 );
             });
 
-            manualInputWrapper.classList.add("hidden");
+
+            manualInputWrapper.classList.add(
+                "hidden"
+            );
+
             input.value = "";
         }
 
 
-        // ==========================
+        // ======================================================
         // Show Modal
-        // ==========================
+        // ======================================================
 
-        modal.classList.remove("hidden");
+        modal.classList.remove(
+            "hidden"
+        );
 
         modal.setAttribute(
             "aria-hidden",
@@ -162,28 +257,34 @@ export function registerDepartmentEvents(table) {
     });
 
 
-    // ==========================
+    // ==========================================================
     // Click Remark Option
-    // ==========================
+    // ==========================================================
 
     remarkOptions.forEach((button) => {
 
-        button.addEventListener("click", () => {
+    button.addEventListener(
+        "click",
+        () => {
 
-            const value = button.dataset.value;
+            const value =
+                button.dataset.value;
 
             selectRemarkOption(value);
-        });
-    });
+        }
+    );
+});
 
 
-    // ==========================
-    // Close Modal
-    // ==========================
+    // ==========================================================
+    // Close Remarks Modal
+    // ==========================================================
 
     function closeModal() {
 
-        modal.classList.add("hidden");
+        modal.classList.add(
+            "hidden"
+        );
 
         modal.setAttribute(
             "aria-hidden",
@@ -196,9 +297,11 @@ export function registerDepartmentEvents(table) {
 
         selectedValue.value = "";
 
+
         manualInputWrapper.classList.add(
             "hidden"
         );
+
 
         remarkOptions.forEach((button) => {
 
@@ -232,125 +335,162 @@ export function registerDepartmentEvents(table) {
     );
 
 
-    // ==========================
+    // ==========================================================
     // Escape Key
-    // ==========================
+    // ==========================================================
 
-    document.addEventListener("keydown", (e) => {
+    document.addEventListener(
+        "keydown",
+        (e) => {
 
-        if (
-            e.key === "Escape" &&
-            !modal.classList.contains("hidden")
-        ) {
-            closeModal();
-        }
+            if (
+                e.key === "Escape" &&
+                !modal.classList.contains(
+                    "hidden"
+                )
+            ) {
 
-    });
-
-
-    // ==========================
-    // Save
-    // ==========================
-
-    document.addEventListener("click", async (e) => {
-
-        const saveButton =
-            e.target.closest("#remarks-modal-save");
-
-        if (!saveButton) {
-            return;
-        }
-
-        const id = summaryId.value;
-
-        const selected = selectedValue.value;
-
-        let remark = "";
-
-
-        // ==========================
-        // Get Selected Remark
-        // ==========================
-
-        if (selected === "manual") {
-
-            remark = input.value.trim();
-
-        } else {
-
-            remark = selected;
-        }
-
-
-        saveButton.disabled = true;
-
-        saveButton.textContent =
-            "កំពុងរក្សាទុក...";
-
-
-        try {
-
-            const response = await fetch(
-                `/department-evaluation-results/remarks/${id}`,
-                {
-                    method: "PATCH",
-
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Accept": "application/json",
-
-                        "X-CSRF-TOKEN":
-                            document
-                                .querySelector(
-                                    'meta[name="csrf-token"]'
-                                )
-                                .getAttribute("content"),
-                    },
-
-                    body: JSON.stringify({
-                        remarks: remark || null,
-                    }),
-                }
-            );
-
-
-            const data =
-                await response.json();
-
-
-            if (!response.ok) {
-
-                throw new Error(
-                    data.message ||
-                    "Failed to save remark."
-                );
+                closeModal();
             }
-            closeModal();
-            await table.load();
-            await Swal.fire({
-                icon: "success",
-                title: "ជោគជ័យ",
-                text: "មូលវិចារណ៍ត្រូវបានរក្សាទុកដោយជោគជ័យ។",
-                confirmButtonText: "យល់ព្រម",
-            });
+
+        }
+    );
 
 
-        } catch (error) {
+    // ==========================================================
+    // Save Remark
+    // ==========================================================
 
-            console.error(error);
+    document.addEventListener(
+        "click",
+        async (e) => {
 
-            alert(
-                error.message ||
-                "មិនអាចរក្សាទុកមូលវិចារណ៍បានទេ។"
-            );
+            const saveButton =
+                e.target.closest(
+                    "#remarks-modal-save"
+                );
+
+            if (!saveButton) {
+                return;
+            }
 
 
-        } finally {
+            const id =
+                summaryId.value;
 
-            saveButton.disabled = false;
+            const selected =
+                selectedValue.value;
+
+            let remark = "";
+
+
+            // ==================================================
+            // Get Selected Remark
+            // ==================================================
+
+            if (selected === "manual") {
+
+                remark =
+                    input.value.trim();
+
+            } else {
+
+                remark =
+                    selected;
+            }
+
+
+            saveButton.disabled = true;
 
             saveButton.textContent =
-                "រក្សាទុក";
+                "កំពុងរក្សាទុក...";
+
+
+            try {
+
+                const response =
+                    await fetch(
+                        `/department-evaluation-results/remarks/${id}`,
+                        {
+                            method: "PATCH",
+
+                            headers: {
+                                "Content-Type":
+                                    "application/json",
+
+                                "Accept":
+                                    "application/json",
+
+                                "X-CSRF-TOKEN":
+                                    document
+                                        .querySelector(
+                                            'meta[name="csrf-token"]'
+                                        )
+                                        .getAttribute(
+                                            "content"
+                                        ),
+                            },
+
+                            body: JSON.stringify({
+                                remarks:
+                                    remark || null,
+                            }),
+                        }
+                    );
+
+
+                const data =
+                    await response.json();
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        data.message ||
+                        "Failed to save remark."
+                    );
+                }
+
+
+                closeModal();
+
+                await table.load();
+
+
+                await Swal.fire({
+                    icon: "success",
+
+                    title: "ជោគជ័យ",
+
+                    text:
+                        "មូលវិចារណ៍ត្រូវបានរក្សាទុកដោយជោគជ័យ។",
+
+                    confirmButtonText:
+                        "យល់ព្រម",
+                });
+
+
+            } catch (error) {
+
+                console.error(
+                    error
+                );
+
+
+                alert(
+                    error.message ||
+                    "មិនអាចរក្សាទុកមូលវិចារណ៍បានទេ។"
+                );
+
+
+            } finally {
+
+                saveButton.disabled =
+                    false;
+
+                saveButton.textContent =
+                    "រក្សាទុក";
+            }
         }
-    });
+    );
 }

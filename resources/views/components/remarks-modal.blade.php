@@ -62,7 +62,6 @@
                     id="remarks-options"
                     class="grid grid-cols-2 gap-3"
                 >
-
                     <button
                         type="button"
                         class="remark-option rounded-xl border border-gray-300 px-4 py-3 text-sm font-medium text-gray-700 transition hover:border-blue-500 hover:bg-blue-50 hover:text-blue-600"
@@ -77,6 +76,14 @@
                         data-value="ល្អបង្គួរ"
                     >
                         ល្អបង្គួរ
+                    </button>
+
+                     <button
+                        type="button"
+                        class="remark-option rounded-xl border border-gray-300 px-4 py-3 text-sm font-medium text-gray-700 transition hover:border-blue-500 hover:bg-blue-50 hover:text-blue-600"
+                        data-value="ល្អ"
+                    >
+                        ល្អ
                     </button>
 
                     <button
@@ -96,10 +103,10 @@
                     </button>
 
                     {{-- Manual option --}}
-                    <button
+                     <button
                         type="button"
                         id="remarks-manual-option"
-                        class="remark-option col-span-2 rounded-xl border border-gray-300 px-4 py-3 text-sm font-medium text-gray-700 transition hover:border-blue-500 hover:bg-blue-50 hover:text-blue-600"
+                        class="remark-option rounded-xl border border-gray-300 px-4 py-3 text-sm font-medium text-gray-700 transition hover:border-blue-500 hover:bg-blue-50 hover:text-blue-600"
                         data-value="manual"
                     >
                         បញ្ចូលដោយដៃ
