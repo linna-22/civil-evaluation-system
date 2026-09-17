@@ -47,6 +47,7 @@
 
                 <div class="ministry-name">
                     ក្រសួងការងារនិងបណ្តុះបណ្តាលវិជ្ជាជីវៈ
+                    <span>{{ $result->evaluationPeriodUser?->user?->department?->department_name_kh ?? '' }}</span>
                 </div>
 
             </div>
@@ -60,7 +61,7 @@
                     ព្រះរាជាណាចក្រកម្ពុជា
                 </div>
 
-                <div>
+                <div class="nation-font">
                     ជាតិ សាសនា ព្រះមហាក្សត្រ
                 </div>
 
@@ -136,9 +137,7 @@
 
 
             <tbody>
-
                 <tr>
-
                     <td>
                         ១
                     </td>
@@ -152,19 +151,19 @@
                     </td>
 
                     <td>
-                        {{ number_format($result->work_performance_score ?? 0, 2) }}
+                        {{ rtrim(rtrim(number_format($result->work_performance_score ?? 0, 2, '.', ''), '0'), '.') }}/60
                     </td>
 
                     <td>
-                        {{ number_format($result->attendance_score ?? 0, 2) }}
+                        {{ rtrim(rtrim(number_format($result->attendance_score ?? 0, 2, '.', ''), '0'), '.') }}/20
                     </td>
 
                     <td>
-                        {{ number_format($result->behavior_score ?? 0, 2) }}
+                        {{ rtrim(rtrim(number_format($result->behavior_score ?? 0, 2, '.', ''), '0'), '.') }}/20
                     </td>
 
                     <td class="total-score">
-                        {{ number_format($result->total_score ?? 0, 2) }}/100
+                        {{ number_format($result->total_score ?? 0) }}/100
                     </td>
 
                     <td class="text-left">

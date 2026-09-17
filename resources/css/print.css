@@ -56,7 +56,7 @@ body {
 /* Logo / left side */
 .header-left {
     position: absolute;
-    top: 0;
+    top: 5mm; /* was 0 — adjust this value to taste */
     left: 0;
     width: 75mm;
     text-align: center;
@@ -83,19 +83,24 @@ body {
     font-size: 14px;
     font-weight: normal;
     line-height: 1.6;
-    text-align: center;
+    text-align: start;
 }
 /* National heading / right side */
 .header-right {
     position: absolute;
     top: 0;
-    right: 0;
+    left: 50%;
+    transform: translateX(-50%);
     width: 90mm;
     text-align: center;
     font-family: "Moul", serif;
-    font-size: 13px;
+    font-size: 14px;
     font-weight: normal;
-    line-height: 1.7;
+    line-height: 1.6;
+}
+.nation-font {
+    font-family: "Siemreap", Arial, sans-serif;
+    font-weight: bold;
 }
 .header-right-divider {
     display: block;
@@ -109,15 +114,14 @@ body {
 .report-title {
     position: absolute;
     left: 50%;
-    bottom: 0;
+    bottom: -6mm;   /* negative moves it down; 0 was already flush with the container edge */
     transform: translateX(-50%);
     width: 180mm;
     text-align: center;
     font-family: "Moul", serif;
-    font-size: 16px;
+    font-size: 14px;
     font-weight: normal;
-    line-height: 1.8;
-    margin-top: 2mm;
+    line-height: 1.6;
 }
 /* ==========================================
            Evaluation Table
@@ -126,7 +130,7 @@ body {
     width: 100%;
     border-collapse: collapse;
     table-layout: fixed;
-    margin-top: 3mm;
+    margin-top: 8mm;   /* was 4mm — bump this up to push it down further */
 }
 .report-table th,
 .report-table td {
@@ -134,15 +138,15 @@ body {
     padding: 4px 6px;
     text-align: center;
     vertical-align: middle;
-    line-height: 1.5;
+    line-height: 1.6;
 }
 .report-table th {
-    font-family: "Moul", serif;
-    font-weight: normal;
+    font-family: "Siemreap", Arial, sans-serif;
+    font-weight: bold;
     font-size: 12px;
 }
 .report-table td {
-    font-size: 13px;
+    font-size: 12px;
 }
 /* Column widths */
 .col-no {
@@ -186,7 +190,7 @@ body {
     justify-content: flex-end;
 }
 .date-signature {
-    width: 80mm;
+    width: 84mm;
     text-align: center;
     font-size: 12px;
 }
@@ -199,6 +203,9 @@ body {
 .evaluator {
     font-family: "Moul", serif;
     font-weight: normal;
+}
+.evaluator-name{
+    margin-left: 50px;
 }
 /* ==========================================
            Print

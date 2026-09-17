@@ -34,7 +34,7 @@
             class="print-button"
             onclick="window.print()"
         >
-            🖨 បោះពុម្ព
+            🖨️ បោះពុម្ព
         </button>
 
     </div>
@@ -66,6 +66,7 @@
 
                 <div class="ministry-name">
                     ក្រសួងការងារនិងបណ្តុះបណ្តាលវិជ្ជាជីវៈ
+                    {{ $evaluationPeriod->department?->department_name_kh ?? $results->first()?->evaluationPeriodUser?->user?->department?->department_name_kh ?? '' }}
                 </div>
 
             </div>
@@ -79,7 +80,7 @@
                     ព្រះរាជាណាចក្រកម្ពុជា
                 </div>
 
-                <div>
+                <div class="nation-font">
                     ជាតិ សាសនា ព្រះមហាក្សត្រ
                 </div>
 
@@ -97,10 +98,6 @@
             <div class="report-title">
 
                 របាយការណ៍វាយតម្លៃផ្អែកលើសមិទ្ធកម្មមន្ត្រី
-
-                <br>
-
-                {{ $evaluationPeriod->department?->name_kh ?? $results->first()?->evaluationPeriodUser?->user?->department?->name_kh ?? '' }}
 
                 ប្រចាំខែ
                 {{ KhmerHelper::month($evaluationPeriod->month) }}
@@ -179,21 +176,20 @@
                         <td>
                             {{ $result->evaluationPeriodUser?->user?->position ?? 'មិនមាន' }}
                         </td>
-                        {{-- Work Performance --}}
                         <td>
-                            {{ number_format($result->work_performance_score ?? 0, 2) }}
-                        </td>
-                        {{-- Attendance --}}
-                        <td>
-                            {{ number_format($result->attendance_score ?? 0, 2) }}
-                        </td>
-                        {{-- Behavior --}}
-                        <td>
-                            {{ number_format($result->behavior_score ?? 0, 2) }}
-                        </td>
+                        {{ rtrim(rtrim(number_format($result->work_performance_score ?? 0, 2, '.', ''), '0'), '.') }}/60
+                    </td>
+
+                    <td>
+                        {{ rtrim(rtrim(number_format($result->attendance_score ?? 0, 2, '.', ''), '0'), '.') }}/20
+                    </td>
+
+                    <td>
+                        {{ rtrim(rtrim(number_format($result->behavior_score ?? 0, 2, '.', ''), '0'), '.') }}/20
+                    </td>
                         {{-- Total --}}
                         <td class="total-score">
-                            {{ number_format($result->total_score ?? 0, 2) }}/100
+                            {{ rtrim(rtrim(number_format($result->total_score ?? 0, 2, '.', ''), '0'), '.') }}/100
                         </td>
                         {{-- Remarks --}}
                         <td class="text-left">
