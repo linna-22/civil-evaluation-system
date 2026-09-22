@@ -125,8 +125,20 @@ class DepartmentEvaluationWordExport
             );
         }
 
+        $departmentName =
+            $this->result->evaluationPeriodUser?->user?->department?->department_name_kh
+            ?? '';
         $leftCell->addText(
             'ក្រសួងការងារនិងបណ្តុះបណ្តាលវិជ្ជាជីវៈ',
+            $moulFont,
+            [
+                'alignment' => Jc::CENTER,
+                'spaceAfter' => 0,
+            ]
+        );
+
+        $leftCell->addText(
+            $departmentName,
             $moulFont,
             [
                 'alignment' => Jc::CENTER,
@@ -191,13 +203,11 @@ class DepartmentEvaluationWordExport
         |--------------------------------------------------------------------------
         */
 
-        $departmentName =
-            $this->result->evaluationPeriodUser?->user?->department?->name_kh
-            ?? '';
+
 
         $title = sprintf(
             "របាយការណ៍វាយតម្លៃផ្អែកលើសមិទ្ធកម្មមន្ត្រី\n%s ប្រចាំខែ%s ឆ្នាំ%s",
-            $departmentName,
+            "",
             KhmerHelper::month($this->evaluationPeriod->month),
             KhmerHelper::number($this->evaluationPeriod->year)
         );

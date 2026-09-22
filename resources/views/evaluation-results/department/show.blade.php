@@ -88,6 +88,9 @@
                     <th class="px-6 py-3 text-left">
                         ភេទ
                     </th>
+                    <th class="px-6 py-3 text-left">
+                        តួនាទី
+                    </th>
 
                     <th class="px-6 py-3 text-center">
                         សមិទ្ធកម្មការងារ
@@ -108,7 +111,7 @@
                         មូលវិចារណ៍
                     </th>
                     <th class="px-6 py-3 text-center">
-                        នាំចេញ
+                        សកម្មភាព
                     </th>
                 </x-slot:head>
 

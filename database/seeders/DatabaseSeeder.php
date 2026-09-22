@@ -15,6 +15,7 @@ class DatabaseSeeder extends Seeder
             AdminSeeder::class,
             OrganizationStructureSeeder::class,
             UserSeeder::class,
+            EvaluationAdminSeeder::class,
         ]);
     }
 }

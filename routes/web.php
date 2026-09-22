@@ -167,6 +167,7 @@ Route::middleware('auth')->group(function () {
             Route::get('/', [DepartmentEvaluationResultController::class, 'index'])->name('index');
             Route::get('/{evaluationPeriod}/data', [DepartmentEvaluationResultController::class, 'data'])->name('data');
             Route::get('/{evaluationPeriod}', [DepartmentEvaluationResultController::class, 'show'])->name('show');
+            Route::get('/{evaluationPeriod}/user/{user}/review', [DepartmentEvaluationResultController::class, 'review'])->name('review');
             Route::patch('/remarks/{evaluationSummary}', [DepartmentEvaluationResultController::class, 'updateRemark'])->name('remarks.update');
             Route::get('/{evaluationPeriod}/user/{user}/print', [DepartmentEvaluationResultController::class, 'print'])->name('print');
             Route::get('/{evaluationPeriod}/user/{user}/word', [DepartmentEvaluationResultController::class, 'downloadWord'])->name('word.download');

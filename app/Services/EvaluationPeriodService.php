@@ -61,6 +61,7 @@ class EvaluationPeriodService
         $activeUserIds = User::query()
             ->where('status', 'active')
             ->where('role', '!=', 'super_admin')
+            ->where('role', '!=', 'evaluation_admin')
             ->pluck('user_id');
 
         if ($activeUserIds->isEmpty()) {
@@ -585,7 +586,7 @@ class EvaluationPeriodService
             if (!empty($missingItems)) {
 
                 $missing[] = [
-                    'user' => $user->name_en ?? $user->name_kh,
+                    'user' => $user->name_kh ?? $user->name_en,
                     'items' => $missingItems,
                 ];
 

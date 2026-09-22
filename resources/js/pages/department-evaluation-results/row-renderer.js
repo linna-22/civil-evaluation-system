@@ -18,9 +18,17 @@ export function renderDepartmentResultRow(result, no) {
             </td>
 
             <td class="px-6 py-4">
-                ${user?.gender === 'male' ? 'ប្រុស' : user?.gender === 'female' ? 'ស្រី' : 'មិនមាន'}
+                ${user?.gender === 'male'
+                    ? 'ប្រុស'
+                    : user?.gender === 'female'
+                        ? 'ស្រី'
+                        : 'មិនមាន'
+                }
             </td>
 
+            <td class="px-6 py-4 text-center">
+                ${user?.position ?? "មិនមាន"}
+            </td>
             <td class="px-6 py-4 text-center">
                 ${result.work_performance_score ?? "0.00"}
             </td>
@@ -36,7 +44,6 @@ export function renderDepartmentResultRow(result, no) {
             <td class="px-6 py-4 text-center font-bold">
                 ${result.total_score ?? "0.00"}
             </td>
-
             <td class="px-6 py-4 whitespace-nowrap">
 
                 <button
@@ -56,25 +63,163 @@ export function renderDepartmentResultRow(result, no) {
 
             </td>
             <td class="px-6 py-5 text-center">
-                <div class="flex items-center justify-center gap-2">
-                    <a
-                        href="/department-evaluation-results/${window.departmentEvaluationPeriodId}/user/${user?.user_id}/print"
-                        target="_blank"
-                        class="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-red-600 text-white text-xs hover:bg-red-700 transition"
+
+                <div class="relative inline-block text-left">
+                    <button
+                        type="button"
+                        class="btn-department-result-action
+                               inline-flex items-center justify-center
+                               w-10 h-10
+                               rounded-full
+                               border border-blue-200
+                               bg-blue-50
+                               text-blue-600
+                               hover:bg-blue-100
+                               hover:border-blue-300
+                               transition"
+                        data-user-id="${user?.user_id ?? ""}"
+                        aria-expanded="false"
+                        aria-label="សកម្មភាព"
                     >
-                        <i data-lucide="file-down" class="w-3.5 h-3.5"></i>
-                        PDF
-                    </a>
-                    <a
-                        href="/department-evaluation-results/${window.departmentEvaluationPeriodId}/user/${user?.user_id}/word"
-                        class="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-blue-600 text-white text-xs hover:bg-blue-700 transition"
+                        <i data-lucide="menu" class="w-5 h-5"></i>
+                    </button>
+                    <div
+                        class="department-result-action-menu
+                               hidden
+                               absolute right-0 z-50 mt-2
+                               w-48
+                               rounded-xl
+                               border border-gray-200
+                               bg-white
+                               shadow-lg
+                               overflow-hidden"
                     >
-                        <i data-lucide="file-text" class="w-3.5 h-3.5"></i>
-                        Word
-                    </a>
+                        <button
+                            type="button"
+                            class="btn-department-result-preview
+                                   w-full flex items-center gap-3
+                                   px-4 py-3
+                                   text-sm text-gray-700
+                                   hover:bg-gray-50
+                                   transition text-left"
+                            data-user-id="${user?.user_id ?? ""}"
+                        >
+                            <i
+                                data-lucide="clipboard-list"
+                                class="w-4 h-4 text-blue-600"
+                            ></i>
+
+                            <span>ពិនិត្យមើល</span>
+                        </button>
+                        <a
+                            href="/department-evaluation-results/${window.departmentEvaluationPeriodId}/user/${user?.user_id}/print"
+                            target="_blank"
+                            class="flex items-center gap-3
+                                   px-4 py-3
+                                   text-sm text-gray-700
+                                   hover:bg-gray-50
+                                   transition"
+                        >
+                            <i
+                                data-lucide="file-down"
+                                class="w-4 h-4 text-red-600"
+                            ></i>
+
+                            <span>ទាញយក PDF</span>
+                        </a>
+                        <a
+                            href="/department-evaluation-results/${window.departmentEvaluationPeriodId}/user/${user?.user_id}/word"
+                            class="flex items-center gap-3
+                                   px-4 py-3
+                                   text-sm text-gray-700
+                                   hover:bg-gray-50
+                                   transition"
+                        >
+                            <i
+                                data-lucide="file-text"
+                                class="w-4 h-4 text-blue-600"
+                            ></i>
+
+                            <span>ទាញយក Word</span>
+                        </a>
+
+                    </div>
 
                 </div>
+
             </td>
+
         </tr>
     `;
 }
+// ==========================================================
+// Department Result Action Dropdown
+// ==========================================================
+
+document.addEventListener("click", function (event) {
+
+    const actionButton = event.target.closest(
+        ".btn-department-result-action"
+    );
+
+    // ------------------------------------------------------
+    // Clicked an Action button
+    // ------------------------------------------------------
+    if (actionButton) {
+
+        const actionContainer = actionButton.closest(".relative");
+
+        const menu = actionContainer?.querySelector(
+            ".department-result-action-menu"
+        );
+
+        if (!menu) {
+            return;
+        }
+
+        // Close all other dropdowns first
+        document
+            .querySelectorAll(".department-result-action-menu")
+            .forEach((dropdown) => {
+
+                if (dropdown !== menu) {
+                    dropdown.classList.add("hidden");
+                }
+            });
+
+        // Toggle current dropdown
+        menu.classList.toggle("hidden");
+
+        // Update aria state
+        const isOpen = !menu.classList.contains("hidden");
+
+        actionButton.setAttribute(
+            "aria-expanded",
+            isOpen ? "true" : "false"
+        );
+
+        return;
+    }
+
+    // ------------------------------------------------------
+    // Clicked outside the dropdown
+    // ------------------------------------------------------
+    if (
+        !event.target.closest(
+            ".department-result-action-menu"
+        )
+    ) {
+
+        document
+            .querySelectorAll(".department-result-action-menu")
+            .forEach((dropdown) => {
+                dropdown.classList.add("hidden");
+            });
+
+        document
+            .querySelectorAll(".btn-department-result-action")
+            .forEach((button) => {
+                button.setAttribute("aria-expanded", "false");
+            });
+    }
+});

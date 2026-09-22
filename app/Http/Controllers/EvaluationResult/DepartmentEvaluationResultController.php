@@ -44,9 +44,15 @@ class DepartmentEvaluationResultController extends Controller
         DepartmentEvaluationResultService $service
     ): View {
 
-        if (auth()->user()->role == 'user' || auth()->user()->position == 'មន្ត្រី' || auth()->user()->role == 'super_admin') {
+        if (
+            !in_array(auth()->user()->role, [
+                'department_admin',
+                'super_admin',
+            ])
+        ) {
             abort(403);
         }
+
         $periods = $service->getClosedPeriods();
 
         return view(
@@ -62,6 +68,14 @@ class DepartmentEvaluationResultController extends Controller
      */
     public function show(EvaluationPeriod $evaluationPeriod, DepartmentEvaluationResultService $service): View
     {
+         if (
+            !in_array(auth()->user()->role, [
+                'department_admin',
+                'super_admin',
+            ])
+        ) {
+            abort(403);
+        }
         $departmentAdmin = auth()->user();
 
         $offices = Office::query()
@@ -71,6 +85,41 @@ class DepartmentEvaluationResultController extends Controller
         return view(
             'evaluation-results.department.show',
             compact('evaluationPeriod', 'offices')
+        );
+    }
+
+    /**
+     * Review one employee's evaluation result.
+     */
+    public function review(
+        EvaluationPeriod $evaluationPeriod,
+        User $user,
+        DepartmentEvaluationResultService $service
+    ): View {
+
+        $departmentAdmin = auth()->user();
+
+        if ($departmentAdmin->role !== 'department_admin') {
+            abort(403);
+        }
+
+        $result = $service->getUserResult(
+            $departmentAdmin,
+            $evaluationPeriod,
+            $user
+        );
+
+        if (!$result) {
+            abort(404, 'Evaluation result not found.');
+        }
+
+        return view(
+            'evaluation-results.department.review',
+            compact(
+                'evaluationPeriod',
+                'result',
+                'departmentAdmin'
+            )
         );
     }
 

@@ -53,9 +53,13 @@ class DepartmentEvaluationResultService
                                         $admin->department_id
                                     )
                                     // Only normal users
-                                    ->where('role', 'user')
+                                    ->whereNotIn('role', [
+                                        'super_admin',
+                                        'evaluation_admin',
+                                        'department_admin',
+                                    ]);
                                     // Exclude leaders
-                                    ->where('is_leader', 0);
+                                    // ->where('is_leader', 0);
                             }
                         );
                 }
@@ -159,9 +163,13 @@ class DepartmentEvaluationResultService
                                         $departmentAdmin->department_id
                                     )
 
-                                    ->where('role', 'user')
+                                    ->whereNotIn('role', [
+                                        'super_admin',
+                                        'evaluation_admin',
+                                        'department_admin',
+                                    ]);
 
-                                    ->where('is_leader', 0);
+                                    // ->where('is_leader', 0);
 
                             }
                         );
@@ -209,10 +217,14 @@ class DepartmentEvaluationResultService
                                     )
 
                                     // Only normal users
-                                    ->where('role', 'user')
+                                    ->whereNotIn('role', [
+                                        'super_admin',
+                                        'evaluation_admin',
+                                        'department_admin',
+                                    ]);
 
                                     // Exclude leaders
-                                    ->where('is_leader', 0);
+                                    // ->where('is_leader', 0);
                             }
                         );
                 }
