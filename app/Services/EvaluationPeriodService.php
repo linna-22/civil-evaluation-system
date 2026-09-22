@@ -263,13 +263,22 @@ class EvaluationPeriodService
 
 
             // ==========================================
-            // Assign Active Users
+            // Save Participating Departments
             // ==========================================
 
-            $this->assignActiveUsers(
-                $evaluationPeriod
-            );
+            foreach ($data['department_ids'] as $departmentId) {
 
+                $evaluationPeriod->departments()->create([
+                    'department_id' => $departmentId,
+                ]);
+
+            }
+
+
+            // ==========================================
+            // IMPORTANT:
+            // Do NOT automatically assign all active users.
+            // ==========================================
 
             return $evaluationPeriod->refresh();
 
@@ -396,7 +405,8 @@ class EvaluationPeriodService
     /**
      * Close an evaluation period.
      */
-    public function close(EvaluationPeriod $evaluationPeriod, EvaluationSummaryService $summaryService): EvaluationPeriod {
+    public function close(EvaluationPeriod $evaluationPeriod, EvaluationSummaryService $summaryService): EvaluationPeriod
+    {
         return DB::transaction(function () use ($evaluationPeriod, $summaryService) {
             // ==========================================
             // Check Already Closed

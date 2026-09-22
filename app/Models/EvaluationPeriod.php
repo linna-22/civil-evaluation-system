@@ -71,4 +71,13 @@ class EvaluationPeriod extends Model
             'evaluation_period_id'
         );
     }
+    public function departments(): HasMany
+    {
+        return $this->hasMany(
+            EvaluationPeriodDepartment::class,
+            'evaluation_period_id',
+            'evaluation_period_id'
+        );
+    }
+
 }

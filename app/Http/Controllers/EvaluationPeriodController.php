@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\EvaluationPeriodRequest;
+use App\Models\Department;
 use App\Models\EvaluationPeriod;
 use App\Services\EvaluationPeriodService;
 use App\Services\EvaluationSummaryService;
@@ -41,22 +42,36 @@ class EvaluationPeriodController extends Controller
      */
     public function create()
     {
-        return view('evaluation-periods.create');
+        $departments = Department::query()
+            ->orderBy('department_name_kh')
+            ->get();
+
+        return view(
+            'evaluation-periods.create',
+            compact('departments')
+        );
     }
 
 
     /**
      * Store a new evaluation period.
      */
-    public function store(EvaluationPeriodRequest $request, EvaluationPeriodService $service)
-    {
-        // dd($request->all());
+    public function store(
+        EvaluationPeriodRequest $request,
+        EvaluationPeriodService $service
+    ) {
+        // dd($request->validated());
+
         $service->store($request->validated());
+
         Log::info('sucess');
-        return redirect()->route('evaluation-periods.index')->with(
-            'success',
-            'ការវាយតម្លៃត្រូវបានបង្កើតដោយជោគជ័យ'
-        );
+
+        return redirect()
+            ->route('evaluation-periods.index')
+            ->with(
+                'success',
+                'ការវាយតម្លៃត្រូវបានបង្កើតដោយជោគជ័យ'
+            );
     }
 
 
@@ -89,7 +104,7 @@ class EvaluationPeriodController extends Controller
                 'ការវាយតម្លៃត្រូវបានកែប្រែដោយជោគជ័យ'
             );
     }
-    public function close(EvaluationPeriod $evaluationPeriod, EvaluationPeriodService $service, EvaluationSummaryService $summaryService) 
+    public function close(EvaluationPeriod $evaluationPeriod, EvaluationPeriodService $service, EvaluationSummaryService $summaryService)
     {
         $service->close(
             $evaluationPeriod,
