@@ -685,6 +685,18 @@ class EvaluationPeriodService
     ): void {
 
         // ==========================================
+        // Evaluation period must still be open
+        // ==========================================
+
+        if ($evaluationPeriod->status !== 'open') {
+            throw ValidationException::withMessages([
+                'evaluation_period' =>
+                    'វគ្គវាយតម្លៃនេះមិនទាន់បើក ឬបានបិទរួចហើយ។',
+            ]);
+        }
+
+
+        // ==========================================
         // Get Evaluation Participants
         // ==========================================
 
@@ -697,17 +709,11 @@ class EvaluationPeriodService
             ->get();
 
 
-        // ==========================================
-        // No Participants
-        // ==========================================
-
         if ($periodUsers->isEmpty()) {
-
             throw ValidationException::withMessages([
                 'evaluation_period' =>
                     'មិនមានមន្ត្រីក្នុងវគ្គវាយតម្លៃនេះទេ។',
             ]);
-
         }
 
 
@@ -717,20 +723,25 @@ class EvaluationPeriodService
 
         $missing = [];
 
-
         foreach ($periodUsers as $periodUser) {
 
             $user = $periodUser->user;
 
-
             // ------------------------------------------
-            // Skip Leaders
+            // Skip users who are not evaluation targets
             // ------------------------------------------
+            //
+            // department_admin is a result viewer/admin,
+            // not a peer-evaluation target.
+            //
+            // Existing leader exclusion is preserved.
+            //
 
             if (
                 !$user ||
                 $user->status !== 'active' ||
-                $user->is_leader
+                $user->is_leader ||
+                $user->role === 'department_admin'
             ) {
                 continue;
             }
@@ -782,9 +793,54 @@ class EvaluationPeriodService
                     'submitted'
                 )
                 ->exists();
+
+
             // ==========================================
-            // 3. Behavior
+            // 3. Behavior - Peer to Peer
             // ==========================================
+            //
+            // Every eligible peer in the same department
+            // must evaluate this user.
+            //
+            // Rules match BehaviorEvaluationService:
+            // - same organization
+            // - same department
+            // - active
+            // - in this evaluation period
+            // - department_admin excluded
+            // - self excluded
+            // - office does NOT matter
+            //
+
+            $expectedBehaviorCount = EvaluationPeriodUser::query()
+                ->where(
+                    'evaluation_period_id',
+                    $evaluationPeriod->evaluation_period_id
+                )
+                ->whereHas('user', function ($query) use ($user) {
+
+                    $query
+                        ->where('status', 'active')
+                        ->where('role', '!=', 'department_admin')
+                        ->where(
+                            'user_id',
+                            '!=',
+                            $user->user_id
+                        )
+                        ->where(
+                            'organization_id',
+                            $user->organization_id
+                        )
+                        ->where(
+                            'department_id',
+                            $user->department_id
+                        );
+
+                    // Intentionally no office_id condition.
+                })
+                ->count();
+
+
             $behaviorCount = Evaluation::query()
                 ->where(
                     'evaluation_period_id',
@@ -803,21 +859,30 @@ class EvaluationPeriodService
                     'submitted'
                 )
                 ->count();
+
+
             // ==========================================
             // Check Missing Evaluations
             // ==========================================
+
             $missingItems = [];
+
             if (!$workCompleted) {
                 $missingItems[] = 'Work Performance';
             }
+
             if (!$attendanceCompleted) {
                 $missingItems[] = 'Attendance';
-
             }
-            if ($behaviorCount === 0) {
 
-                $missingItems[] = 'Peer Behavior';
-
+            // If there are no eligible peers, behavior is
+            // not required for this user.
+            if (
+                $expectedBehaviorCount > 0 &&
+                $behaviorCount < $expectedBehaviorCount
+            ) {
+                $missingItems[] =
+                    "Peer Behavior ({$behaviorCount}/{$expectedBehaviorCount})";
             }
 
 
@@ -828,10 +893,10 @@ class EvaluationPeriodService
             if (!empty($missingItems)) {
 
                 $missing[] = [
-                    'user' => $user->name_kh ?? $user->name_en,
+                    'user' =>
+                        $user->name_kh ?? $user->name_en,
                     'items' => $missingItems,
                 ];
-
             }
         }
 
@@ -859,7 +924,6 @@ class EvaluationPeriodService
                     . 'មន្ត្រីមួយចំនួនមិនទាន់បំពេញការវាយតម្លៃ៖ '
                     . $messages,
             ]);
-
         }
     }
 
