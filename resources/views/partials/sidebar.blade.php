@@ -143,9 +143,6 @@
 
                     $allowedRoutes = [
                         'dashboard',
-                        'evaluations.work-performance.*',
-                        'evaluations.attendance.*',
-                        'evaluations.behavior.*',
                         'department-evaluation-results.*',
                         'users.profile',
                     ];
