@@ -10,16 +10,11 @@
         {{-- Page Header --}}
         {{-- ========================================== --}}
 
-        <x-page-header
-            title="ព័ត៌មានការវាយតម្លៃ"
-            description="">
+        <x-page-header title="ព័ត៌មានការវាយតម្លៃ" description="">
 
             <x-slot:actions>
 
-                <x-action-btn
-                    href="{{ route('evaluation-periods.index') }}"
-                    variant="secondary"
-                    icon="arrow-left">
+                <x-action-btn href="{{ route('evaluation-periods.index') }}" variant="secondary" icon="arrow-left">
 
                     ត្រឡប់
 
@@ -39,42 +34,33 @@
             <div class="flex items-center justify-between mb-6">
 
                 <div>
+                      @if ($evaluationPeriod->status === 'open')
+                        <span
+                            class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-700">
 
-                    <h2 class="text-lg font-semibold text-gray-800">
-                        ព័ត៌មានការវាយតម្លៃ
-                    </h2>
+                            កំពុងបើកដំណើរការវាយតម្លៃ
+
+                        </span>
+                    @else
+                        <span
+                            class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gray-100 text-gray-600">
+
+                            បានបិទការវាយតម្លៃ
+
+                        </span>
+                    @endif
                 </div>
 
                 <div class="flex items-center gap-3">
 
                     @if ($evaluationPeriod->status === 'open')
-                        <x-action-btn
-                            href="{{ route('evaluation-periods.data-entry.edit', $evaluationPeriod) }}"
-                            variant="primary"
-                            icon="users">
+                        <x-action-btn href="{{ route('evaluation-periods.data-entry.edit', $evaluationPeriod) }}"
+                            variant="primary" icon="users">
                             កំណត់អ្នកបញ្ចូលទិន្នន័យ
                         </x-action-btn>
                     @endif
 
-                    @if ($evaluationPeriod->status === 'open')
-
-                        <span
-                            class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-700">
-
-                            កំពុងបើកការវាយតម្លៃ
-
-                        </span>
-
-                    @else
-
-                        <span
-                            class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gray-100 text-gray-600">
-
-                            បានបិទការវាយតម្លៃ 
-
-                        </span>
-
-                    @endif
+                  
 
                 </div>
 
@@ -139,7 +125,7 @@
                 <div>
 
                     <p class="text-sm text-gray-500 mb-1">
-                        ថ្ងៃចាប់ផ្តើម
+                        កាលបរិច្ឆេទចាប់ផ្តើមវាយតម្លៃ
                     </p>
 
                     <p class="font-medium text-gray-800">
@@ -154,7 +140,7 @@
                 <div>
 
                     <p class="text-sm text-gray-500 mb-1">
-                        ថ្ងៃបញ្ចប់
+                        កាលបរិច្ឆេទត្រូវបិទការវាយតម្លៃ
                     </p>
 
                     <p class="font-medium text-gray-800">
@@ -164,54 +150,19 @@
                 </div>
 
 
-                {{-- Open At --}}
-
-                <div>
-
-                    <p class="text-sm text-gray-500 mb-1">
-                        ថ្ងៃបើកការវាយតម្លៃ
-                    </p>
-
-                    <p class="font-medium text-gray-800">
-
-                        @if ($evaluationPeriod->open_at)
-
-                            {{ $evaluationPeriod->open_at->format('d/m/Y H:i') }}
-
-                        @else
-
-                            -
-
-                        @endif
-
-                    </p>
-
-                </div>
-
-
                 {{-- Close At --}}
+                @if ($evaluationPeriod->status == 'closed' && $evaluationPeriod->close_at)
+                    <div>
+                        <p class="text-sm text-gray-500 mb-1">
+                            កាលបានបិទការវាយតម្លៃ
+                        </p>
 
-                <div>
-
-                    <p class="text-sm text-gray-500 mb-1">
-                        ថ្ងៃបិទការវាយតម្លៃ
-                    </p>
-
-                    <p class="font-medium text-gray-800">
-
-                        @if ($evaluationPeriod->close_at)
-
+                        <p class="font-medium text-gray-800">
                             {{ $evaluationPeriod->close_at->format('d/m/Y H:i') }}
+                        </p>
+                    </div>
+                @endif
 
-                        @else
-
-                            <span class="text-sm text-red-500">ការវាយតម្លៃមិនទាន់បានបិទ</span>
-
-                        @endif
-
-                    </p>
-
-                </div>
 
 
                 {{-- Participants Count --}}
@@ -219,7 +170,7 @@
                 <div>
 
                     <p class="text-sm text-gray-500 mb-1">
-                        ចំនួនមន្ត្រីចូលរួម
+                        ចំនួនមន្ត្រីចូលរួមវាយតម្លៃ
                     </p>
 
                     <p class="font-medium text-gray-800">
@@ -259,8 +210,7 @@
 
                     </div>
 
-                    <div
-                        class="px-3 py-1 rounded-full bg-blue-50 text-blue-600 text-sm font-medium">
+                    <div class="px-3 py-1 rounded-full bg-blue-50 text-blue-600 text-sm font-medium">
 
                         {{ $participantsTotal }}
                         នាក់
@@ -309,13 +259,9 @@
 
                     <tbody>
 
-                        @forelse (
-                            $participants
-                            as $index => $periodUser
-                        )
-
-                            <tr
-                                class="border-b border-gray-100 hover:bg-gray-50 transition">
+                        @forelse ($participants
+                                as $index => $periodUser)
+                            <tr class="border-b border-gray-100 hover:bg-gray-50 transition">
 
                                 <td class="px-6 py-4">
                                     {{ $participants->firstItem() + $index }}
@@ -345,27 +291,20 @@
 
                                 <td class="px-6 py-4">
 
-                                    @if (
-                                        $periodUser->user &&
-                                        $periodUser->user->status === 'active'
-                                    )
-
+                                    @if ($periodUser->user && $periodUser->user->status === 'active')
                                         <span
                                             class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-700">
 
                                             សកម្ម
 
                                         </span>
-
                                     @else
-
                                         <span
                                             class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-600">
 
                                             អសកម្ម
 
                                         </span>
-
                                     @endif
 
                                 </td>
@@ -376,16 +315,13 @@
 
                             <tr>
 
-                                <td
-                                    colspan="5"
-                                    class="py-12 text-center text-gray-400">
+                                <td colspan="5" class="py-12 text-center text-gray-400">
 
                                     មិនមានទិន្នន័យ
 
                                 </td>
 
                             </tr>
-
                         @endforelse
 
                     </tbody>
