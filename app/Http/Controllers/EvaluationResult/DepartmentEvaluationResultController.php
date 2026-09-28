@@ -123,6 +123,84 @@ class DepartmentEvaluationResultController extends Controller
         );
     }
 
+    /**
+     * Edit one employee's submitted Work Performance evaluation.
+     */
+    public function editWorkPerformance(
+        EvaluationPeriod $evaluationPeriod,
+        User $user,
+        DepartmentEvaluationResultService $service
+    ): View {
+
+        $departmentAdmin = auth()->user();
+
+        if ($departmentAdmin->role !== 'department_admin') {
+            abort(403);
+        }
+
+        $evaluation = $service->getWorkPerformanceForEdit(
+            $departmentAdmin,
+            $evaluationPeriod,
+            $user
+        );
+
+        if (!$evaluation) {
+            abort(404, 'Work Performance evaluation not found.');
+        }
+
+        return view('evaluation-results.department.work-performance.edit',
+            compact(
+                'evaluationPeriod',
+                'evaluation',
+                'departmentAdmin'
+            )
+        );
+    }
+
+
+    /**
+     * Update one employee's submitted Work Performance evaluation.
+     */
+    public function updateWorkPerformance(
+        Request $request,
+        EvaluationPeriod $evaluationPeriod,
+        User $user,
+        DepartmentEvaluationResultService $service
+    ) {
+
+        $departmentAdmin = auth()->user();
+
+        if ($departmentAdmin->role !== 'department_admin') {
+            abort(403);
+        }
+
+        $request->validate([
+            'performances' => ['required', 'array'],
+            'performances.*.work_performance_id' => ['nullable', 'integer'],
+            'performances.*.activity' => ['nullable', 'string', 'max:1000'],
+            'performances.*.indicator' => ['nullable', 'string', 'max:1000'],
+            'performances.*.achievement_percent' => ['nullable', 'numeric', 'min:0', 'max:100'],
+        ]);
+
+        $service->updateWorkPerformance(
+            $departmentAdmin,
+            $evaluationPeriod,
+            $user,
+            $request->input('performances', [])
+        );
+
+        return redirect()
+            ->route(
+                'department-evaluation-results.review',
+                [
+                    'evaluationPeriod' => $evaluationPeriod->evaluation_period_id,
+                    'user' => $user->user_id,
+                ]
+            )
+            ->with('success', 'សមិទ្ធកម្មការងារត្រូវបានកែប្រែ និងគណនាពិន្ទុឡើងវិញដោយជោគជ័យ។');
+    }
+
+
     public function updateRemark(
         Request $request,
         EvaluationSummary $evaluationSummary,

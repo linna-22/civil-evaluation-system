@@ -3,11 +3,14 @@
 namespace App\Services;
 
 use App\Models\EvaluationPeriod;
+use App\Models\Evaluation;
 use App\Models\EvaluationSummary;
+use App\Models\EvaluationWorkPerformance;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\DB;
 
 class DepartmentEvaluationResultService
 {
@@ -178,6 +181,173 @@ class DepartmentEvaluationResultService
             )->first();
     }
     /**
+     * Get one employee's submitted Work Performance evaluation for editing.
+     *
+     * Editing is intentionally available only after the evaluation period
+     * has been closed, and the employee must belong to the Department Admin's
+     * department and the selected evaluation period.
+     */
+    public function getWorkPerformanceForEdit(
+        User $departmentAdmin,
+        EvaluationPeriod $evaluationPeriod,
+        User $user
+    ): ?Evaluation {
+
+        if ($evaluationPeriod->status !== 'closed') {
+            abort(403, 'ការកែប្រែអាចធ្វើបានតែបន្ទាប់ពីបិទវគ្គវាយតម្លៃប៉ុណ្ណោះ។');
+        }
+
+        if ($user->department_id !== $departmentAdmin->department_id) {
+            abort(403, 'Unauthorized.');
+        }
+
+        if (in_array($user->role, [
+            'super_admin',
+            'evaluation_admin',
+            'department_admin',
+        ], true)) {
+            abort(403, 'Unauthorized.');
+        }
+
+        return Evaluation::query()
+            ->where('evaluation_period_id', $evaluationPeriod->evaluation_period_id)
+            ->where('evaluatee_id', $user->user_id)
+            ->where('evaluation_type', 'work_performance')
+            ->where('evaluation_status', 'submitted')
+            ->with([
+                'evaluatee',
+                'workPerformance',
+            ])
+            ->first();
+    }
+
+
+    /**
+     * Update an employee's Work Performance evaluation and recalculate the
+     * employee's combined summary.
+     */
+    public function updateWorkPerformance(
+        User $departmentAdmin,
+        EvaluationPeriod $evaluationPeriod,
+        User $user,
+        array $performances
+    ): void {
+
+        $evaluation = $this->getWorkPerformanceForEdit(
+            $departmentAdmin,
+            $evaluationPeriod,
+            $user
+        );
+
+        if (!$evaluation) {
+            abort(404, 'Work Performance evaluation not found.');
+        }
+
+        DB::transaction(function () use (
+            $evaluation,
+            $evaluationPeriod,
+            $performances,
+            $departmentAdmin
+        ) {
+
+            // Normalize the submitted rows and ignore completely empty rows.
+            $validRows = [];
+
+            foreach ($performances as $row) {
+                $activity = trim((string) ($row['activity'] ?? ''));
+                $indicator = trim((string) ($row['indicator'] ?? ''));
+                $achievement = $row['achievement_percent'] ?? null;
+
+                if (
+                    $activity === '' &&
+                    $indicator === '' &&
+                    ($achievement === null || $achievement === '')
+                ) {
+                    continue;
+                }
+
+                $validRows[] = [
+                    'id' => !empty($row['work_performance_id'])
+                        ? (int) $row['work_performance_id']
+                        : null,
+                    'activity' => $activity,
+                    'indicator' => $indicator,
+                    'achievement_percent' => (float) $achievement,
+                ];
+            }
+
+            // The original submission distributes 100% weight equally
+            // across all entered activities. Keep exactly the same rule.
+            $count = count($validRows);
+            $weight = $count > 0 ? 100 / $count : 0;
+
+            $existingRows = $evaluation->workPerformance
+                ->keyBy('work_performance_id');
+
+            $keptIds = [];
+
+            foreach ($validRows as $row) {
+                $score = round(
+                    ($row['achievement_percent'] * $weight) / 100,
+                    2
+                );
+
+                if ($row['id'] !== null) {
+                    $workPerformance = $existingRows->get($row['id']);
+
+                    // Never allow a row from another evaluation to be edited.
+                    if (!$workPerformance) {
+                        abort(403, 'Unauthorized.');
+                    }
+
+                    $workPerformance->update([
+                        'activity' => $row['activity'],
+                        'indicator' => $row['indicator'],
+                        'achievement_percent' => $row['achievement_percent'],
+                        'score' => $score,
+                    ]);
+
+                    $keptIds[] = $workPerformance->work_performance_id;
+                } else {
+                    $created = EvaluationWorkPerformance::create([
+                        'evaluation_id' => $evaluation->evaluation_id,
+                        'activity' => $row['activity'],
+                        'indicator' => $row['indicator'],
+                        'achievement_percent' => $row['achievement_percent'],
+                        'score' => $score,
+                    ]);
+
+                    $keptIds[] = $created->work_performance_id;
+                }
+            }
+
+            // Rows removed from the edit form are removed from the evaluation.
+            $evaluation->workPerformance()
+                ->when(
+                    !empty($keptIds),
+                    fn ($query) => $query->whereNotIn('work_performance_id', $keptIds)
+                )
+                ->when(
+                    empty($keptIds),
+                    fn ($query) => $query
+                )
+                ->delete();
+
+            $evaluation->update([
+                'updated_by' => $departmentAdmin->user_id,
+            ]);
+
+            // Recalculate only this employee's summary.
+            app(EvaluationSummaryService::class)
+                ->calculateForUser(
+                    $evaluationPeriod,
+                    $evaluation->evaluatee_id
+                );
+        });
+    }
+
+
+    /**
      * Get all evaluation results for export.
      *
      * Returns all matching employees without pagination.
@@ -321,21 +491,11 @@ class DepartmentEvaluationResultService
             abort(403, 'Unauthorized.');
         }
 
-        // The remark action must follow the same employee scope as the
-        // department result list above. Do not restrict this to role=user
-        // because the result query may also contain other allowed roles
-        // (for example office_admin or organization_admin).
-        if (in_array($employee->role, [
-            'super_admin',
-            'evaluation_admin',
-            'department_admin',
-        ], true)) {
-            abort(403, 'Unauthorized.');
-        }
-
-        $evaluationPeriod = $evaluationSummary->evaluationPeriodUser?->evaluationPeriod;
-
-        if (!$evaluationPeriod || $evaluationPeriod->status !== 'closed') {
+        // Only normal users can appear in department results.
+        if (
+            $employee->role !== 'user' ||
+            $employee->is_leader != 0
+        ) {
             abort(403, 'Unauthorized.');
         }
 

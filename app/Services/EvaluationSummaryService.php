@@ -135,6 +135,67 @@ class EvaluationSummaryService
 
 
     /**
+     * Recalculate the summary for one employee only.
+     *
+     * This is used after a Department Admin edits a closed evaluation.
+     */
+    public function calculateForUser(
+        EvaluationPeriod $evaluationPeriod,
+        int $evaluateeId
+    ): void {
+
+        DB::transaction(function () use ($evaluationPeriod, $evaluateeId) {
+
+            $periodUser = EvaluationPeriodUser::query()
+                ->where(
+                    'evaluation_period_id',
+                    $evaluationPeriod->evaluation_period_id
+                )
+                ->where('user_id', $evaluateeId)
+                ->first();
+
+            if (!$periodUser) {
+                return;
+            }
+
+            $workPerformanceScore = $this->calculateWorkPerformance(
+                $evaluationPeriod,
+                $evaluateeId
+            );
+
+            $attendanceScore = $this->calculateAttendance(
+                $evaluationPeriod,
+                $evaluateeId
+            );
+
+            $behaviorScore = $this->calculateBehavior(
+                $evaluationPeriod,
+                $evaluateeId
+            );
+
+            $totalScore =
+                $workPerformanceScore
+                + $attendanceScore
+                + $behaviorScore;
+
+            EvaluationSummary::updateOrCreate(
+                [
+                    'evaluation_period_user_id' =>
+                        $periodUser->evaluation_period_user_id,
+                ],
+                [
+                    'work_performance_score' => $workPerformanceScore,
+                    'attendance_score' => $attendanceScore,
+                    'behavior_score' => $behaviorScore,
+                    'total_score' => round($totalScore, 2),
+                    'calculated_at' => now(),
+                ]
+            );
+        });
+    }
+
+
+    /**
      * Calculate Work Performance /60.
      */
     private function calculateWorkPerformance(EvaluationPeriod $evaluationPeriod, int $evaluateeId): float 

@@ -25,9 +25,7 @@
                         ពិនិត្យលទ្ធផលវាយតម្លៃ
                     </h1>
 
-                    <p class="mt-1 text-sm text-gray-500">
-                        ពិនិត្យលទ្ធផលវាយតម្លៃរបស់មន្ត្រីម្នាក់ៗ
-                    </p>
+                    
 
                 </div>
 
@@ -205,7 +203,7 @@
                         <div>
 
                             <p class="text-xs text-gray-500 mb-1">
-                                វគ្គវាយតម្លៃ
+                                ការវាយតម្លៃ
                             </p>
 
                             <p class="font-semibold text-gray-800">
@@ -237,7 +235,7 @@
                         </h2>
 
                         <p class="mt-1 text-sm text-gray-500">
-                            ពិន្ទុដែលបានគណនាសម្រាប់វគ្គវាយតម្លៃនេះ
+                            ពិន្ទុដែលបានគណនាសម្រាប់ការវាយតម្លៃនេះ
                         </p>
 
                     </div>
@@ -271,7 +269,10 @@
                                 <div class="flex items-center gap-2">
 
                                     {{-- Edit Work Performance --}}
-                                    <a href="#"
+                                    <a href="{{ route('department-evaluation-results.work-performance.edit', [
+                                            'evaluationPeriod' => $evaluationPeriod->evaluation_period_id,
+                                            'user' => $employee->user_id,
+                                        ]) }}"
                                         class="inline-flex items-center gap-1.5
                    px-3 py-1.5
                    rounded-lg
