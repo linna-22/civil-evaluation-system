@@ -158,6 +158,7 @@
     <script>
         window.attendanceUsers = @json($users->values());
         window.attendanceOfficeId = @json($officeModel?->office_id);
+        window.attendanceDepartmentId = @json($assignment?->department_id);
         window.attendanceTotalUsers = {{ $users->count() }};
     </script>
     @vite('resources/js/evaluations/attendance/progressbar.js')

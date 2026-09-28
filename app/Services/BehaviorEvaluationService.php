@@ -30,7 +30,7 @@ class BehaviorEvaluationService
      *
      * - user can evaluate users in the same department
      * - office_admin can evaluate users in the same department
-     * - department_admin can evaluate users in the same department
+     * - department_admin cannot act as a peer evaluator
      * - evaluator cannot evaluate himself/herself
      * - department_admin cannot be an evaluation target
      * - users from another department cannot be evaluated
@@ -48,7 +48,6 @@ class BehaviorEvaluationService
             !in_array($user->role, [
                 'user',
                 'office_admin',
-                'department_admin',
             ], true)
         ) {
             abort(403);
@@ -208,7 +207,6 @@ class BehaviorEvaluationService
             !in_array($user->role, [
                 'user',
                 'office_admin',
-                'department_admin',
             ], true)
         ) {
             abort(403);
