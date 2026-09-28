@@ -6,6 +6,7 @@ use App\Models\EvaluationPeriod;
 use App\Models\Evaluation;
 use App\Models\EvaluationSummary;
 use App\Models\EvaluationWorkPerformance;
+use App\Models\EvaluationAttendance;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
@@ -338,6 +339,165 @@ class DepartmentEvaluationResultService
             ]);
 
             // Recalculate only this employee's summary.
+            app(EvaluationSummaryService::class)
+                ->calculateForUser(
+                    $evaluationPeriod,
+                    $evaluation->evaluatee_id
+                );
+        });
+    }
+
+
+    /**
+     * Get one employee's submitted Attendance evaluation for editing.
+     */
+    public function getAttendanceForEdit(
+        User $departmentAdmin,
+        EvaluationPeriod $evaluationPeriod,
+        User $user
+    ): ?Evaluation {
+
+        if ($evaluationPeriod->status !== 'closed') {
+            abort(403, 'ការកែប្រែអាចធ្វើបានតែបន្ទាប់ពីបិទវគ្គវាយតម្លៃប៉ុណ្ណោះ។');
+        }
+
+        if ($user->department_id !== $departmentAdmin->department_id) {
+            abort(403, 'Unauthorized.');
+        }
+
+        if (in_array($user->role, [
+            'super_admin',
+            'evaluation_admin',
+            'department_admin',
+        ], true)) {
+            abort(403, 'Unauthorized.');
+        }
+
+        return Evaluation::query()
+            ->where('evaluation_period_id', $evaluationPeriod->evaluation_period_id)
+            ->where('evaluatee_id', $user->user_id)
+            ->where('evaluation_type', 'attendance')
+            ->where('evaluation_status', 'submitted')
+            ->with([
+                'evaluatee',
+                'attendance',
+            ])
+            ->first();
+    }
+
+
+    /**
+     * Update one employee's submitted Attendance evaluation and
+     * recalculate the employee's combined summary.
+     */
+    public function updateAttendance(
+        User $departmentAdmin,
+        EvaluationPeriod $evaluationPeriod,
+        User $user,
+        array $data
+    ): void {
+
+        $evaluation = $this->getAttendanceForEdit(
+            $departmentAdmin,
+            $evaluationPeriod,
+            $user
+        );
+
+        if (!$evaluation) {
+            abort(404, 'Attendance evaluation not found.');
+        }
+
+        if (!$evaluation->attendance) {
+            abort(404, 'Attendance record not found.');
+        }
+
+        DB::transaction(function () use (
+            $evaluation,
+            $evaluationPeriod,
+            $data,
+            $departmentAdmin
+        ) {
+
+            $approvedLeaveDays = max(
+                0,
+                (float) ($data['approved_leave_days'] ?? 0)
+            );
+
+            $unapprovedLeaveDays = max(
+                0,
+                (float) ($data['unapproved_leave_days'] ?? 0)
+            );
+
+            $lateHours = max(
+                0,
+                (float) ($data['late_hours'] ?? 0)
+            );
+
+            $leaveEarlyHours = max(
+                0,
+                (float) ($data['leave_early_hours'] ?? 0)
+            );
+
+            $overtimeHours = max(
+                0,
+                (float) ($data['overtime_hours'] ?? 0)
+            );
+
+            $perfectAttendance = filter_var(
+                $data['perfect_attendance'] ?? false,
+                FILTER_VALIDATE_BOOLEAN
+            );
+
+            if ($perfectAttendance) {
+                $attendancePercent = 100;
+                $approvedLeaveDays = 0;
+                $unapprovedLeaveDays = 0;
+                $lateHours = 0;
+                $leaveEarlyHours = 0;
+            } else {
+                $approvedHours = $approvedLeaveDays * 8 * 0.5;
+                $unapprovedHours = $unapprovedLeaveDays * 8;
+
+                $deductionHours =
+                    $approvedHours
+                    + $unapprovedHours
+                    + $lateHours
+                    + $leaveEarlyHours;
+
+                $deductionPercent = $deductionHours / 1.76;
+
+                $attendancePercent = max(
+                    0,
+                    round(100 - $deductionPercent, 2)
+                );
+            }
+
+            if ($attendancePercent < 80) {
+                $attendanceScore = 0;
+            } elseif ($attendancePercent < 90) {
+                $attendanceScore = 5;
+            } elseif ($attendancePercent < 95) {
+                $attendanceScore = 10;
+            } elseif ($attendancePercent < 100) {
+                $attendanceScore = 15;
+            } else {
+                $attendanceScore = 20;
+            }
+
+            $evaluation->attendance->update([
+                'approved_leave_count' => $approvedLeaveDays,
+                'unapproved_leave_count' => $unapprovedLeaveDays,
+                'late_hours' => $lateHours,
+                'leave_early_hours' => $leaveEarlyHours,
+                'overtime_hours' => $overtimeHours,
+                'attendance_percent' => $attendancePercent,
+                'attendance_score' => $attendanceScore,
+            ]);
+
+            $evaluation->update([
+                'updated_by' => $departmentAdmin->user_id,
+            ]);
+
             app(EvaluationSummaryService::class)
                 ->calculateForUser(
                     $evaluationPeriod,
