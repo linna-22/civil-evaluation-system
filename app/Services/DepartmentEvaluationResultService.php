@@ -33,9 +33,13 @@ class DepartmentEvaluationResultService
      * in the Department Admin's department
      * for a specific evaluation period.
      */
-    public function getDepartmentResults(User $admin, EvaluationPeriod $evaluationPeriod, Request $request): LengthAwarePaginator
-    {
-        return EvaluationSummary::query()
+    public function getDepartmentResults(
+        User $admin,
+        EvaluationPeriod $evaluationPeriod,
+        Request $request
+    ): LengthAwarePaginator {
+
+        $results = EvaluationSummary::query()
             ->with([
                 'evaluationPeriodUser.user',
                 'evaluationPeriodUser.evaluationPeriod',
@@ -43,6 +47,7 @@ class DepartmentEvaluationResultService
             ->whereHas(
                 'evaluationPeriodUser',
                 function ($query) use ($admin, $evaluationPeriod) {
+
                     $query
                         ->where(
                             'evaluation_period_id',
@@ -51,32 +56,33 @@ class DepartmentEvaluationResultService
                         ->whereHas(
                             'user',
                             function ($userQuery) use ($admin) {
+
                                 $userQuery
                                     ->where(
                                         'department_id',
                                         $admin->department_id
                                     )
-                                    // Only normal users
                                     ->whereNotIn('role', [
                                         'super_admin',
                                         'evaluation_admin',
                                         'department_admin',
                                     ]);
-                                    // Exclude leaders
-                                    // ->where('is_leader', 0);
                             }
                         );
                 }
             )
+
             // ==========================================================
             // Office Filter
             // ==========================================================
             ->when(
                 $request->office_id,
                 function ($query) use ($request) {
+
                     $query->whereHas(
                         'evaluationPeriodUser.user',
                         function ($userQuery) use ($request) {
+
                             $userQuery->where(
                                 'office_id',
                                 $request->office_id
@@ -85,17 +91,22 @@ class DepartmentEvaluationResultService
                     );
                 }
             )
+
             // ==========================================================
             // Search
             // ==========================================================
             ->when(
                 $request->search,
                 function ($query) use ($request) {
+
                     $search = $request->search;
+
                     $query->whereHas(
                         'evaluationPeriodUser.user',
                         function ($userQuery) use ($search) {
+
                             $userQuery->where(function ($q) use ($search) {
+
                                 $q->where(
                                     'name_kh',
                                     'like',
@@ -114,17 +125,105 @@ class DepartmentEvaluationResultService
                             });
                         }
                     );
-
                 }
             )
+
+            // ==========================================================
             // Highest score first
+            // ==========================================================
             ->orderByDesc('total_score')
+
+            // ==========================================================
             // Pagination
+            // ==========================================================
             ->paginate(
                 $request->input('per_page', 10)
             );
-    }
 
+
+        // ==========================================================
+        // Add Overtime Hours
+        // ==========================================================
+
+        $results->getCollection()->transform(
+            function ($result) use ($evaluationPeriod) {
+
+                $userId =
+                    $result->evaluationPeriodUser?->user_id;
+
+
+                // ------------------------------------------------------
+                // No user
+                // ------------------------------------------------------
+    
+                if (!$userId) {
+
+                    $result->overtime_hours = 0;
+
+                    return $result;
+                }
+
+
+                // ------------------------------------------------------
+                // Find Attendance Evaluation
+                // ------------------------------------------------------
+    
+                $attendanceEvaluation = Evaluation::query()
+                    ->where(
+                        'evaluation_period_id',
+                        $evaluationPeriod->evaluation_period_id
+                    )
+                    ->where(
+                        'evaluatee_id',
+                        $userId
+                    )
+                    ->where(
+                        'evaluation_type',
+                        'attendance'
+                    )
+                    ->first();
+
+
+                // ------------------------------------------------------
+                // No Attendance Evaluation
+                // ------------------------------------------------------
+    
+                if (!$attendanceEvaluation) {
+
+                    $result->overtime_hours = 0;
+
+                    return $result;
+                }
+
+
+                // ------------------------------------------------------
+                // Get Attendance Data
+                // ------------------------------------------------------
+    
+                $attendance = EvaluationAttendance::query()
+                    ->where(
+                        'evaluation_id',
+                        $attendanceEvaluation->evaluation_id
+                    )
+                    ->first();
+
+
+                // ------------------------------------------------------
+                // Attach Overtime Hours
+                // ------------------------------------------------------
+    
+                $result->overtime_hours = (float) (
+                    $attendance?->overtime_hours ?? 0
+                );
+
+
+                return $result;
+            }
+        );
+
+
+        return $results;
+    }
 
     /**
      * Get one user's evaluation result
@@ -173,8 +272,8 @@ class DepartmentEvaluationResultService
                                         'department_admin',
                                     ]);
 
-                                    // ->where('is_leader', 0);
-
+                                // ->where('is_leader', 0);
+                
                             }
                         );
 
@@ -202,11 +301,13 @@ class DepartmentEvaluationResultService
             abort(403, 'Unauthorized.');
         }
 
-        if (in_array($user->role, [
-            'super_admin',
-            'evaluation_admin',
-            'department_admin',
-        ], true)) {
+        if (
+            in_array($user->role, [
+                'super_admin',
+                'evaluation_admin',
+                'department_admin',
+            ], true)
+        ) {
             abort(403, 'Unauthorized.');
         }
 
@@ -244,12 +345,7 @@ class DepartmentEvaluationResultService
             abort(404, 'Work Performance evaluation not found.');
         }
 
-        DB::transaction(function () use (
-            $evaluation,
-            $evaluationPeriod,
-            $performances,
-            $departmentAdmin
-        ) {
+        DB::transaction(function () use ($evaluation, $evaluationPeriod, $performances, $departmentAdmin) {
 
             // Normalize the submitted rows and ignore completely empty rows.
             $validRows = [];
@@ -326,11 +422,11 @@ class DepartmentEvaluationResultService
             $evaluation->workPerformance()
                 ->when(
                     !empty($keptIds),
-                    fn ($query) => $query->whereNotIn('work_performance_id', $keptIds)
+                    fn($query) => $query->whereNotIn('work_performance_id', $keptIds)
                 )
                 ->when(
                     empty($keptIds),
-                    fn ($query) => $query
+                    fn($query) => $query
                 )
                 ->delete();
 
@@ -365,11 +461,13 @@ class DepartmentEvaluationResultService
             abort(403, 'Unauthorized.');
         }
 
-        if (in_array($user->role, [
-            'super_admin',
-            'evaluation_admin',
-            'department_admin',
-        ], true)) {
+        if (
+            in_array($user->role, [
+                'super_admin',
+                'evaluation_admin',
+                'department_admin',
+            ], true)
+        ) {
             abort(403, 'Unauthorized.');
         }
 
@@ -411,12 +509,7 @@ class DepartmentEvaluationResultService
             abort(404, 'Attendance record not found.');
         }
 
-        DB::transaction(function () use (
-            $evaluation,
-            $evaluationPeriod,
-            $data,
-            $departmentAdmin
-        ) {
+        DB::transaction(function () use ($evaluation, $evaluationPeriod, $data, $departmentAdmin) {
 
             $approvedLeaveDays = max(
                 0,
@@ -553,8 +646,8 @@ class DepartmentEvaluationResultService
                                         'department_admin',
                                     ]);
 
-                                    // Exclude leaders
-                                    // ->where('is_leader', 0);
+                                // Exclude leaders
+                                // ->where('is_leader', 0);
                             }
                         );
                 }

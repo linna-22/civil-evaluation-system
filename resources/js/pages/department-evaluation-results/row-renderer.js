@@ -1,5 +1,7 @@
 export function renderDepartmentResultRow(result, no) {
 
+     console.log("DEPARTMENT RESULT:", result);
+    console.log("OVERTIME:", result.overtime_hours);
     const user =
         result.evaluation_period_user?.user;
 
@@ -34,7 +36,20 @@ export function renderDepartmentResultRow(result, no) {
             </td>
 
             <td class="px-6 py-4 text-center">
-                ${result.attendance_score ?? "0.00"}
+                <div class="flex flex-col items-center gap-1">
+                    <span class="font-medium text-gray-800">
+                        ${result.attendance_score ?? "0.00"}
+                    </span>
+
+                    <span class="text-xs text-gray-500">
+                        ម៉ោងលើស: ${
+                            Number(result.overtime_hours ?? 0)
+                                .toLocaleString("en-US", {
+                                    maximumFractionDigits: 2,
+                                })
+                        } ម៉ោង
+                    </span>
+                </div>
             </td>
 
             <td class="px-6 py-4 text-center">
