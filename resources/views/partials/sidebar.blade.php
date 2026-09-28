@@ -135,6 +135,18 @@
             $user = auth()->user();
             $sidebar = config('sidebar');
 
+            // Work Performance access is assignment-based.
+            // The assigned data-entry user may have ANY role.
+            $hasWorkPerformanceAssignment = \App\Models\EvaluationDataEntryAssignment::query()
+                ->where('user_id', $user->user_id)
+                ->whereHas('evaluationPeriod', function ($query) {
+                    $query
+                        ->where('status', 'open')
+                        ->whereDate('start_date', '<=', now()->toDateString())
+                        ->whereDate('end_date', '>=', now()->toDateString());
+                })
+                ->exists();
+
             switch ($user->role) {
                 case 'user':
                     $allowedRoutes = [
@@ -179,9 +191,7 @@
                 case 'department_admin':
                     $allowedRoutes = [
                         'dashboard',
-                        // 'evaluations.work-performance.*',
-                        // 'evaluations.attendance.*',
-                        // 'evaluations.work-performance.offices',
+                        'evaluations.work-performance.*',
                         'evaluations.behavior.*',   
                         'department-evaluation-results.*',
                         'users.profile',
@@ -190,6 +200,11 @@
                 default:
                     $allowedRoutes = null;
                     break;
+            }
+
+            if ($hasWorkPerformanceAssignment && is_array($allowedRoutes)) {
+                $allowedRoutes[] = 'evaluations.work-performance.*';
+                $allowedRoutes = array_values(array_unique($allowedRoutes));
             }
 
             if ($allowedRoutes !== null) {

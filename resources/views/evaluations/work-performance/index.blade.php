@@ -21,7 +21,7 @@
                 </h1>
 
                 <p class="mt-1 text-sm text-gray-500">
-                    សូមវាយតម្លៃសមិទ្ធកម្មការងាររបស់មន្ត្រីក្នុងការិយាល័យ
+                    សូមវាយតម្លៃសមិទ្ធកម្មការងាររបស់មន្ត្រីតាមវិសាលភាពដែលអ្នកទទួលខុសត្រូវ
                 </p>
 
             @else
@@ -62,56 +62,68 @@
 
         @else
 
+            @if (!$assignment)
+
+                <div class="bg-white rounded-xl border border-amber-200 shadow-sm p-8 text-center">
+                    <div class="w-12 h-12 mx-auto mb-4 rounded-full bg-amber-50 text-amber-600 flex items-center justify-center">
+                        <i data-lucide="user-round-x" class="w-6 h-6"></i>
+                    </div>
+
+                    <h2 class="text-lg font-semibold text-gray-800">
+                        មិនទាន់មានការកំណត់អ្នកបញ្ចូលទិន្នន័យ
+                    </h2>
+
+                    <p class="mt-2 text-sm text-gray-500">
+                        សូមឱ្យអ្នកគ្រប់គ្រងកំណត់អ្នកបញ្ចូលទិន្នន័យសម្រាប់វគ្គវាយតម្លៃនេះជាមុនសិន។
+                    </p>
+                </div>
+
+            @else
 
             {{-- =====================================================
-                Office Information
+                Assignment Information
             ====================================================== --}}
             <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6 mb-6">
 
                 <div class="flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
 
-                    {{-- Office Information --}}
                     <div>
 
                         <div class="flex items-center gap-3">
 
-                            <div
-                                class="w-11 h-11 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center">
-
+                            <div class="w-11 h-11 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center">
                                 <i data-lucide="building-2" class="w-5 h-5"></i>
-
                             </div>
 
                             <div>
 
-                                <p class="text-sm text-gray-500">
-                                    ការិយាល័យ
-                                </p>
-
-                                <h2 class="text-lg font-semibold text-gray-800">
-                                    {{ $office->office_name_kh }}
-                                </h2>
+                                @if ($assignment?->scope === 'office')
+                                    <p class="text-sm text-gray-500">ការិយាល័យ</p>
+                                    <h2 class="text-lg font-semibold text-gray-800">
+                                        {{ $office?->office_name_kh }}
+                                    </h2>
+                                    <p class="text-xs text-gray-500 mt-1">
+                                        អ្នកបញ្ចូលទិន្នន័យតាមការិយាល័យ
+                                    </p>
+                                @else
+                                    <p class="text-sm text-gray-500">កម្រិតនាយកដ្ឋាន</p>
+                                    <h2 class="text-lg font-semibold text-gray-800">
+                                        {{ $assignment?->department?->department_name_kh ?? 'នាយកដ្ឋាន' }}
+                                    </h2>
+                                    <p class="text-xs text-gray-500 mt-1">
+                                        សម្រាប់មន្ត្រីកម្រិតនាយកដ្ឋាន ដូចជា អនុប្រធាននាយកដ្ឋាន
+                                    </p>
+                                @endif
 
                             </div>
 
                         </div>
 
                         <div class="mt-3 flex items-center gap-2 text-sm">
-
                             <i data-lucide="users" class="w-4 h-4 text-gray-400"></i>
-
-                            <span class="text-gray-500">
-                                មន្ត្រីសរុប៖
-                            </span>
-
-                            <span class="font-semibold text-blue-600">
-                                {{ $users->count() }}
-                            </span>
-
-                            <span class="text-gray-500">
-                                នាក់
-                            </span>
-
+                            <span class="text-gray-500">មន្ត្រីសរុប៖</span>
+                            <span class="font-semibold text-blue-600">{{ $users->count() }}</span>
+                            <span class="text-gray-500">នាក់</span>
                         </div>
 
                     </div>
@@ -292,7 +304,7 @@
                                         colspan="4"
                                         class="px-6 py-10 text-center text-gray-500">
 
-                                        មិនមានមន្ត្រីក្នុងការិយាល័យនេះទេ។
+                                        មិនមានមន្ត្រីក្នុងវិសាលភាពដែលអ្នកទទួលខុសត្រូវទេ។
 
                                     </td>
 
@@ -307,6 +319,8 @@
                 </div>
 
             </div>
+
+            @endif
 
         @endif
 

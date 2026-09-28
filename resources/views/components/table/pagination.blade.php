@@ -10,7 +10,7 @@
         {{-- Left --}}
         <div class="text-xs text-gray-500">
 
-            បង្ហាញ
+            កំពុងបង្ហាញ
 
             <span class="font-semibold text-gray-700">
                 {{ $paginator->firstItem() }}

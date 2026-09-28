@@ -230,6 +230,37 @@ class EvaluationDataEntryAssignmentController extends Controller
                 ];
             }
 
+            // Every participating department must have one department-level
+            // assignment, and every active office must have one office-level
+            // assignment. The assigned user may have ANY role, as long as
+            // they are active and belong to the required scope.
+            foreach ($participatingDepartmentIds as $departmentId) {
+                $departmentKey = "department:{$departmentId}";
+
+                if (!isset($seenScopes[$departmentKey])) {
+                    throw ValidationException::withMessages([
+                        'assignments' =>
+                            'នាយកដ្ឋាននីមួយៗត្រូវមានអ្នកបញ្ចូលទិន្នន័យកម្រិតនាយកដ្ឋាន។',
+                    ]);
+                }
+
+                $officeIds = Office::query()
+                    ->where('department_id', $departmentId)
+                    ->where('status', 'active')
+                    ->pluck('office_id');
+
+                foreach ($officeIds as $officeId) {
+                    $officeKey = "office:{$departmentId}:{$officeId}";
+
+                    if (!isset($seenScopes[$officeKey])) {
+                        throw ValidationException::withMessages([
+                            'assignments' =>
+                                'ការិយាល័យសកម្មនីមួយៗត្រូវមានអ្នកបញ្ចូលទិន្នន័យ។',
+                        ]);
+                    }
+                }
+            }
+
             /*
              * Replace the assignments for this
              * evaluation period with the submitted set.

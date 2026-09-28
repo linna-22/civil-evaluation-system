@@ -107,8 +107,10 @@ Route::middleware('auth')->group(function () {
                 Route::put('/{evaluationPeriod}', [EvaluationPeriodController::class, 'update'])->name('update');
                 Route::patch('/{evaluationPeriod}/close', [EvaluationPeriodController::class, 'close'])->name('close');
             });
-            Route::get('/{evaluationPeriod}/data-entry', [EvaluationDataEntryAssignmentController::class, 'edit'])->name('data-entry.edit');
-            Route::put('/{evaluationPeriod}/data-entry', [EvaluationDataEntryAssignmentController::class, 'update'])->name('data-entry.update');
+            Route::middleware('role:evaluation_admin')->group(function () {
+                Route::get('/{evaluationPeriod}/data-entry', [EvaluationDataEntryAssignmentController::class, 'edit'])->name('data-entry.edit');
+                Route::put('/{evaluationPeriod}/data-entry', [EvaluationDataEntryAssignmentController::class, 'update'])->name('data-entry.update');
+            });
 
             Route::get('/{evaluationPeriod}', [EvaluationPeriodController::class, 'show'])->name('show');
 
@@ -127,19 +129,19 @@ Route::middleware('auth')->group(function () {
         Route::get('/view', [BehaviorEvaluationController::class, 'view'])->name('evaluations.behavior.view');
     });
 
-    // Work Performance evaluation
+     // Work Performance evaluation
     Route::prefix('evaluations/work-performance')
-        ->middleware('role:office_admin')
         ->name('evaluations.work-performance.')
         ->group(function () {
-
-            // Department cards
             Route::get('/', [WorkPerformanceEvaluationController::class, 'index'])->name('index');
             Route::get('/create/{office?}', [WorkPerformanceEvaluationController::class, 'create'])->name('create');
             Route::get('/preview', [WorkPerformanceEvaluationController::class, 'preview'])->name('preview');
             Route::post('/submit', [WorkPerformanceEvaluationController::class, 'submit'])->name('submit');
-            Route::get('/view/{office?}', [WorkPerformanceEvaluationController::class, 'view'])->name('view');
 
+            // Department admin result view.
+            Route::middleware('role:department_admin')->group(function () {
+                Route::get('/view/{office?}', [WorkPerformanceEvaluationController::class, 'view'])->name('view');
+            });
         });
     // Attendance evaluation
     Route::prefix('evaluations/attendance')

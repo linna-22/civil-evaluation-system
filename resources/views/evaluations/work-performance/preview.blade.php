@@ -257,12 +257,12 @@
             type="button"
             id="backToEvaluationBtn"
             class="inline-flex items-center gap-2
-                   px-5 py-2.5
+                   px-3 py-2
                    rounded-lg
                    border border-gray-300
                    text-gray-700
                    hover:bg-gray-50
-                   transition"
+                   transition text-sm"
         >
 
             <i
@@ -281,13 +281,13 @@
             type="button"
             id="submitEvaluationBtn"
             class="inline-flex items-center gap-2
-                   px-5 py-2.5
+                   px-3 py-2
                    rounded-lg
                    bg-blue-600
                    text-white
                    hover:bg-blue-700
                    transition
-                   cursor-pointer">
+                   cursor-pointer text-sm">
             បញ្ជូនការវាយតម្លៃ
             <i data-lucide="send" class="w-4 h-4"></i>
         </button>
