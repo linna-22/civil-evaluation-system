@@ -94,7 +94,6 @@ Route::middleware('auth')->group(function () {
 
         });
     // Evaluation Period
-       // Evaluation Period
     Route::prefix('evaluation-periods')
         ->name('evaluation-periods.')
         ->group(function () {
@@ -129,7 +128,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/view', [BehaviorEvaluationController::class, 'view'])->name('evaluations.behavior.view');
     });
 
-     // Work Performance evaluation
+    // Work Performance evaluation
     Route::prefix('evaluations/work-performance')
         ->name('evaluations.work-performance.')
         ->group(function () {
@@ -145,7 +144,6 @@ Route::middleware('auth')->group(function () {
         });
     // Attendance evaluation
     Route::prefix('evaluations/attendance')
-        ->middleware('role:office_admin')
         ->name('evaluations.attendance.')
         ->group(function () {
             // Department / Office

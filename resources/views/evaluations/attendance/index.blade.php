@@ -19,7 +19,7 @@
                 </h1>
 
                 <p class="mt-1 text-sm text-gray-500">
-                    សូមវាយតម្លៃវត្តមានរបស់មន្ត្រីក្នុងការិយាល័យ
+                    សូមវាយតម្លៃវត្តមានរបស់មន្ត្រីតាមវិសាលភាពដែលអ្នកទទួលខុសត្រូវ
                 </p>
 
             @else
@@ -71,13 +71,31 @@
 
                             <div>
 
-                                <p class="text-sm text-gray-500">
-                                    ការិយាល័យ
-                                </p>
+                                @if ($assignment?->scope === 'office')
+                                    <p class="text-sm text-gray-500">
+                                        ការិយាល័យ
+                                    </p>
 
-                                <h2 class="text-lg font-semibold text-gray-800">
-                                    {{ $office->office_name_kh }}
-                                </h2>
+                                    <h2 class="text-lg font-semibold text-gray-800">
+                                        {{ $office?->office_name_kh }}
+                                    </h2>
+
+                                    <p class="text-xs text-gray-500 mt-1">
+                                        អ្នកបញ្ចូលទិន្នន័យតាមការិយាល័យ
+                                    </p>
+                                @else
+                                    <p class="text-sm text-gray-500">
+                                        កម្រិតនាយកដ្ឋាន
+                                    </p>
+
+                                    <h2 class="text-lg font-semibold text-gray-800">
+                                        {{ $assignment?->department?->department_name_kh ?? 'នាយកដ្ឋាន' }}
+                                    </h2>
+
+                                    <p class="text-xs text-gray-500 mt-1">
+                                        សម្រាប់មន្ត្រីកម្រិតនាយកដ្ឋាន
+                                    </p>
+                                @endif
 
                             </div>
 
