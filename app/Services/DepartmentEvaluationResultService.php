@@ -321,11 +321,21 @@ class DepartmentEvaluationResultService
             abort(403, 'Unauthorized.');
         }
 
-        // Only normal users can appear in department results.
-        if (
-            $employee->role !== 'user' ||
-            $employee->is_leader != 0
-        ) {
+        // The remark action must follow the same employee scope as the
+        // department result list above. Do not restrict this to role=user
+        // because the result query may also contain other allowed roles
+        // (for example office_admin or organization_admin).
+        if (in_array($employee->role, [
+            'super_admin',
+            'evaluation_admin',
+            'department_admin',
+        ], true)) {
+            abort(403, 'Unauthorized.');
+        }
+
+        $evaluationPeriod = $evaluationSummary->evaluationPeriodUser?->evaluationPeriod;
+
+        if (!$evaluationPeriod || $evaluationPeriod->status !== 'closed') {
             abort(403, 'Unauthorized.');
         }
 
