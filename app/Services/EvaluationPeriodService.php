@@ -55,7 +55,7 @@ class EvaluationPeriodService
      */
     public function find(EvaluationPeriod $evaluationPeriod): EvaluationPeriod
     {
-        return $evaluationPeriod->load('periodUsers.user');
+        return $evaluationPeriod;
     }
     public function assignActiveUsers(
         EvaluationPeriod $evaluationPeriod
@@ -95,16 +95,29 @@ class EvaluationPeriodService
             $participants
         );
     }
-    public function assignUserToOpenPeriods(
-        User $user
-    ): void {
-
+    public function assignUserToOpenPeriods(User $user): void
+    {
         if ($user->status !== 'active') {
+            return;
+        }
+
+        if (
+            in_array($user->role, [
+                'super_admin',
+                'evaluation_admin',
+            ], true)
+        ) {
             return;
         }
 
         $openPeriods = EvaluationPeriod::query()
             ->where('status', 'open')
+            ->whereHas('departments', function ($query) use ($user) {
+                $query->where(
+                    'department_id',
+                    $user->department_id
+                );
+            })
             ->get();
 
         if ($openPeriods->isEmpty()) {
@@ -115,24 +128,19 @@ class EvaluationPeriodService
 
         $participants = $openPeriods
             ->map(function ($period) use ($user, $now) {
-
                 return [
                     'evaluation_period_id'
                     => $period->evaluation_period_id,
 
-                    'user_id'
-                    => $user->user_id,
+                    'user_id' => $user->user_id,
 
                     'created_at' => $now,
                     'updated_at' => $now,
                 ];
-
             })
             ->toArray();
 
-        EvaluationPeriodUser::insertOrIgnore(
-            $participants
-        );
+        EvaluationPeriodUser::insertOrIgnore($participants);
     }
     /**
      * Get participating departments, their offices and existing data-entry assignments.
@@ -148,7 +156,7 @@ class EvaluationPeriodService
         ]);
 
         $departments = $evaluationPeriod->departments
-            ->map(fn ($item) => $item->department)
+            ->map(fn($item) => $item->department)
             ->filter()
             ->values();
 
@@ -234,8 +242,8 @@ class EvaluationPeriodService
                 ->where('department_id', $data['department_id'])
                 ->when(
                     $officeId === null,
-                    fn ($q) => $q->whereNull('office_id'),
-                    fn ($q) => $q->where('office_id', $officeId)
+                    fn($q) => $q->whereNull('office_id'),
+                    fn($q) => $q->where('office_id', $officeId)
                 )
                 ->first();
 
@@ -373,62 +381,86 @@ class EvaluationPeriodService
                 ->exists();
 
             if ($exists) {
-
                 throw ValidationException::withMessages([
                     'month' =>
                         'វគ្គវាយតម្លៃសម្រាប់ខែ និងឆ្នាំនេះមានរួចហើយ។',
                 ]);
-
             }
-
 
             // ==========================================
             // Create Evaluation Period
             // ==========================================
 
             $evaluationPeriod = EvaluationPeriod::create([
-
                 'name_kh' => $data['name_kh'],
-
                 'name_en' => $data['name_en'],
-
                 'month' => $data['month'],
-
                 'year' => $data['year'],
-
                 'start_date' => $data['start_date'],
-
                 'end_date' => $data['end_date'],
-
                 'status' => 'open',
-
                 'created_by' => auth()->id(),
-
                 'open_at' => now(),
-
             ]);
-
 
             // ==========================================
             // Save Participating Departments
             // ==========================================
 
-            foreach ($data['department_ids'] as $departmentId) {
+            $departmentIds = collect($data['department_ids'])
+                ->map(fn($id) => (int) $id)
+                ->unique()
+                ->values();
 
+            foreach ($departmentIds as $departmentId) {
                 $evaluationPeriod->departments()->create([
                     'department_id' => $departmentId,
                 ]);
-
             }
 
+            // ==========================================
+            // Get Active Users From Participating
+            // Departments
+            // ==========================================
+
+            $activeUsers = User::query()
+                ->where('status', 'active')
+                ->whereIn('department_id', $departmentIds)
+                ->whereNotIn('role', [
+                    'super_admin',
+                    'evaluation_admin',
+                ])
+                ->get(['user_id']);
 
             // ==========================================
-            // IMPORTANT:
-            // Do NOT automatically assign all active users.
+            // Add Users To Evaluation Period
             // ==========================================
+
+            if ($activeUsers->isNotEmpty()) {
+
+                $now = now();
+
+                $participants = $activeUsers
+                    ->map(function ($user) use ($evaluationPeriod, $now) {
+                        return [
+                            'evaluation_period_id'
+                            => $evaluationPeriod->evaluation_period_id,
+
+                            'user_id'
+                            => $user->user_id,
+
+                            'created_at' => $now,
+                            'updated_at' => $now,
+                        ];
+                    })
+                    ->toArray();
+
+                EvaluationPeriodUser::insertOrIgnore(
+                    $participants
+                );
+            }
 
             return $evaluationPeriod->refresh();
-
         });
     }
 
@@ -488,6 +520,59 @@ class EvaluationPeriodService
                 'start_date' => $data['start_date'],
                 'end_date' => $data['end_date'],
             ]);
+            // ==========================================
+            // Sync Participating Departments
+            // ==========================================
+
+            $departmentIds = collect($data['department_ids'])
+                ->map(fn($id) => (int) $id)
+                ->unique()
+                ->values()
+                ->all();
+
+            $evaluationPeriod->departments()->delete();
+
+            foreach ($departmentIds as $departmentId) {
+                $evaluationPeriod->departments()->create([
+                    'department_id' => $departmentId,
+                ]);
+            }
+
+            // ==========================================
+            // Sync Evaluation Period Users
+            // ==========================================
+
+            $activeUsers = User::query()
+                ->where('status', 'active')
+                ->whereIn('department_id', $departmentIds)
+                ->whereNotIn('role', [
+                    'super_admin',
+                    'evaluation_admin',
+                ])
+                ->pluck('user_id');
+
+            $evaluationPeriod->periodUsers()->delete();
+
+            if ($activeUsers->isNotEmpty()) {
+
+                $now = now();
+
+                $participants = $activeUsers
+                    ->map(function ($userId) use ($evaluationPeriod, $now) {
+                        return [
+                            'evaluation_period_id'
+                            => $evaluationPeriod->evaluation_period_id,
+
+                            'user_id' => $userId,
+
+                            'created_at' => $now,
+                            'updated_at' => $now,
+                        ];
+                    })
+                    ->toArray();
+
+                EvaluationPeriodUser::insertOrIgnore($participants);
+            }
 
             return $evaluationPeriod->refresh();
 

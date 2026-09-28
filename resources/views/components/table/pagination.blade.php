@@ -5,17 +5,10 @@
 @if ($paginator->hasPages())
 
     <div
-        class="flex
-               items-center
-               justify-between
-               px-6
-               py-5
-               border-t
-               border-gray-100
-               bg-white">
+        class="flex items-center justify-between px-6 py-4 border-t border-gray-100 bg-white">
 
         {{-- Left --}}
-        <div class="text-sm text-gray-500">
+        <div class="text-xs text-gray-500">
 
             បង្ហាញ
 
@@ -41,25 +34,25 @@
 
 
         {{-- Right --}}
-        <div class="flex items-center gap-2">
+        <div class="flex items-center gap-1">
 
             {{-- Previous --}}
             @if ($paginator->onFirstPage())
 
                 <span
                     class="flex
-                           h-10
-                           w-10
+                           h-7
+                           w-7
                            items-center
                            justify-center
-                           rounded-xl
+                           rounded-md
                            border
                            border-gray-200
                            text-gray-300">
 
                     <i
                         data-lucide="chevron-left"
-                        class="h-5 w-5">
+                        class="h-3.5 w-3.5">
                     </i>
 
                 </span>
@@ -69,21 +62,21 @@
                 <a
                     href="{{ $paginator->previousPageUrl() }}"
                     class="flex
-                           h-10
-                           w-10
+                           h-7
+                           w-7
                            items-center
                            justify-center
-                           rounded-xl
+                           rounded-md
                            border
                            border-gray-200
-                           text-gray-700
+                           text-gray-600
                            transition
                            hover:border-blue-300
                            hover:bg-blue-50">
 
                     <i
                         data-lucide="chevron-left"
-                        class="h-5 w-5">
+                        class="h-3.5 w-3.5">
                     </i>
 
                 </a>
@@ -99,13 +92,13 @@
                     {{-- Active page --}}
                     <span
                         class="flex
-                               h-10
-                               w-10
+                               h-7
+                               w-7
                                items-center
                                justify-center
-                               rounded-xl
+                               rounded-md
                                bg-blue-600
-                               text-sm
+                               text-xs
                                font-semibold
                                text-white">
 
@@ -119,17 +112,17 @@
                     <a
                         href="{{ $url }}"
                         class="flex
-                               h-10
-                               w-10
+                               h-7
+                               w-7
                                items-center
                                justify-center
-                               rounded-xl
+                               rounded-md
                                border
                                border-gray-200
                                bg-white
-                               text-sm
+                               text-xs
                                font-medium
-                               text-gray-700
+                               text-gray-600
                                transition
                                hover:border-blue-300
                                hover:bg-blue-50">
@@ -149,21 +142,21 @@
                 <a
                     href="{{ $paginator->nextPageUrl() }}"
                     class="flex
-                           h-10
-                           w-10
+                           h-7
+                           w-7
                            items-center
                            justify-center
-                           rounded-xl
+                           rounded-md
                            border
                            border-gray-200
-                           text-gray-700
+                           text-gray-600
                            transition
                            hover:border-blue-300
                            hover:bg-blue-50">
 
                     <i
                         data-lucide="chevron-right"
-                        class="h-5 w-5">
+                        class="h-3.5 w-3.5">
                     </i>
 
                 </a>
@@ -172,18 +165,18 @@
 
                 <span
                     class="flex
-                           h-10
-                           w-10
+                           h-7
+                           w-7
                            items-center
                            justify-center
-                           rounded-xl
+                           rounded-md
                            border
                            border-gray-200
                            text-gray-300">
 
                     <i
                         data-lucide="chevron-right"
-                        class="h-5 w-5">
+                        class="h-3.5 w-3.5">
                     </i>
 
                 </span>

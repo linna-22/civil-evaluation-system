@@ -72,9 +72,21 @@ class EvaluationPeriodController extends Controller
      */
     public function edit(EvaluationPeriod $evaluationPeriod)
     {
+        $departments = Department::query()
+            ->orderBy('department_name_kh')
+            ->get();
+
+        $selectedDepartmentIds = $evaluationPeriod->departments()
+            ->pluck('department_id')
+            ->toArray();
+
         return view(
             'evaluation-periods.edit',
-            compact('evaluationPeriod')
+            compact(
+                'evaluationPeriod',
+                'departments',
+                'selectedDepartmentIds'
+            )
         );
     }
 
@@ -127,9 +139,26 @@ class EvaluationPeriodController extends Controller
     ) {
         $evaluationPeriod = $service->find($evaluationPeriod);
 
+        // Paginate participants instead of loading every participant at once.
+        // Reuse the existing <x-table.pagination> component in the Blade view.
+        $participants = $evaluationPeriod
+            ->periodUsers()
+            ->with('user')
+            ->orderBy('evaluation_period_user_id')
+            ->paginate(5)
+            ->withQueryString();
+
+        $participantsTotal = $evaluationPeriod
+            ->periodUsers()
+            ->count();
+
         return view(
             'evaluation-periods.show',
-            compact('evaluationPeriod')
+            compact(
+                'evaluationPeriod',
+                'participants',
+                'participantsTotal'
+            )
         );
     }
 }

@@ -224,7 +224,7 @@
 
                     <p class="font-medium text-gray-800">
 
-                        {{ $evaluationPeriod->periodUsers->count() }}
+                        {{ $participantsTotal }}
 
                         នាក់
 
@@ -262,7 +262,7 @@
                     <div
                         class="px-3 py-1 rounded-full bg-blue-50 text-blue-600 text-sm font-medium">
 
-                        {{ $evaluationPeriod->periodUsers->count() }}
+                        {{ $participantsTotal }}
                         នាក់
 
                     </div>
@@ -310,7 +310,7 @@
                     <tbody>
 
                         @forelse (
-                            $evaluationPeriod->periodUsers
+                            $participants
                             as $index => $periodUser
                         )
 
@@ -318,7 +318,7 @@
                                 class="border-b border-gray-100 hover:bg-gray-50 transition">
 
                                 <td class="px-6 py-4">
-                                    {{ $index + 1 }}
+                                    {{ $participants->firstItem() + $index }}
                                 </td>
 
 
@@ -393,6 +393,9 @@
                 </table>
 
             </div>
+
+            {{-- Reuse the existing project pagination component --}}
+            <x-table.pagination :paginator="$participants" />
 
         </div>
 
