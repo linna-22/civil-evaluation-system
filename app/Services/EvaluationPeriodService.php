@@ -5,6 +5,9 @@ namespace App\Services;
 use App\Models\Evaluation;
 use App\Models\EvaluationPeriod;
 use App\Models\EvaluationPeriodUser;
+use App\Models\EvaluationDataEntryAssignment;
+use App\Models\Department;
+use App\Models\Office;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -131,6 +134,150 @@ class EvaluationPeriodService
             $participants
         );
     }
+    /**
+     * Get participating departments, their offices and existing data-entry assignments.
+     */
+    public function getDataEntryAssignmentData(EvaluationPeriod $evaluationPeriod): array
+    {
+        $evaluationPeriod->load([
+            'departments.department.offices.users',
+            'departments.department.users',
+            'dataEntryAssignments.department',
+            'dataEntryAssignments.office',
+            'dataEntryAssignments.user',
+        ]);
+
+        $departments = $evaluationPeriod->departments
+            ->map(fn ($item) => $item->department)
+            ->filter()
+            ->values();
+
+        return [
+            'departments' => $departments,
+            'assignments' => $evaluationPeriod->dataEntryAssignments,
+        ];
+    }
+
+    /**
+     * Save one assignment for a participating department or office.
+     */
+    public function saveDataEntryAssignment(
+        EvaluationPeriod $evaluationPeriod,
+        array $data
+    ): EvaluationDataEntryAssignment {
+        if ($evaluationPeriod->status === 'closed') {
+            throw ValidationException::withMessages([
+                'evaluation_period' => 'វគ្គវាយតម្លៃដែលបានបិទ មិនអាចកំណត់អ្នកបញ្ចូលទិន្នន័យបានទេ។',
+            ]);
+        }
+
+        return DB::transaction(function () use ($evaluationPeriod, $data) {
+            $participating = $evaluationPeriod->departments()
+                ->where('department_id', $data['department_id'])
+                ->exists();
+
+            if (!$participating) {
+                throw ValidationException::withMessages([
+                    'department_id' => 'នាយកដ្ឋាននេះមិនបានចូលរួមក្នុងវគ្គវាយតម្លៃនេះទេ។',
+                ]);
+            }
+
+            $officeId = $data['scope'] === 'office' ? ($data['office_id'] ?? null) : null;
+
+            if ($data['scope'] === 'office') {
+                if (!$officeId) {
+                    throw ValidationException::withMessages([
+                        'office_id' => 'សូមជ្រើសរើសការិយាល័យ។',
+                    ]);
+                }
+
+                $officeBelongs = Office::query()
+                    ->where('office_id', $officeId)
+                    ->where('department_id', $data['department_id'])
+                    ->where('status', 'active')
+                    ->exists();
+
+                if (!$officeBelongs) {
+                    throw ValidationException::withMessages([
+                        'office_id' => 'ការិយាល័យមិនស្ថិតក្រោមនាយកដ្ឋានដែលបានជ្រើសរើសទេ។',
+                    ]);
+                }
+            }
+
+            $user = User::query()
+                ->where('user_id', $data['user_id'])
+                ->where('status', 'active')
+                ->first();
+
+            if (!$user) {
+                throw ValidationException::withMessages([
+                    'user_id' => 'អ្នកបញ្ចូលទិន្នន័យត្រូវតែជាអ្នកប្រើប្រាស់ដែលសកម្ម។',
+                ]);
+            }
+
+            if ((int) $user->department_id !== (int) $data['department_id']) {
+                throw ValidationException::withMessages([
+                    'user_id' => 'អ្នកបញ្ចូលទិន្នន័យត្រូវស្ថិតនៅក្នុងនាយកដ្ឋានដែលបានជ្រើសរើស។',
+                ]);
+            }
+
+            if ($data['scope'] === 'office' && (int) $user->office_id !== (int) $officeId) {
+                throw ValidationException::withMessages([
+                    'user_id' => 'អ្នកបញ្ចូលទិន្នន័យត្រូវស្ថិតនៅក្នុងការិយាល័យដែលបានជ្រើសរើស។',
+                ]);
+            }
+
+            // One assignment per scope. For department scope office_id is NULL,
+            // so we explicitly query NULL rather than relying on the DB unique index.
+            $assignment = EvaluationDataEntryAssignment::query()
+                ->where('evaluation_period_id', $evaluationPeriod->evaluation_period_id)
+                ->where('department_id', $data['department_id'])
+                ->when(
+                    $officeId === null,
+                    fn ($q) => $q->whereNull('office_id'),
+                    fn ($q) => $q->where('office_id', $officeId)
+                )
+                ->first();
+
+            if ($assignment) {
+                $assignment->update([
+                    'scope' => $data['scope'],
+                    'user_id' => $user->user_id,
+                ]);
+
+                return $assignment->refresh();
+            }
+
+            return EvaluationDataEntryAssignment::create([
+                'evaluation_period_id' => $evaluationPeriod->evaluation_period_id,
+                'department_id' => $data['department_id'],
+                'office_id' => $officeId,
+                'user_id' => $user->user_id,
+                'scope' => $data['scope'],
+            ]);
+        });
+    }
+
+    /**
+     * Delete one assignment belonging to the selected period.
+     */
+    public function deleteDataEntryAssignment(
+        EvaluationPeriod $evaluationPeriod,
+        EvaluationDataEntryAssignment $assignment
+    ): void {
+        if ($evaluationPeriod->status === 'closed') {
+            throw ValidationException::withMessages([
+                'evaluation_period' => 'វគ្គវាយតម្លៃដែលបានបិទ មិនអាចកែប្រែការកំណត់បានទេ។',
+            ]);
+        }
+
+        if ((int) $assignment->evaluation_period_id !== (int) $evaluationPeriod->evaluation_period_id) {
+            abort(404);
+        }
+
+        $assignment->delete();
+    }
+
     /**
      * Create an evaluation period
      * and automatically assign active users.

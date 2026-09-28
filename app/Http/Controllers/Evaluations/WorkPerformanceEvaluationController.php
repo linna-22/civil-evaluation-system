@@ -282,6 +282,12 @@ class WorkPerformanceEvaluationController extends Controller
                     ->where('office_id', $user->office_id)
                     ->where('status', 'active')
                     ->where('is_leader', false)
+                    ->whereHas('evaluationPeriodUsers', function ($query) use ($evaluationPeriod) {
+                        $query->where(
+                            'evaluation_period_id',
+                            $evaluationPeriod->evaluation_period_id
+                        );
+                    })
                     ->first();
                 if (!$evaluatee) {
                     throw new \Exception(

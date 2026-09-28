@@ -45,7 +45,16 @@
                     </h2>
                 </div>
 
-                <div>
+                <div class="flex items-center gap-3">
+
+                    @if ($evaluationPeriod->status === 'open')
+                        <x-action-btn
+                            href="{{ route('evaluation-periods.data-entry.edit', $evaluationPeriod) }}"
+                            variant="primary"
+                            icon="users">
+                            កំណត់អ្នកបញ្ចូលទិន្នន័យ
+                        </x-action-btn>
+                    @endif
 
                     @if ($evaluationPeriod->status === 'open')
 

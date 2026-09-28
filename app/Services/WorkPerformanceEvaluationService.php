@@ -51,12 +51,23 @@ class WorkPerformanceEvaluationService
     public function getEligibleUsers(): Collection
     {
         $admin = auth()->user();
+        $evaluationPeriod = $this->getOpenEvaluationPeriod();
+
+        if (!$evaluationPeriod) {
+            return collect();
+        }
 
         return User::query()
             ->where('department_id', $admin->department_id)
             ->where('office_id', $admin->office_id)
             ->where('status', 'active')
             ->where('is_leader', false)
+            ->whereHas('evaluationPeriodUsers', function ($query) use ($evaluationPeriod) {
+                $query->where(
+                    'evaluation_period_id',
+                    $evaluationPeriod->evaluation_period_id
+                );
+            })
             ->orderBy('name_kh')
             ->get();
     }

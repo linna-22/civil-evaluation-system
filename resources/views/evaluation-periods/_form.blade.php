@@ -95,7 +95,15 @@
 
                     <input type="checkbox" name="department_ids[]" value="{{ $department->department_id }}"
                         class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                        {{ in_array($department->department_id, old('department_ids', [])) ? 'checked' : '' }}>
+                        {{ in_array(
+                            $department->department_id,
+                            old(
+                                'department_ids',
+                                isset($evaluationPeriod)
+                                    ? $evaluationPeriod->departments->pluck('department_id')->all()
+                                    : []
+                            )
+                        ) ? 'checked' : '' }}>
 
                     <span class="text-sm text-gray-700">
                         {{ $department->department_name_kh }}

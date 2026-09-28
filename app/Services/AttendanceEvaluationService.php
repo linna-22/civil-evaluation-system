@@ -15,6 +15,27 @@ use Illuminate\Http\Request;
 class AttendanceEvaluationService
 {
     /**
+     * Get active employees in the current office who belong to the
+     * evaluation-period participant snapshot.
+     */
+    private function getEligibleUsers($user, EvaluationPeriod $evaluationPeriod)
+    {
+        return User::query()
+            ->where('department_id', $user->department_id)
+            ->where('office_id', $user->office_id)
+            ->where('status', 'active')
+            ->where('is_leader', false)
+            ->whereHas('evaluationPeriodUsers', function ($query) use ($evaluationPeriod) {
+                $query->where(
+                    'evaluation_period_id',
+                    $evaluationPeriod->evaluation_period_id
+                );
+            })
+            ->orderBy('name_kh')
+            ->get();
+    }
+
+    /**
      * Display attendance evaluation offices.
      */
     public function index($user)
@@ -73,11 +94,10 @@ class AttendanceEvaluationService
         // Get Eligible Users in Own Office
         // =====================================================
 
-        $users = $office->users()
-            ->where('status', 'active')
-            ->where('is_leader', false)
-            ->orderBy('name_kh')
-            ->get();
+        $users = $this->getEligibleUsers(
+            $user,
+            $evaluationPeriod
+        );
 
         // =====================================================
         // Get Submitted User IDs
@@ -204,11 +224,10 @@ class AttendanceEvaluationService
         // Get All Eligible Users In Own Office
         // =====================================================
 
-        $users = $officeModel->users()
-            ->where('status', 'active')
-            ->where('is_leader', false)
-            ->orderBy('name_kh')
-            ->get();
+        $users = $this->getEligibleUsers(
+            $user,
+            $evaluationPeriod
+        );
 
         // =====================================================
         // No Users
@@ -290,8 +309,15 @@ class AttendanceEvaluationService
         $users = User::query()
             ->whereIn('user_id', $userIds)
             ->where('department_id', $user->department_id)
+            ->where('office_id', $user->office_id)
             ->where('status', 'active')
             ->where('is_leader', false)
+            ->whereHas('evaluationPeriodUsers', function ($query) use ($evaluationPeriod) {
+                $query->where(
+                    'evaluation_period_id',
+                    $evaluationPeriod->evaluation_period_id
+                );
+            })
             ->orderBy('name_kh')
             ->get();
         // Return Preview
@@ -506,6 +532,12 @@ class AttendanceEvaluationService
                     )
                     ->where('status', 'active')
                     ->where('is_leader', false)
+                    ->whereHas('evaluationPeriodUsers', function ($query) use ($evaluationPeriod) {
+                        $query->where(
+                            'evaluation_period_id',
+                            $evaluationPeriod->evaluation_period_id
+                        );
+                    })
                     ->first();
 
                 if (!$evaluatee) {
@@ -783,7 +815,13 @@ class AttendanceEvaluationService
                 ->where(
                     'is_leader',
                     false
-                );
+                )
+                ->whereHas('evaluationPeriodUsers', function ($query) use ($evaluationPeriod) {
+                    $query->where(
+                        'evaluation_period_id',
+                        $evaluationPeriod->evaluation_period_id
+                    );
+                });
 
 
         // -------------------------------------------------

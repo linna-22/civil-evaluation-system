@@ -8,8 +8,6 @@ use App\Models\EvaluationPeriod;
 use App\Services\EvaluationPeriodService;
 use App\Services\EvaluationSummaryService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
-
 
 class EvaluationPeriodController extends Controller
 {
@@ -20,6 +18,7 @@ class EvaluationPeriodController extends Controller
     {
         return view('evaluation-periods.index');
     }
+
     /**
      * Get evaluation periods for DataTable.
      */
@@ -36,7 +35,6 @@ class EvaluationPeriodController extends Controller
         ]);
     }
 
-
     /**
      * Show create evaluation period form.
      */
@@ -52,7 +50,6 @@ class EvaluationPeriodController extends Controller
         );
     }
 
-
     /**
      * Store a new evaluation period.
      */
@@ -60,11 +57,7 @@ class EvaluationPeriodController extends Controller
         EvaluationPeriodRequest $request,
         EvaluationPeriodService $service
     ) {
-        // dd($request->validated());
-
         $service->store($request->validated());
-
-        Log::info('sucess');
 
         return redirect()
             ->route('evaluation-periods.index')
@@ -74,15 +67,16 @@ class EvaluationPeriodController extends Controller
             );
     }
 
-
     /**
      * Show edit evaluation period form.
      */
     public function edit(EvaluationPeriod $evaluationPeriod)
     {
-        return view('evaluation-periods.edit', compact('evaluationPeriod'));
+        return view(
+            'evaluation-periods.edit',
+            compact('evaluationPeriod')
+        );
     }
-
 
     /**
      * Update evaluation period.
@@ -104,8 +98,15 @@ class EvaluationPeriodController extends Controller
                 'ការវាយតម្លៃត្រូវបានកែប្រែដោយជោគជ័យ'
             );
     }
-    public function close(EvaluationPeriod $evaluationPeriod, EvaluationPeriodService $service, EvaluationSummaryService $summaryService)
-    {
+
+    /**
+     * Close an evaluation period.
+     */
+    public function close(
+        EvaluationPeriod $evaluationPeriod,
+        EvaluationPeriodService $service,
+        EvaluationSummaryService $summaryService
+    ) {
         $service->close(
             $evaluationPeriod,
             $summaryService
@@ -116,16 +117,19 @@ class EvaluationPeriodController extends Controller
             'message' => 'វគ្គវាយតម្លៃត្រូវបានបិទដោយជោគជ័យ។',
         ]);
     }
-    public function show(EvaluationPeriod $evaluationPeriod, EvaluationPeriodService $service)
-    {
-        $evaluationPeriod = $service->find(
-            $evaluationPeriod
-        );
+
+    /**
+     * Show evaluation period details.
+     */
+    public function show(
+        EvaluationPeriod $evaluationPeriod,
+        EvaluationPeriodService $service
+    ) {
+        $evaluationPeriod = $service->find($evaluationPeriod);
 
         return view(
             'evaluation-periods.show',
             compact('evaluationPeriod')
         );
     }
-
 }

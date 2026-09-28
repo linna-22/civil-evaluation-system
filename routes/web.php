@@ -8,6 +8,7 @@ use App\Http\Controllers\BehaviorEvaluationController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\EvaluationController;
+use App\Http\Controllers\EvaluationDataEntryAssignmentController;
 use App\Http\Controllers\EvaluationPeriodController;
 use App\Http\Controllers\EvaluationReportController;
 use App\Http\Controllers\EvaluationResult\DepartmentEvaluationResultController;
@@ -93,6 +94,7 @@ Route::middleware('auth')->group(function () {
 
         });
     // Evaluation Period
+       // Evaluation Period
     Route::prefix('evaluation-periods')
         ->name('evaluation-periods.')
         ->group(function () {
@@ -105,6 +107,9 @@ Route::middleware('auth')->group(function () {
                 Route::put('/{evaluationPeriod}', [EvaluationPeriodController::class, 'update'])->name('update');
                 Route::patch('/{evaluationPeriod}/close', [EvaluationPeriodController::class, 'close'])->name('close');
             });
+            Route::get('/{evaluationPeriod}/data-entry', [EvaluationDataEntryAssignmentController::class, 'edit'])->name('data-entry.edit');
+            Route::put('/{evaluationPeriod}/data-entry', [EvaluationDataEntryAssignmentController::class, 'update'])->name('data-entry.update');
+
             Route::get('/{evaluationPeriod}', [EvaluationPeriodController::class, 'show'])->name('show');
 
         });
