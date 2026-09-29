@@ -147,8 +147,7 @@
 
                                     <p class="font-semibold text-slate-800">
 
-                                        {{ $user->position ?? 'មិនទាន់មាន' }}
-
+                                        {{ config('positions.options.' . (auth()->user()->position ?? ''), 'មិនមាន') }}
                                     </p>
 
                                 </div>
