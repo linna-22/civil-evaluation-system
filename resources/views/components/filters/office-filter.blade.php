@@ -2,7 +2,7 @@
     'id' => null,
     'name' => 'office_id',
     'offices' => [],
-    'placeholder' => 'ជ្រើសរើសការិយាល័យ',
+    'placeholder' => 'ការិយាល័យទាំងអស់',
 ])
 
 <div class="relative">

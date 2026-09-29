@@ -50,7 +50,7 @@
                     <i data-lucide="triangle-alert" class="w-5 h-5 text-amber-600 mt-0.5"></i>
                     <div>
                         <p class="text-sm font-semibold text-amber-800">
-                            វគ្គវាយតម្លៃបានបិទរួចហើយ
+                            ការវាយតម្លៃបានបិទហើយ
                         </p>
                         <p class="mt-1 text-xs text-amber-700">
                             ការកែប្រែពិន្ទុឥរិយាបថនឹងគណនាពិន្ទុវាយតម្លៃរបស់មន្ត្រីឡើងវិញដោយស្វ័យប្រវត្តិ។

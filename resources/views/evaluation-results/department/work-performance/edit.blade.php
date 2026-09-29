@@ -13,16 +13,16 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
 
             {{-- Header --}}
-            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
 
                 <div>
                     <h1 class="text-2xl font-bold text-gray-800">
                         កែប្រែសមិទ្ធកម្មការងារ
                     </h1>
 
-                    <p class="mt-1 text-sm text-gray-500">
+                    {{-- <p class="mt-1 text-sm text-gray-500">
                         កែប្រែទិន្នន័យសមិទ្ធកម្មការងារ និងគណនាពិន្ទុឡើងវិញ
-                    </p>
+                    </p> --}}
                 </div>
 
                 <a
@@ -46,7 +46,7 @@
 
                     <div>
                         <p class="text-sm font-semibold text-amber-800">
-                            វគ្គវាយតម្លៃបានបិទរួចហើយ
+                            ការតម្លៃបានបិទហើយ
                         </p>
                         <p class="mt-1 text-xs text-amber-700">
                             ការកែប្រែនេះនឹងធ្វើឱ្យពិន្ទុសមិទ្ធកម្ម និងពិន្ទុវាយតម្លៃសរុបរបស់មន្ត្រីត្រូវបានគណនាឡើងវិញដោយស្វ័យប្រវត្តិ។
@@ -135,9 +135,9 @@
                                         សមិទ្ធកម្មការងារ
                                     </h2>
 
-                                    <p class="mt-1 text-sm text-gray-500">
+                                    {{-- <p class="mt-1 text-sm text-gray-500">
                                         កែប្រែសកម្មភាព និងសូចនាករសមិទ្ធកម្មការងាររបស់មន្ត្រី
-                                    </p>
+                                    </p> --}}
                                 </div>
 
                                 {{-- Same Add button as Create Work Performance --}}
