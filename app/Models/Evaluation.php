@@ -12,17 +12,19 @@ class Evaluation extends Model
     protected $primaryKey = 'evaluation_id';
 
     protected $fillable = [
-
         'evaluation_period_id',
         'evaluator_id',
         'evaluatee_id',
         'evaluation_status',
         'evaluation_type',
         'check_status',
-        'submitted_at', 
+        'submitted_at',
         'created_by',
-        'updated_by'
+        'updated_by',
+    ];
 
+    protected $casts = [
+        'submitted_at' => 'datetime',
     ];
 
     public function evaluator()
@@ -45,12 +47,20 @@ class Evaluation extends Model
 
     public function workPerformance()
     {
-        return $this->hasMany(EvaluationWorkPerformance::class, 'evaluation_id', 'evaluation_id');
+        return $this->hasMany(
+            EvaluationWorkPerformance::class,
+            'evaluation_id',
+            'evaluation_id'
+        );
     }
 
     public function attendance()
     {
-        return $this->hasOne(EvaluationAttendance::class, 'evaluation_id', 'evaluation_id');
+        return $this->hasOne(
+            EvaluationAttendance::class,
+            'evaluation_id',
+            'evaluation_id'
+        );
     }
 
     public function behavior()

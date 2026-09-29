@@ -281,6 +281,153 @@ class DepartmentEvaluationResultService
             )->first();
     }
     /**
+     * Get all submitted Behavior evaluations for one employee.
+     *
+     * Each evaluator is returned separately so the Department Admin can
+     * review and edit one evaluator's score at a time.
+     *
+     * Editing follows the existing rule used by Work Performance and
+     * Attendance: it is available only after the evaluation period is closed.
+     */
+    public function getBehaviorEvaluationsForEdit(
+        User $departmentAdmin,
+        EvaluationPeriod $evaluationPeriod,
+        User $user
+    ): Collection {
+
+        if ($evaluationPeriod->status !== 'closed') {
+            abort(403, 'ការកែប្រែអាចធ្វើបានតែបន្ទាប់ពីបិទវគ្គវាយតម្លៃប៉ុណ្ណោះ។');
+        }
+
+        if ($user->department_id !== $departmentAdmin->department_id) {
+            abort(403, 'Unauthorized.');
+        }
+
+        if (
+            in_array($user->role, [
+                'super_admin',
+                'evaluation_admin',
+                'department_admin',
+            ], true)
+        ) {
+            abort(403, 'Unauthorized.');
+        }
+
+        return Evaluation::query()
+            ->with([
+                'evaluatee',
+                'evaluator',
+                'behavior',
+            ])
+            ->where('evaluation_period_id', $evaluationPeriod->evaluation_period_id)
+            ->where('evaluatee_id', $user->user_id)
+            ->where('evaluation_type', 'behavior')
+            ->where('evaluation_status', 'submitted')
+            ->orderBy('submitted_at')
+            ->get();
+    }
+
+
+    /**
+     * Update one evaluator's submitted Behavior evaluation.
+     *
+     * The selected evaluation must belong to the selected employee and
+     * evaluation period. After the ten behavior criteria are updated,
+     * the employee's combined summary is recalculated.
+     */
+    public function updateBehaviorEvaluation(
+        User $departmentAdmin,
+        EvaluationPeriod $evaluationPeriod,
+        User $user,
+        Evaluation $evaluation,
+        array $scores
+    ): int {
+
+        if ($evaluationPeriod->status !== 'closed') {
+            abort(403, 'ការកែប្រែអាចធ្វើបានតែបន្ទាប់ពីបិទវគ្គវាយតម្លៃប៉ុណ្ណោះ។');
+        }
+
+        if ($user->department_id !== $departmentAdmin->department_id) {
+            abort(403, 'Unauthorized.');
+        }
+
+        if (
+            in_array($user->role, [
+                'super_admin',
+                'evaluation_admin',
+                'department_admin',
+            ], true)
+        ) {
+            abort(403, 'Unauthorized.');
+        }
+
+        if (
+            (int) $evaluation->evaluation_period_id !== (int) $evaluationPeriod->evaluation_period_id
+            || (int) $evaluation->evaluatee_id !== (int) $user->user_id
+            || $evaluation->evaluation_type !== 'behavior'
+            || $evaluation->evaluation_status !== 'submitted'
+        ) {
+            abort(404, 'Behavior evaluation not found.');
+        }
+
+        $criteria = [
+            'discipline',
+            'responsibility',
+            'professional_ethics',
+            'work_performance',
+            'self_development',
+            'initiative_creativity',
+            'teamwork',
+            'interpersonal_skill',
+            'work_under_pressure',
+            'leadership',
+        ];
+
+        return DB::transaction(function () use (
+            $departmentAdmin,
+            $evaluationPeriod,
+            $user,
+            $evaluation,
+            $scores,
+            $criteria
+        ) {
+            $behavior = $evaluation->behavior()->first();
+
+            if (!$behavior) {
+                abort(404, 'Behavior evaluation data not found.');
+            }
+
+            $totalScore = 0;
+            $updates = [];
+
+            foreach ($criteria as $criterion) {
+                $value = (int) $scores[$criterion];
+
+                $updates[$criterion] = $value;
+                $totalScore += $value;
+            }
+
+            $updates['total_score'] = $totalScore;
+
+            $behavior->update($updates);
+
+            // Keep the original evaluator and submitted_at unchanged.
+            // Only record which Department Admin performed the edit.
+            $evaluation->update([
+                'updated_by' => $departmentAdmin->user_id,
+            ]);
+
+            app(EvaluationSummaryService::class)->calculateForUser(
+                $evaluationPeriod,
+                $user->user_id
+            );
+
+            return $totalScore;
+        });
+    }
+
+
+    /**
      * Get one employee's submitted Work Performance evaluation for editing.
      *
      * Editing is intentionally available only after the evaluation period

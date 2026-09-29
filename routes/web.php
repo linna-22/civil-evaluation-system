@@ -173,6 +173,8 @@ Route::middleware('auth')->group(function () {
             Route::get('/{evaluationPeriod}/data', [DepartmentEvaluationResultController::class, 'data'])->name('data');
             Route::get('/{evaluationPeriod}', [DepartmentEvaluationResultController::class, 'show'])->name('show');
             Route::get('/{evaluationPeriod}/user/{user}/review', [DepartmentEvaluationResultController::class, 'review'])->name('review');
+            Route::get('/{evaluationPeriod}/user/{user}/behavior/review', [DepartmentEvaluationResultController::class, 'behaviorReview'])->name('behavior-review');
+            Route::patch('/{evaluationPeriod}/user/{user}/behavior/{evaluation}', [DepartmentEvaluationResultController::class, 'updateBehavior'])->name('behavior.update');
             Route::get('/{evaluationPeriod}/user/{user}/work-performance/edit', [DepartmentEvaluationResultController::class, 'editWorkPerformance'])->name('work-performance.edit');
             Route::patch('/{evaluationPeriod}/user/{user}/work-performance', [DepartmentEvaluationResultController::class, 'updateWorkPerformance'])->name('work-performance.update');
             Route::get('/{evaluationPeriod}/user/{user}/attendance/edit', [DepartmentEvaluationResultController::class, 'editAttendance'])->name('attendance.edit');

@@ -6,6 +6,7 @@
     use App\Http\Controllers\Controller;
     use App\Models\EvaluationPeriod;
     use App\Models\EvaluationSummary;
+    use App\Models\Evaluation;
     use App\Models\Office;
     use App\Models\User;
     use App\Services\DepartmentEvaluationResultService;
@@ -121,6 +122,100 @@
                 )
             );
         }
+
+        /**
+         * Display all submitted Behavior evaluations for one employee.
+         */
+        public function behaviorReview(
+            EvaluationPeriod $evaluationPeriod,
+            User $user,
+            DepartmentEvaluationResultService $service
+        ): View {
+
+            $departmentAdmin = auth()->user();
+
+            if ($departmentAdmin->role !== 'department_admin') {
+                abort(403);
+            }
+
+            $evaluations = $service->getBehaviorEvaluationsForEdit(
+                $departmentAdmin,
+                $evaluationPeriod,
+                $user
+            );
+
+            return view(
+                'evaluation-results.department.behavior.review',
+                compact(
+                    'evaluationPeriod',
+                    'user',
+                    'evaluations',
+                    'departmentAdmin'
+                )
+            );
+        }
+
+
+        /**
+         * Update one evaluator's Behavior evaluation.
+         */
+        public function updateBehavior(
+            Request $request,
+            EvaluationPeriod $evaluationPeriod,
+            User $user,
+            Evaluation $evaluation,
+            DepartmentEvaluationResultService $service
+        ) {
+
+            $departmentAdmin = auth()->user();
+
+            if ($departmentAdmin->role !== 'department_admin') {
+                abort(403);
+            }
+
+            $validated = $request->validate([
+                'discipline' => ['required', 'integer', 'min:0', 'max:2'],
+                'responsibility' => ['required', 'integer', 'min:0', 'max:2'],
+                'professional_ethics' => ['required', 'integer', 'min:0', 'max:2'],
+                'work_performance' => ['required', 'integer', 'min:0', 'max:2'],
+                'self_development' => ['required', 'integer', 'min:0', 'max:2'],
+                'initiative_creativity' => ['required', 'integer', 'min:0', 'max:2'],
+                'teamwork' => ['required', 'integer', 'min:0', 'max:2'],
+                'interpersonal_skill' => ['required', 'integer', 'min:0', 'max:2'],
+                'work_under_pressure' => ['required', 'integer', 'min:0', 'max:2'],
+                'leadership' => ['required', 'integer', 'min:0', 'max:2'],
+            ]);
+
+            $totalScore = $service->updateBehaviorEvaluation(
+                $departmentAdmin,
+                $evaluationPeriod,
+                $user,
+                $evaluation,
+                $validated
+            );
+
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'ការវាយតម្លៃអាកប្បកិរិយាត្រូវបានកែប្រែ និងគណនាពិន្ទុឡើងវិញដោយជោគជ័យ។',
+                    'data' => [
+                        'evaluation_id' => $evaluation->evaluation_id,
+                        'total_score' => $totalScore,
+                    ],
+                ]);
+            }
+
+            return redirect()
+                ->route(
+                    'department-evaluation-results.behavior-review',
+                    [
+                        'evaluationPeriod' => $evaluationPeriod->evaluation_period_id,
+                        'user' => $user->user_id,
+                    ]
+                )
+                ->with('success', 'ការវាយតម្លៃអាកប្បកិរិយាត្រូវបានកែប្រែ និងគណនាពិន្ទុឡើងវិញដោយជោគជ័យ។');
+        }
+
 
         /**
          * Edit one employee's submitted Work Performance evaluation.

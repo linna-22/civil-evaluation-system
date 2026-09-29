@@ -410,7 +410,10 @@
                                 <div class="flex items-center gap-2">
 
                                     {{-- Edit Behavior --}}
-                                    <a href="#"
+                                    <a href="{{ route('department-evaluation-results.behavior-review', [
+                                            'evaluationPeriod' => $evaluationPeriod->evaluation_period_id,
+                                            'user' => $employee->user_id,
+                                        ]) }}"
                                         class="inline-flex items-center gap-1.5
                    px-3 py-1.5
                    rounded-lg
@@ -547,48 +550,6 @@
                     @endif
 
                 </div>
-
-            </div>
-
-
-            {{-- ==========================================================
-            ACTIONS
-        =========================================================== --}}
-
-            <div
-                class="flex flex-col-reverse sm:flex-row
-                    items-stretch sm:items-center
-                    justify-end gap-3">
-
-                <a href="{{ route('department-evaluation-results.show', $evaluationPeriod->evaluation_period_id) }}"
-                    class="inline-flex items-center justify-center gap-2
-                       px-5 py-2.5
-                       rounded-xl
-                       border border-gray-200
-                       bg-white
-                       text-gray-700
-                       text-sm font-semibold
-                       hover:bg-gray-50
-                       transition">
-                    <i data-lucide="arrow-left" class="w-4 h-4"></i>
-
-                    ត្រឡប់ក្រោយ
-                </a>
-
-
-                {{-- Edit will be connected next --}}
-                <button type="button" disabled
-                    class="inline-flex items-center justify-center gap-2
-                       px-5 py-2.5
-                       rounded-xl
-                       bg-gray-300
-                       text-white
-                       text-sm font-semibold
-                       cursor-not-allowed">
-                    <i data-lucide="pencil" class="w-4 h-4"></i>
-
-                    កែប្រែ
-                </button>
 
             </div>
 
