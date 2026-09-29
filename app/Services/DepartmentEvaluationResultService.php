@@ -383,14 +383,7 @@ class DepartmentEvaluationResultService
             'leadership',
         ];
 
-        return DB::transaction(function () use (
-            $departmentAdmin,
-            $evaluationPeriod,
-            $user,
-            $evaluation,
-            $scores,
-            $criteria
-        ) {
+        return DB::transaction(function () use ($departmentAdmin, $evaluationPeriod, $user, $evaluation, $scores, $criteria) {
             $behavior = $evaluation->behavior()->first();
 
             if (!$behavior) {
@@ -868,6 +861,7 @@ class DepartmentEvaluationResultService
     ): void {
         $user = auth()->user();
 
+        // Only Department Admin can update remarks.
         if ($user->role !== 'department_admin') {
             abort(403, 'Unauthorized.');
         }
@@ -885,17 +879,15 @@ class DepartmentEvaluationResultService
             abort(404, 'User not found.');
         }
 
-        // Department admin can only update
+        // Department Admin can only update
         // users in their own department.
         if ($employee->department_id !== $user->department_id) {
             abort(403, 'Unauthorized.');
         }
 
         // Only normal users can appear in department results.
-        if (
-            $employee->role !== 'user' ||
-            $employee->is_leader != 0
-        ) {
+        // Leaders are also allowed.
+        if ($employee->role !== 'user') {
             abort(403, 'Unauthorized.');
         }
 
