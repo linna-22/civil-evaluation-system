@@ -37,52 +37,80 @@
                             សង្ខេបលទ្ធផលវាយតម្លៃ
                         </h2>
                     </div>
+
                     <div
                         class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-50 text-blue-700 text-sm font-medium">
-                        <i data-lucide="users" class="w-4 h-4">
-                        </i>
+
+                        <i data-lucide="users" class="w-4 h-4"></i>
+
                         <span>
                             មន្ត្រីសរុប {{ $users->count() }} នាក់
                         </span>
+
                     </div>
                 </div>
             </div>
+
+
             {{-- =================================================
-                Attendance Table
-            ================================================== --}}
+        Attendance Table
+    ================================================== --}}
+
             <div class="overflow-x-auto">
+
                 <table class="w-full text-sm">
+
                     <thead>
+
                         <tr class="bg-gray-50 border-b border-gray-200">
+
                             <th class="px-5 py-4 text-left font-semibold text-gray-600">
                                 ល.រ
                             </th>
+
                             <th class="px-5 py-4 text-left font-semibold text-gray-600">
                                 មន្ត្រី
                             </th>
+
                             <th class="px-5 py-4 text-center font-semibold text-gray-600">
                                 ឈប់មានច្បាប់
                             </th>
+
                             <th class="px-5 py-4 text-center font-semibold text-gray-600">
                                 ឈប់អត់ច្បាប់
                             </th>
+
                             <th class="px-5 py-4 text-center font-semibold text-gray-600">
                                 មកយឺត
                             </th>
+
                             <th class="px-5 py-4 text-center font-semibold text-gray-600">
                                 ចេញមុន
                             </th>
+
+                            {{-- NEW: Overtime --}}
+                            <th class="px-5 py-4 text-center font-semibold text-gray-600">
+                                ម៉ោងលើស
+                            </th>
+
                             <th class="px-5 py-4 text-center font-semibold text-gray-600">
                                 ភាគរយវត្តមាន
                             </th>
+
                             <th class="px-5 py-4 text-center font-semibold text-gray-600">
                                 ពិន្ទុ
                             </th>
+
                         </tr>
+
                     </thead>
+
                     <tbody id="attendancePreviewTable" class="divide-y divide-gray-100">
+
                     </tbody>
+
                 </table>
+
             </div>
         </div>
         {{-- =====================================================

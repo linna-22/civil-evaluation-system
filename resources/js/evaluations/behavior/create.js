@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // ==========================================
     // State
     // ==========================================
-     const form = document.getElementById('behaviorEvaluationForm');
+    const form = document.getElementById('behaviorEvaluationForm');
 
     const peers = JSON.parse(form.dataset.peers || '[]');
 
@@ -155,110 +155,230 @@ document.addEventListener('DOMContentLoaded', function () {
 
         progressSteps.innerHTML = '';
 
-        peers.forEach((peer, index) => {
+        const currentPeer =
+            peers[currentIndex];
 
-            const isCurrent =
-                index === currentIndex;
-
-            const isCompleted =
-                index < currentIndex;
+        const nextPeer =
+            peers[currentIndex + 1];
 
 
-            const wrapper =
+        if (!currentPeer) {
+            return;
+        }
+
+
+        // ==========================================
+        // Progress Container
+        // ==========================================
+
+        const container =
+            document.createElement('div');
+
+        container.className = `
+        w-full
+        flex
+        items-center
+        gap-3
+    `;
+
+
+        // ==========================================
+        // Current User
+        // ==========================================
+
+        const currentStep =
+            document.createElement('div');
+
+        currentStep.className = `
+        flex
+        items-center
+        gap-3
+        shrink-0
+        min-w-0
+    `;
+
+
+        const currentCircle =
+            document.createElement('div');
+
+        currentCircle.className = `
+        w-11
+        h-11
+        rounded-full
+        flex
+        items-center
+        justify-center
+        bg-blue-600
+        text-white
+        font-semibold
+        text-sm
+        shrink-0
+    `;
+
+        currentCircle.textContent =
+            currentIndex + 1;
+
+
+        const currentName =
+            document.createElement('div');
+
+        currentName.className = `
+        min-w-0
+    `;
+
+
+        const currentNameKh =
+            document.createElement('p');
+
+        currentNameKh.className = `
+        text-sm
+        font-medium
+        text-blue-600
+        truncate
+        max-w-[140px]
+        sm:max-w-[180px]
+        lg:max-w-[220px]
+    `;
+
+        currentNameKh.textContent =
+            `${currentPeer.name_kh ?? ''}`;
+
+
+        currentName.appendChild(
+            currentNameKh
+        );
+
+
+        currentStep.appendChild(
+            currentCircle
+        );
+
+        currentStep.appendChild(
+            currentName
+        );
+
+
+        container.appendChild(
+            currentStep
+        );
+
+
+        // ==========================================
+        // Line + Next User
+        // ==========================================
+
+        if (nextPeer) {
+
+            // --------------------------------------
+            // Connecting Line
+            // --------------------------------------
+
+            const line =
                 document.createElement('div');
 
-            wrapper.className = `
-                flex
-                items-center
-                ${index < peers.length - 1
-                    ? 'flex-1'
-                    : ''
-                }
-            `;
+            line.className = `
+            flex-1
+            h-1
+            min-w-[40px]
+            rounded-full
+            bg-gray-200
+        `;
 
 
-            const circle =
+            container.appendChild(
+                line
+            );
+
+
+            // --------------------------------------
+            // Next User
+            // --------------------------------------
+
+            const nextStep =
                 document.createElement('div');
 
-            circle.className = `
-                w-11
-                h-11
-                rounded-full
-                flex
-                items-center
-                justify-center
-                font-semibold
-                text-sm
-                shrink-0
-                ${isCompleted
-                    ? 'bg-green-600 text-white'
-                    : isCurrent
-                        ? 'bg-blue-600 text-white'
-                        : 'bg-gray-200 text-gray-500'
-                }
-            `;
-
-            circle.textContent =
-                index + 1;
+            nextStep.className = `
+            flex
+            items-center
+            gap-3
+            shrink-0
+            min-w-0
+        `;
 
 
-            const name =
-                document.createElement('span');
-
-            name.className = `
-                hidden
-                md:block
-                ml-3
-                text-sm
-                ${isCurrent
-                    ? 'text-blue-600 font-medium'
-                    : isCompleted
-                        ? 'text-green-600'
-                        : 'text-gray-400'
-                }
-            `;
-
-            name.textContent =
-                peer.name_kh;
-
-
-            const content =
+            const nextCircle =
                 document.createElement('div');
 
-            content.className =
-                'flex items-center';
+            nextCircle.className = `
+            w-11
+            h-11
+            rounded-full
+            flex
+            items-center
+            justify-center
+            bg-gray-200
+            text-gray-500
+            font-semibold
+            text-sm
+            shrink-0
+        `;
+
+            nextCircle.textContent =
+                currentIndex + 2;
 
 
-            content.appendChild(circle);
-            content.appendChild(name);
+            const nextName =
+                document.createElement('div');
 
-            wrapper.appendChild(content);
-
-
-            if (index < peers.length - 1) {
-
-                const line =
-                    document.createElement('div');
-
-                line.className = `
-                    flex-1
-                    h-1
-                    mx-4
-                    rounded
-                    ${index < currentIndex
-                        ? 'bg-green-600'
-                        : 'bg-gray-200'
-                    }
-                `;
-
-                wrapper.appendChild(line);
-
-            }
+            nextName.className = `
+            min-w-0
+        `;
 
 
-            progressSteps.appendChild(wrapper);
+            const nextNameKh =
+                document.createElement('p');
 
-        });
+            nextNameKh.className = `
+            text-sm
+            text-gray-400
+            truncate
+            max-w-[140px]
+            sm:max-w-[180px]
+            lg:max-w-[220px]
+        `;
+
+            nextNameKh.textContent =
+                `${nextPeer.name_kh ?? ''}`;
+
+
+            nextName.appendChild(
+                nextNameKh
+            );
+
+
+            nextStep.appendChild(
+                nextCircle
+            );
+
+            nextStep.appendChild(
+                nextName
+            );
+
+
+            container.appendChild(
+                nextStep
+            );
+
+        }
+
+
+        // ==========================================
+        // Add To Progress Area
+        // ==========================================
+
+        progressSteps.appendChild(
+            container
+        );
 
     }
 

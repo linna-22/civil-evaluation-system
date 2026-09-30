@@ -60,7 +60,7 @@
                     ស្ថានភាព
                 </th>
 
-                <th class="px-6 py-3 text-center w-40">
+                <th class="px-6 py-2 text-center w-40">
                     សកម្មភាព
                 </th>
 

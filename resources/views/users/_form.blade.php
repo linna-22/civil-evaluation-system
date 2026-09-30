@@ -56,7 +56,7 @@
     {{-- Row 4 --}}
     <div class="grid grid-cols-3 gap-5">
 
-        <x-input label="តួនាទី" name="position" :value="old('position', $user->position ?? '')" required />
+        <x-forms.select label="តួនាទី" name="position" :options="config('positions.options')" :selected="old('position', $user->position ?? '')" required />
 
         <x-input label="អត្តលេខ" name="id_code" :value="old('id_code', $user->id_code ?? '')" placeholder="បញ្ចូលអត្តលេខ" />
 
@@ -70,20 +70,24 @@
     <div class="grid grid-cols-3 gap-5">
 
         {{-- Role --}}
-        
-        @if(auth()->user()->role === 'super_admin')
+
+        @if (auth()->user()->role === 'super_admin')
             <x-forms.select label="Role" name="role" :selected="old('role', $user->role ?? 'user')" :options="[
-            'super_admin' => 'Super Admin',
-            'organization_admin' => 'អ្នកគ្រប់គ្រងអង្គភាព',
-            'department_admin' => 'អ្នកគ្រប់គ្រងនាយកដ្ឋាន',
-            'user' => 'អ្នកប្រើប្រាស់',
-        ]" />
-        @else 
-         <x-forms.select label="Role" name="role" :selected="old('role', $user->role ?? 'user')" :options="[
-            'organization_admin' => 'អ្នកគ្រប់គ្រងអង្គភាព',
-            'department_admin' => 'អ្នកគ្រប់គ្រងនាយកដ្ឋាន',
-            'user' => 'អ្នកប្រើប្រាស់',
-        ]" />
+                'super_admin' => 'Super Admin',
+                'evaluation_admin' => 'អ្នកកំណត់ការវាយតម្លៃ',
+                'organization_admin' => 'អ្នកគ្រប់គ្រងអង្គភាព',
+                'department_admin' => 'អ្នកគ្រប់គ្រងនាយកដ្ឋាន',
+                'office_admin' => 'អ្នកគ្រប់គ្រងការិយាល័យ',
+                'user' => 'អ្នកប្រើប្រាស់',
+            ]" />
+        @else
+            <x-forms.select label="Role" name="role" :selected="old('role', $user->role ?? 'user')" :options="[
+                'organization_admin' => 'អ្នកគ្រប់គ្រងអង្គភាព',
+                'evaluation_admin' => 'អ្នកកំណត់ការវាយតម្លៃ',
+                'department_admin' => 'អ្នកគ្រប់គ្រងនាយកដ្ឋាន',
+                'office_admin' => 'អ្នកគ្រប់គ្រងការិយាល័យ',
+                'user' => 'អ្នកប្រើប្រាស់',
+            ]" />
         @endif
 
         {{-- Status --}}

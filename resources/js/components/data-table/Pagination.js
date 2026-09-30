@@ -77,7 +77,7 @@ export default class Pagination {
 
             this.createButton(
 
-                `<i data-lucide="arrow-left"></i>`,
+                `<i data-lucide="chevron-left"></i>`,
 
                 meta.current_page - 1,
 
@@ -92,12 +92,27 @@ export default class Pagination {
         // Page Numbers
         // ==========================================
 
-        for (
-            let page = 1;
-            page <= meta.last_page;
-            page++
-        ) {
+        const pages = this.getPageNumbers(
+            meta.current_page,
+            meta.last_page
+        );
 
+
+        pages.forEach((page) => {
+
+            // Ellipsis
+            if (page === "...") {
+
+                pagination.appendChild(
+                    this.createEllipsis()
+                );
+
+                return;
+
+            }
+
+
+            // Page number
             pagination.appendChild(
 
                 this.createButton(
@@ -114,7 +129,7 @@ export default class Pagination {
 
             );
 
-        }
+        });
 
 
         // ==========================================
@@ -125,7 +140,7 @@ export default class Pagination {
 
             this.createButton(
 
-                `<i data-lucide="arrow-right"></i>`,
+                `<i data-lucide="chevron-right"></i>`,
 
                 meta.current_page + 1,
 
@@ -151,17 +166,128 @@ export default class Pagination {
 
 
     // ==========================================
+    // Generate Page Numbers
+    // ==========================================
+
+    getPageNumbers(currentPage, lastPage) {
+
+        // ==========================================
+        // Few Pages
+        // ==========================================
+
+        // If there are 7 or fewer pages,
+        // show all page numbers.
+
+        if (lastPage <= 5) {
+
+            return Array.from(
+                { length: lastPage },
+                (_, index) => index + 1
+            );
+
+        }
+
+
+        // ==========================================
+        // Beginning
+        // ==========================================
+
+        // Example:
+        // 1 2 3 4 5 ... 20
+
+        if (currentPage <= 4) {
+
+            return [
+                1,
+                2,
+                3,
+                4,
+                5,
+                "...",
+                lastPage
+            ];
+
+        }
+
+
+        // ==========================================
+        // End
+        // ==========================================
+
+        // Example:
+        // 1 ... 16 17 18 19 20
+
+        if (currentPage >= lastPage - 3) {
+
+            return [
+                1,
+                "...",
+                lastPage - 4,
+                lastPage - 3,
+                lastPage - 2,
+                lastPage - 1,
+                lastPage
+            ];
+
+        }
+
+
+        // ==========================================
+        // Middle
+        // ==========================================
+
+        // Example:
+        // 1 ... 8 9 10 11 12 ... 20
+
+        return [
+            1,
+            "...",
+            currentPage - 2,
+            currentPage - 1,
+            currentPage,
+            currentPage + 1,
+            currentPage + 2,
+            "...",
+            lastPage
+        ];
+
+    }
+
+
+    // ==========================================
+    // Create Ellipsis
+    // ==========================================
+
+    createEllipsis() {
+
+        const span = document.createElement("span");
+
+        span.textContent = "...";
+
+        span.className = `
+            min-w-10
+            h-10
+            px-3
+            inline-flex
+            items-center
+            justify-center
+            text-sm
+            text-gray-500
+        `;
+
+        return span;
+
+    }
+
+
+    // ==========================================
     // Create Button
     // ==========================================
 
     createButton(
-
         label,
-
         page,
-
         disabled = false,
-
         active = false
 
     ) {
@@ -180,8 +306,8 @@ export default class Pagination {
 
 
         button.className = `
-            min-w-10
-            h-10
+            min-w-6
+            h-8
             px-3
             rounded-lg
             border

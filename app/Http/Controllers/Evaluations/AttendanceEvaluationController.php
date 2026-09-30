@@ -20,45 +20,14 @@ class AttendanceEvaluationController extends Controller
         );
     }
 
-
-    /**
-     * Display users without office.
-     */
-    public function usersByDepartment(
-        Department $department,
-        AttendanceEvaluationService $service
-    ) {
-        return $service->usersByDepartment(
-            auth()->user(),
-            $department
-        );
-    }
-
-
-    /**
-     * Display users under an office.
-     */
-    public function usersByOffice(
-        Office $office,
-        AttendanceEvaluationService $service
-    ) {
-        return $service->usersByOffice(
-            auth()->user(),
-            $office
-        );
-    }
-
-
     /**
      * Create attendance evaluation.
      */
     public function create(
-        AttendanceEvaluationService $service,
-        ?int $office = null
+        AttendanceEvaluationService $service
     ) {
         return $service->create(
-            auth()->user(),
-            $office
+            auth()->user()
         );
     }
 

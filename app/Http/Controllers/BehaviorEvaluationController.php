@@ -10,14 +10,25 @@ class BehaviorEvaluationController extends Controller
     /**
      * Display the behavior evaluation page.
      */
-    public function index(BehaviorEvaluationService $service) 
+    public function index()
     {
-        $peers = $service->getEligiblePeers();
+        return view('evaluations.behavior.index');
+    }
 
-        return view(
-            'evaluations.behavior.index',
-            compact('peers')
-        );
+    public function data(BehaviorEvaluationService $service)
+    {
+        $peers = $service->getPaginatedEligiblePeers(6);
+
+        $allPeers = $service->getEligiblePeers();
+
+        $hasPending = $allPeers->contains(function ($peer) {
+            return $peer->evaluation_status !== 'submitted';
+        });
+
+        return response()->json([
+            'data' => $peers,
+            'has_pending' => $hasPending,
+        ]);
     }
 
 
@@ -47,7 +58,7 @@ class BehaviorEvaluationController extends Controller
     {
         return view('evaluations.behavior.preview');
     }
-    public function view(BehaviorEvaluationService $service) 
+    public function view(BehaviorEvaluationService $service)
     {
         $evaluations = $service->getSubmittedEvaluations();
         return view(

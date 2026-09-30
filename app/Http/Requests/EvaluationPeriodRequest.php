@@ -86,7 +86,20 @@ class EvaluationPeriodRequest extends FormRequest
                 'date',
                 'after_or_equal:start_date',
             ],
+            // ==========================================
+            // Participating Departments
+            // ==========================================
 
+            'department_ids' => [
+                'required',
+                'array',
+                'min:1',
+            ],
+
+            'department_ids.*' => [
+                'integer',
+                'exists:departments,department_id',
+            ],
         ];
     }
 
@@ -177,6 +190,25 @@ class EvaluationPeriodRequest extends FormRequest
 
             'end_date.after_or_equal' =>
                 'ថ្ងៃបញ្ចប់ត្រូវតែធំជាង ឬស្មើថ្ងៃចាប់ផ្តើម។',
+
+             // ==========================================
+            // Participating Departments
+            // ==========================================
+
+            'department_ids.required' =>
+                'សូមជ្រើសរើសយ៉ាងហោចណាស់ 1 អង្គភាពសម្រាប់ការវាយតម្លៃ។',
+
+            'department_ids.array' =>
+                'ទិន្នន័យអង្គភាពមិនត្រឹមត្រូវ។',
+
+            'department_ids.min' =>
+                'សូមជ្រើសរើសយ៉ាងហោចណាស់ 1 អង្គភាពសម្រាប់ការវាយតម្លៃ។',
+
+            'department_ids.*.integer' =>
+                'លេខសម្គាល់អង្គភាពមិនត្រឹមត្រូវ។',
+
+            'department_ids.*.exists' =>
+                'អង្គភាពដែលបានជ្រើសរើសមិនមាននៅក្នុងប្រព័ន្ធ។',
 
         ];
     }

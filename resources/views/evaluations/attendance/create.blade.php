@@ -29,13 +29,7 @@
 
                 {{-- Back Button --}}
 
-                <a href="{{ $officeModel
-                    ? route('evaluations.attendance.office.users', [
-                        'office' => $officeModel->office_id,
-                    ])
-                    : route('evaluations.attendance.department.users', [
-                        'department' => $department->department_id,
-                    ]) }}"
+                <a href="{{ route('evaluations.attendance.index') }}"
                     class="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-300 text-gray-600 text-sm font-medium hover:bg-gray-50 transition">
                     <i data-lucide="arrow-left" class="w-4 h-4"></i>
                     ត្រឡប់ក្រោយ
@@ -123,36 +117,36 @@
 
             @include('evaluations.attendance.partials.attendance-form')
 
-        
-             {{-- =====================================================
+
+            {{-- =====================================================
             Navigation
         ====================================================== --}}
 
-        <div class="px-6 py-4 flex items-center justify-between">
-            {{-- Previous --}}
+            <div class="px-6 py-4 flex items-center justify-between">
+                {{-- Previous --}}
 
-            <button type="button" id="previousUserBtn"
-                class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg border border-gray-300 text-gray-600 text-sm font-medium hover:bg-gray-50 transition disabled:opacity-50 disabled:cursor-not-allowed">
-                <i data-lucide="arrow-left" class="w-4 h-4"></i>
-                មុន
-            </button>
-            {{-- Next --}}
+                <button type="button" id="previousUserBtn"
+                    class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg border border-gray-300 text-gray-600 text-sm font-medium hover:bg-gray-50 transition disabled:opacity-50 disabled:cursor-not-allowed">
+                    <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                    មុន
+                </button>
+                {{-- Next --}}
 
-            <button type="button" id="nextUserBtn"
-                class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-blue-600 text-white text-sm font-medium hover:bg-blue-700 transition">
+                <button type="button" id="nextUserBtn"
+                    class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-blue-600 text-white text-sm font-medium hover:bg-blue-700 transition">
 
-                បន្ទាប់
+                    បន្ទាប់
 
-                <i data-lucide="arrow-right" class="w-4 h-4">
-                </i>
+                    <i data-lucide="arrow-right" class="w-4 h-4">
+                    </i>
 
-            </button>
+                </button>
 
+            </div>
         </div>
-        </div>
 
 
-       
+
 
     </div>
 
@@ -164,7 +158,7 @@
     <script>
         window.attendanceUsers = @json($users->values());
         window.attendanceOfficeId = @json($officeModel?->office_id);
-        window.attendanceDepartmentId = @json($department->department_id);
+        window.attendanceDepartmentId = @json($assignment?->department_id);
         window.attendanceTotalUsers = {{ $users->count() }};
     </script>
     @vite('resources/js/evaluations/attendance/progressbar.js')

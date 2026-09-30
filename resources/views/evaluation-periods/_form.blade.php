@@ -72,6 +72,62 @@
 
     </div>
     {{-- ==========================================
+    Row 4 - Participating Departments
+========================================== --}}
+
+    <div class="space-y-3">
+
+        <div>
+            <label class="block text-sm font-medium text-gray-700">
+                អង្គភាពចូលរួមវាយតម្លៃ
+                <span class="text-red-500">*</span>
+            </label>
+
+            <p class="text-sm text-gray-500 mt-1">
+                សូមជ្រើសរើសអង្គភាពដែលត្រូវចូលរួមក្នុងការវាយតម្លៃនេះ។
+            </p>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+
+            @foreach ($departments as $department)
+                <label class="flex items-center gap-3 p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
+
+                    <input type="checkbox" name="department_ids[]" value="{{ $department->department_id }}"
+                        class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                        {{ in_array(
+                            $department->department_id,
+                            old(
+                                'department_ids',
+                                isset($evaluationPeriod)
+                                    ? $evaluationPeriod->departments->pluck('department_id')->all()
+                                    : []
+                            )
+                        ) ? 'checked' : '' }}>
+
+                    <span class="text-sm text-gray-700">
+                        {{ $department->department_name_kh }}
+                    </span>
+
+                </label>
+            @endforeach
+
+        </div>
+
+        @error('department_ids')
+            <p class="text-sm text-red-600">
+                {{ $message }}
+            </p>
+        @enderror
+
+        @error('department_ids.*')
+            <p class="text-sm text-red-600">
+                {{ $message }}
+            </p>
+        @enderror
+
+    </div>
+    {{-- ==========================================
         Footer
     ========================================== --}}
 

@@ -20,7 +20,7 @@
                 </h2>
 
                 <p class="text-blue-100 text-lg">
-                    {{ $user->position }}
+                    {{ config('positions.options.' . (auth()->user()->position ?? ''), 'មិនមាន') }}
                 </p>
 
                 <p class="text-blue-200 mt-1">
@@ -114,7 +114,7 @@
 
                     <x-info-item label="នាយកដ្ឋាន" :value="$user->department?->department_name_kh" />
 
-                    <x-info-item label="មុខតំណែង" :value="$user->position" />
+                    <x-info-item label="មុខតំណែង" :value="config('positions.options.' . ($user->position ?? ''), 'មិនមាន')" />
 
                     {{-- <x-info-item label="តួនាទី" :value="ucfirst($user->role)" /> --}}
 

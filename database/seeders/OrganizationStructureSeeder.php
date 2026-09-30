@@ -30,12 +30,19 @@ class OrganizationStructureSeeder extends Seeder
         | Organization 1 - Department 1 with no office
         |--------------------------------------------------------------------------
         */
-
-       Department::create([
+        $no_department = Department::create([
             'organization_id' => $organization1->organization_id,
-            'department_code' => '3101000100',
-            'department_name_kh' => 'លេខាធិការដ្ឋាន នៃអគ្គនាយកដ្ឋានរដ្ឋបាល និងហិរញ្ញវត្ថុ',
-            'department_name_en' => 'Secretariat of the General Department of Administration and Finance',
+            'department_code' => 'NO-DEP',
+            'department_name_kh' => 'មិនស្ថិតក្រោមនាយកដ្ឋាន',
+            'department_name_en' => 'No Under Department',
+            'desc' => 'មិនមាន',
+            'status' => 'active',
+        ]);
+        Office::create([
+            'department_id' => $no_department->department_id,
+            'office_code' => '3101000100',
+            'office_name_kh' => 'លេខាធិការដ្ឋាន នៃអគ្គនាយកដ្ឋានរដ្ឋបាល និងហិរញ្ញវត្ថុ',
+            'office_name_en' => 'Secretariat of the General Department of Administration and Finance',
             'desc' => 'លេខាធិការដ្ឋាន នៃអគ្គនាយកដ្ឋានរដ្ឋបាលនិងហិរញ្ញវត្ថុ',
             'status' => 'active',
         ]);

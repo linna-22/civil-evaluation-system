@@ -18,9 +18,10 @@ class UserSeeder extends Seeder
         */
         $organization1 = Organization::where('org_code', '3100000010')->firstOrFail();
         $department1 = Department::where('department_code', '3101010000')->firstOrFail();
-        $department2 = Department::where('department_code', '3101000100')->firstOrFail();
+        $department2 = Department::where('department_code', 'NO-DEP')->firstOrFail();
         $office1 = Office::where('office_code', '3101010100')->firstOrFail();
         $office2 = Office::where('office_code', '3101010200')->firstOrFail();
+        $office3 = Office::where('office_code', '3101000100')->firstOrFail();
         /*
         |--------------------------------------------------------------------------
         | Organization 1 Admin
@@ -126,7 +127,7 @@ class UserSeeder extends Seeder
                 'email' => 'thong.mengdavid@gmail.com',
                 'position' => 'អនុប្រធានលេខាធិការដ្ឋាន',
                 'is_leader' => true,
-                'role' => 'user',
+                'role' => 'office_admin',
             ],
             [
                 'id_code' => '2931300091',
@@ -158,7 +159,7 @@ class UserSeeder extends Seeder
             User::create([
                 'organization_id' => $organization1->organization_id,
                 'department_id' => $department2->department_id,
-                'office_id' => null,
+                'office_id' => $office3->office_id,
                 'id_code' => $department2user['id_code'],
                 'name_kh' => $department2user['name_kh'],
                 'name_en' => $department2user['name_en'],
@@ -216,6 +217,7 @@ class UserSeeder extends Seeder
                 'email' => 'saly.muny@mlvt.gov.kh',
                 'position' => 'អនុប្រធាននាយកដ្ឋាន',
                 'is_leader' => true,
+                'role' => 'user',
             ],
 
             [
@@ -228,6 +230,7 @@ class UserSeeder extends Seeder
                 'email' => 'sok.sophannarith@mlvt.gov.kh',
                 'position' => 'ប្រធានការិយាល័យ',
                 'is_leader' => true,
+                'role' => 'office_admin',
             ],
 
             [
@@ -240,6 +243,7 @@ class UserSeeder extends Seeder
                 'email' => 'moung.rann@email.com',
                 'position' => 'អនុប្រធានការិយាល័យ',
                 'is_leader' => true,
+                'role' => 'user',
             ],
             [
                 'id_code' => '2851200214',
@@ -251,6 +255,7 @@ class UserSeeder extends Seeder
                 'email' => 'chea.sory@email.com',
                 'position' => 'មន្ត្រី',
                 'is_leader' => false,
+                'role' => 'user',
             ],
             [
                 'id_code' => '1940600121',
@@ -262,6 +267,7 @@ class UserSeeder extends Seeder
                 'email' => 'pin.sopheak@email.com',
                 'position' => 'មន្ត្រី',
                 'is_leader' => false,
+                'role' => 'user',
             ],
             [
                 'id_code' => '2940600180',
@@ -273,6 +279,7 @@ class UserSeeder extends Seeder
                 'email' => 'ken.sokunthea@email.com',
                 'position' => 'មន្ត្រី',
                 'is_leader' => false,
+                'role' => 'user',
             ],
 
         ];
@@ -293,7 +300,7 @@ class UserSeeder extends Seeder
                 'position' => $user['position'],
                 'is_leader' => $user['is_leader'],
                 'password' => 'password',
-                'role' => 'user',
+                'role' => $user['role'],
                 'status' => 'active',
             ]);
         }

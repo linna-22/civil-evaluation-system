@@ -1,8 +1,6 @@
 <div class="relative">
 
-    <button
-        id="userDropdownToggle"
-        type="button"
+    <button id="userDropdownToggle" type="button"
         class="
             flex
             items-center
@@ -14,8 +12,7 @@
             rounded-2xl
             hover:bg-white/10
             transition
-        "
-    >
+        ">
 
         {{-- Avatar --}}
         <div
@@ -28,48 +25,34 @@
                 overflow-hidden
                 bg-white
                 shrink-0
-            "
-        >
+            ">
 
-            <img
-                src="https://ui-avatars.com/api/?name={{ urlencode(auth()->user()->name_en) }}&background=ffffff&color=2563eb&size=256"
-                alt="{{ auth()->user()->name_en }}"
-                class="w-full h-full object-cover"
-            >
+            <img src="https://ui-avatars.com/api/?name={{ urlencode(auth()->user()->name_en) }}&background=ffffff&color=2563eb&size=256"
+                alt="{{ auth()->user()->name_en }}" class="w-full h-full object-cover">
 
         </div>
 
 
         {{-- User Info --}}
         <div class="text-left hidden sm:block">
-
             <p class="font-body text-white font-semibold truncate max-w-[180px]">
-
                 {{ auth()->user()->name_kh }}
-
             </p>
-
             <p class="text-blue-100 text-sm truncate max-w-[180px]">
-
-                {{ ucfirst(auth()->user()->position ?? 'Administrator') }}
-
+                {{ config('positions.options.' . (auth()->user()->position ?? ''), 'Administrator') }}
             </p>
 
         </div>
 
 
         {{-- Arrow --}}
-        <i
-            data-lucide="chevron-down"
-            class="w-4 h-4 text-white shrink-0"
-        ></i>
+        <i data-lucide="chevron-down" class="w-4 h-4 text-white shrink-0"></i>
 
     </button>
 
 
     {{-- Dropdown --}}
-    <div
-        id="userDropdownMenu"
+    <div id="userDropdownMenu"
         class="
             hidden
             opacity-0
@@ -87,12 +70,10 @@
             duration-200
             overflow-hidden
             z-50
-        "
-    >
+        ">
 
         {{-- Profile --}}
-        <a
-            href="{{ route('users.profile') }}"
+        <a href="{{ route('users.profile') }}"
             class="
                 flex
                 items-center
@@ -100,13 +81,9 @@
                 px-5
                 py-3
                 hover:bg-gray-100
-            "
-        >
+            ">
 
-            <i
-                data-lucide="user"
-                class="w-5 h-5 text-blue-600"
-            ></i>
+            <i data-lucide="user" class="w-5 h-5 text-blue-600"></i>
 
             <span class="font-body text-blue-600">
                 ព័ត៌មានផ្ទាល់ខ្លួន
@@ -116,8 +93,7 @@
 
 
         {{-- Change Password --}}
-        <a
-            href="{{ route('users.change-password') }}"
+        <a href="{{ route('users.change-password') }}"
             class="
                 flex
                 items-center
@@ -125,13 +101,9 @@
                 px-5
                 py-3
                 hover:bg-gray-100
-            "
-        >
+            ">
 
-            <i
-                data-lucide="key-round"
-                class="w-5 h-5 text-blue-600"
-            ></i>
+            <i data-lucide="key-round" class="w-5 h-5 text-blue-600"></i>
 
             <span class="font-body text-blue-600">
                 ប្ដូរពាក្យសម្ងាត់
@@ -148,8 +120,7 @@
 
             @csrf
 
-            <button
-                type="submit"
+            <button type="submit"
                 class="
                     w-full
                     flex
@@ -160,13 +131,9 @@
                     hover:bg-red-50
                     text-red-600
                     cursor-pointer
-                "
-            >
+                ">
 
-                <i
-                    data-lucide="log-out"
-                    class="w-5 h-5"
-                ></i>
+                <i data-lucide="log-out" class="w-5 h-5"></i>
 
                 <span class="font-body">
                     ចាកចេញ

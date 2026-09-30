@@ -3,12 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\EvaluationPeriodRequest;
+use App\Models\Department;
 use App\Models\EvaluationPeriod;
 use App\Services\EvaluationPeriodService;
 use App\Services\EvaluationSummaryService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
-
 
 class EvaluationPeriodController extends Controller
 {
@@ -19,6 +18,7 @@ class EvaluationPeriodController extends Controller
     {
         return view('evaluation-periods.index');
     }
+
     /**
      * Get evaluation periods for DataTable.
      */
@@ -35,39 +35,60 @@ class EvaluationPeriodController extends Controller
         ]);
     }
 
-
     /**
      * Show create evaluation period form.
      */
     public function create()
     {
-        return view('evaluation-periods.create');
-    }
+        $departments = Department::query()
+            ->orderBy('department_name_kh')
+            ->get();
 
+        return view(
+            'evaluation-periods.create',
+            compact('departments')
+        );
+    }
 
     /**
      * Store a new evaluation period.
      */
-    public function store(EvaluationPeriodRequest $request, EvaluationPeriodService $service)
-    {
-        // dd($request->all());
+    public function store(
+        EvaluationPeriodRequest $request,
+        EvaluationPeriodService $service
+    ) {
         $service->store($request->validated());
-        Log::info('sucess');
-        return redirect()->route('evaluation-periods.index')->with(
-            'success',
-            'ការវាយតម្លៃត្រូវបានបង្កើតដោយជោគជ័យ'
-        );
-    }
 
+        return redirect()
+            ->route('evaluation-periods.index')
+            ->with(
+                'success',
+                'ការវាយតម្លៃត្រូវបានបង្កើតដោយជោគជ័យ'
+            );
+    }
 
     /**
      * Show edit evaluation period form.
      */
     public function edit(EvaluationPeriod $evaluationPeriod)
     {
-        return view('evaluation-periods.edit', compact('evaluationPeriod'));
-    }
+        $departments = Department::query()
+            ->orderBy('department_name_kh')
+            ->get();
 
+        $selectedDepartmentIds = $evaluationPeriod->departments()
+            ->pluck('department_id')
+            ->toArray();
+
+        return view(
+            'evaluation-periods.edit',
+            compact(
+                'evaluationPeriod',
+                'departments',
+                'selectedDepartmentIds'
+            )
+        );
+    }
 
     /**
      * Update evaluation period.
@@ -89,8 +110,15 @@ class EvaluationPeriodController extends Controller
                 'ការវាយតម្លៃត្រូវបានកែប្រែដោយជោគជ័យ'
             );
     }
-    public function close(EvaluationPeriod $evaluationPeriod, EvaluationPeriodService $service, EvaluationSummaryService $summaryService) 
-    {
+
+    /**
+     * Close an evaluation period.
+     */
+    public function close(
+        EvaluationPeriod $evaluationPeriod,
+        EvaluationPeriodService $service,
+        EvaluationSummaryService $summaryService
+    ) {
         $service->close(
             $evaluationPeriod,
             $summaryService
@@ -101,16 +129,36 @@ class EvaluationPeriodController extends Controller
             'message' => 'វគ្គវាយតម្លៃត្រូវបានបិទដោយជោគជ័យ។',
         ]);
     }
-    public function show(EvaluationPeriod $evaluationPeriod, EvaluationPeriodService $service)
-    {
-        $evaluationPeriod = $service->find(
-            $evaluationPeriod
-        );
+
+    /**
+     * Show evaluation period details.
+     */
+    public function show(
+        EvaluationPeriod $evaluationPeriod,
+        EvaluationPeriodService $service
+    ) {
+        $evaluationPeriod = $service->find($evaluationPeriod);
+
+        // Paginate participants instead of loading every participant at once.
+        // Reuse the existing <x-table.pagination> component in the Blade view.
+        $participants = $evaluationPeriod
+            ->periodUsers()
+            ->with('user')
+            ->orderBy('evaluation_period_user_id')
+            ->paginate(5)
+            ->withQueryString();
+
+        $participantsTotal = $evaluationPeriod
+            ->periodUsers()
+            ->count();
 
         return view(
             'evaluation-periods.show',
-            compact('evaluationPeriod')
+            compact(
+                'evaluationPeriod',
+                'participants',
+                'participantsTotal'
+            )
         );
     }
-
 }

@@ -1,17 +1,30 @@
-@props(['icon', 'title', 'route' => null, 'url' => '#', 'children' => []])
+@props(['icon', 'title', 'route' => null, 'url' => '#', 'children' => [], 'active_routes' => []])
 
 @php
 
     $hasChildren = !empty($children);
 
     // Parent active
-    $active = $route ? request()->routeIs($route) : false;
+    $activeRoutes = $active_routes ?? [];
+    $activePatterns = array_values(array_filter(array_merge(
+        $route ? [$route] : [],
+        $activeRoutes
+    )));
+
+    $active = !empty($activePatterns)
+        ? request()->routeIs(...$activePatterns)
+        : false;
 
     // Check if any child is active
     $childActive = false;
 
     foreach ($children as $child) {
-        if (isset($child['route']) && request()->routeIs($child['route'])) {
+        $childPatterns = array_values(array_filter(array_merge(
+            isset($child['route']) ? [$child['route']] : [],
+            $child['active_routes'] ?? []
+        )));
+
+        if (!empty($childPatterns) && request()->routeIs(...$childPatterns)) {
             $childActive = true;
             break;
         }
@@ -97,7 +110,11 @@
 
                 @foreach ($children as $child)
                     @php
-                        $childActive = isset($child['route']) && request()->routeIs($child['route']);
+                        $childPatterns = array_values(array_filter(array_merge(
+                            isset($child['route']) ? [$child['route']] : [],
+                            $child['active_routes'] ?? []
+                        )));
+                        $childActive = !empty($childPatterns) && request()->routeIs(...$childPatterns);
                     @endphp
                     <a href="{{ $child['url'] === '#' ? '#' : route($child['url']) }}"
                         class="
