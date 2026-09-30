@@ -12,6 +12,7 @@ use App\Http\Controllers\EvaluationDataEntryAssignmentController;
 use App\Http\Controllers\EvaluationPeriodController;
 use App\Http\Controllers\EvaluationReportController;
 use App\Http\Controllers\EvaluationResult\DepartmentEvaluationResultController;
+use App\Http\Controllers\EvaluationResult\DepartmentEvaluationOutcomeController;
 use App\Http\Controllers\EvaluationResult\UserEvaluationResultController;
 use App\Http\Controllers\EvaluationReviewController;
 use App\Http\Controllers\Evaluations\AttendanceEvaluationController;
@@ -164,6 +165,39 @@ Route::middleware('auth')->group(function () {
     // evaluation result
     Route::get('/my-evaluation-results', [UserEvaluationResultController::class, 'index'])->name('my-evaluation-results.index');
     Route::get('/my-evaluation-results/{evaluationPeriod}', [UserEvaluationResultController::class, 'show'])->name('my-evaluation-results.show');
+
+    // Department evaluation outcome (period-first result module)
+    Route::prefix('evaluation-results')
+        ->name('evaluation-results.')
+        ->group(function () {
+            Route::get('/work-performance', [DepartmentEvaluationOutcomeController::class, 'workPerformance'])
+                ->name('work-performance.index');
+            Route::get('/work-performance/{evaluationPeriod}', [DepartmentEvaluationOutcomeController::class, 'workPerformanceDetail'])
+                ->name('work-performance.show');
+            Route::get('/work-performance/{evaluationPeriod}/data', [DepartmentEvaluationOutcomeController::class, 'workPerformanceData'])
+                ->name('work-performance.data');
+
+            Route::get('/attendance', [DepartmentEvaluationOutcomeController::class, 'attendance'])
+                ->name('attendance.index');
+            Route::get('/attendance/{evaluationPeriod}', [DepartmentEvaluationOutcomeController::class, 'attendanceDetail'])
+                ->name('attendance.show');
+            Route::get('/attendance/{evaluationPeriod}/data', [DepartmentEvaluationOutcomeController::class, 'attendanceData'])
+                ->name('attendance.data');
+
+            Route::get('/behavior', [DepartmentEvaluationOutcomeController::class, 'behavior'])
+                ->name('behavior.index');
+            Route::get('/behavior/{evaluationPeriod}', [DepartmentEvaluationOutcomeController::class, 'behaviorDetail'])
+                ->name('behavior.show');
+            Route::get('/behavior/{evaluationPeriod}/data', [DepartmentEvaluationOutcomeController::class, 'behaviorData'])
+                ->name('behavior.data');
+
+            Route::get('/overall', [DepartmentEvaluationOutcomeController::class, 'overall'])
+                ->name('overall.index');
+            Route::get('/overall/{evaluationPeriod}', [DepartmentEvaluationOutcomeController::class, 'overallDetail'])
+                ->name('overall.show');
+            Route::get('/overall/{evaluationPeriod}/data', [DepartmentEvaluationOutcomeController::class, 'overallData'])
+                ->name('overall.data');
+        });
 
     // Department evaluation result
     Route::prefix('department-evaluation-results')

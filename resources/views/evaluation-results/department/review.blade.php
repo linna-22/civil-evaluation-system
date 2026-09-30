@@ -31,7 +31,9 @@
 
                 </div>
 
-                <a href="{{ route('department-evaluation-results.show', $evaluationPeriod->evaluation_period_id) }}"
+                <a href="{{ route('evaluation-results.overall.show', [
+                    'evaluationPeriod' => $evaluationPeriod->evaluation_period_id,
+                ]) }}"
                     class="inline-flex items-center justify-center gap-2
                        px-4 py-2.5
                        rounded-xl
@@ -45,13 +47,11 @@
 
                     ត្រឡប់ក្រោយ
                 </a>
-
             </div>
 
-
             {{-- ==========================================================
-            EMPLOYEE INFORMATION
-        =========================================================== --}}
+                EMPLOYEE INFORMATION
+            =========================================================== --}}
 
             <div class="bg-white rounded-2xl border border-gray-100
                     shadow-sm overflow-hidden mb-5">
@@ -272,9 +272,9 @@
 
                                     {{-- Edit Work Performance --}}
                                     <a href="{{ route('department-evaluation-results.work-performance.edit', [
-                                            'evaluationPeriod' => $evaluationPeriod->evaluation_period_id,
-                                            'user' => $employee->user_id,
-                                        ]) }}"
+                                        'evaluationPeriod' => $evaluationPeriod->evaluation_period_id,
+                                        'user' => $employee->user_id,
+                                    ]) }}"
                                         class="inline-flex items-center gap-1.5
                    px-3 py-1.5
                    rounded-lg
@@ -411,9 +411,9 @@
 
                                     {{-- Edit Behavior --}}
                                     <a href="{{ route('department-evaluation-results.behavior-review', [
-                                            'evaluationPeriod' => $evaluationPeriod->evaluation_period_id,
-                                            'user' => $employee->user_id,
-                                        ]) }}"
+                                        'evaluationPeriod' => $evaluationPeriod->evaluation_period_id,
+                                        'user' => $employee->user_id,
+                                    ]) }}"
                                         class="inline-flex items-center gap-1.5
                    px-3 py-1.5
                    rounded-lg

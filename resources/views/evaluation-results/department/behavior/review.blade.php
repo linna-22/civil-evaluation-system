@@ -33,9 +33,8 @@
                 </div>
 
                 <a
-                    href="{{ route('department-evaluation-results.review', [
+                    href="{{ route('evaluation-results.behavior.show', [
                         'evaluationPeriod' => $evaluationPeriod->evaluation_period_id,
-                        'user' => $employee->user_id,
                     ]) }}"
                     class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-white border border-gray-200 text-gray-700 text-sm font-semibold hover:bg-gray-50 transition"
                 >
@@ -43,22 +42,6 @@
                     ត្រឡប់ក្រោយ
                 </a>
             </div>
-
-            {{-- Closed period notice --}}
-            <div class="mb-5 rounded-2xl border border-amber-200 bg-amber-50 px-5 py-4">
-                <div class="flex items-start gap-3">
-                    <i data-lucide="triangle-alert" class="w-5 h-5 text-amber-600 mt-0.5"></i>
-                    <div>
-                        <p class="text-sm font-semibold text-amber-800">
-                            ការវាយតម្លៃបានបិទហើយ
-                        </p>
-                        <p class="mt-1 text-xs text-amber-700">
-                            ការកែប្រែពិន្ទុឥរិយាបថនឹងគណនាពិន្ទុវាយតម្លៃរបស់មន្ត្រីឡើងវិញដោយស្វ័យប្រវត្តិ។
-                        </p>
-                    </div>
-                </div>
-            </div>
-
             {{-- Employee information --}}
             <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden mb-6">
                 <div class="px-6 py-5 border-b border-gray-100">

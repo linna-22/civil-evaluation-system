@@ -62,11 +62,11 @@ document.addEventListener("DOMContentLoaded", () => {
         const row = document.createElement("tr");
 
         row.innerHTML = `
-            <td class="border border-gray-300 text-center row-number font-medium">
+            <td class="border text-center row-number font-medium">
                 ${index + 1}
             </td>
 
-            <td class="border border-gray-300 p-2">
+            <td class="border p-2">
                 <textarea
                     name="performances[${index}][activity]"
                     rows="2"
@@ -75,7 +75,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 >${data.activity ?? ""}</textarea>
             </td>
 
-            <td class="border border-gray-300 p-2">
+            <td class="border p-2">
                 <textarea
                     name="performances[${index}][indicator]"
                     rows="2"
@@ -84,7 +84,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 >${data.indicator ?? ""}</textarea>
             </td>
 
-            <td class="border border-gray-300 p-2">
+            <td class="border p-2">
                 <input
                     type="number"
                     name="performances[${index}][achievement_percent]"
@@ -97,7 +97,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 >
             </td>
 
-            <td class="border border-gray-300 p-2">
+            <td class="border p-2">
                 <input
                     type="text"
                     name="performances[${index}][score]"
@@ -108,7 +108,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 >
             </td>
 
-            <td class="border border-gray-300 text-center">
+            <td class="border text-center">
                 <button
                     type="button"
                     class="delete-row text-red-600 hover:text-red-700 cursor-pointer"
@@ -243,6 +243,24 @@ document.addEventListener("DOMContentLoaded", () => {
             if (idInput) {
                 idInput.name =
                     `performances[${index}][work_performance_id]`;
+            }
+
+            // Make sure every row, including newly added rows, has
+            // its own delete button.
+            if (!row.querySelector(".delete-row")) {
+                const actionCell = row.querySelector("td:last-child");
+
+                if (actionCell) {
+                    actionCell.innerHTML = `
+                        <button
+                            type="button"
+                            class="delete-row text-red-600 hover:text-red-700 cursor-pointer"
+                            title="លុប"
+                        >
+                            <i data-lucide="trash-2" class="w-5 h-5 mx-auto"></i>
+                        </button>
+                    `;
+                }
             }
         });
 

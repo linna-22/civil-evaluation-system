@@ -65,6 +65,50 @@ return [
             ],
             [
                 'icon' => 'chart-no-axes-combined',
+                'title' => 'លទ្ធផលវាយតម្លៃ',
+                'route' => 'evaluation-results.*',
+                'url' => '#',
+
+                'children' => [
+
+                    [
+                        'title' => 'សមិទ្ធកម្មការងារ',
+                        'route' => 'evaluation-results.work-performance.*',
+                        'active_routes' => [
+                            'department-evaluation-results.work-performance.edit',
+                        ],
+                        'url' => 'evaluation-results.work-performance.index',
+                    ],
+                    [
+                        'title' => 'វត្តមាន',
+                        'route' => 'evaluation-results.attendance.*',
+                        'active_routes' => [
+                            'department-evaluation-results.attendance.edit',
+                        ],
+                        'url' => 'evaluation-results.attendance.index',
+                    ],
+                    [
+                        'title' => 'ឥរិយាបថ',
+                        'route' => 'evaluation-results.behavior.*',
+                        'active_routes' => [
+                            'department-evaluation-results.behavior-review',
+                        ],
+                        'url' => 'evaluation-results.behavior.index',
+                    ],
+                    [
+                        'title' => 'លទ្ធផលវាយតម្លៃរួម',
+                        'route' => 'evaluation-results.overall.*',
+                        'active_routes' => [
+                            'department-evaluation-results.review',
+                        ],
+                        'url' => 'evaluation-results.overall.index',
+                    ],
+
+                ],
+            ],
+
+            [
+                'icon' => 'chart-no-axes-combined',
                 'title' => 'របាយការណ៍',
                 'route' => 'reports.*',
                 'url' => '#',
@@ -78,7 +122,15 @@ return [
                     ],
                     [
                         'title' => 'លទ្ធផលការវាយតម្លៃរបស់មន្ត្រី',
-                        'route' => 'department-evaluation-results.*',
+                        'route' => 'department-evaluation-results.index',
+                        'active_routes' => [
+                            'department-evaluation-results.data',
+                            'department-evaluation-results.show',
+                            'department-evaluation-results.print',
+                            'department-evaluation-results.word.download',
+                            'department-evaluation-results.download.pdf',
+                            'department-evaluation-results.download.word',
+                        ],
                         'url' => 'department-evaluation-results.index',
                     ],
 
