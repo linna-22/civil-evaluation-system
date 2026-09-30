@@ -108,7 +108,7 @@ return [
             ],
 
             [
-                'icon' => 'chart-no-axes-combined',
+                'icon' => 'file-text',
                 'title' => 'របាយការណ៍',
                 'route' => 'reports.*',
                 'url' => '#',
@@ -116,21 +116,8 @@ return [
                 'children' => [
 
                     [
-                        'title' => 'លទ្ធផលការវាយតម្លៃ',
-                        'route' => 'my-evaluation-results.*',
-                        'url' => 'my-evaluation-results.index',
-                    ],
-                    [
                         'title' => 'លទ្ធផលការវាយតម្លៃរបស់មន្ត្រី',
-                        'route' => 'department-evaluation-results.index',
-                        'active_routes' => [
-                            'department-evaluation-results.data',
-                            'department-evaluation-results.show',
-                            'department-evaluation-results.print',
-                            'department-evaluation-results.word.download',
-                            'department-evaluation-results.download.pdf',
-                            'department-evaluation-results.download.word',
-                        ],
+                        'route' => 'department-evaluation-results.*',
                         'url' => 'department-evaluation-results.index',
                     ],
 

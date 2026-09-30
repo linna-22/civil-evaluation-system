@@ -143,12 +143,18 @@
 
                     $allowedRoutes = [
                         'dashboard',
+
+                        // New evaluation result modules
                         'evaluation-results.*',
                         'evaluation-results.work-performance.*',
                         'evaluation-results.attendance.*',
                         'evaluation-results.behavior.*',
                         'evaluation-results.overall.*',
+
+                        // Report sidebar
+                        'my-evaluation-results.*',
                         'department-evaluation-results.*',
+
                         'users.profile',
                     ];
 
@@ -301,7 +307,6 @@
                         :route="$item['route']"
                         :url="$item['url']"
                         :children="$item['children'] ?? []"
-                        :active_routes="$item['active_routes'] ?? []"
                     />
 
                 @endforeach
@@ -319,4 +324,4 @@
 
     </div>
 
-</aside>
+</aside>    

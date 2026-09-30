@@ -3,41 +3,6 @@ import Swal from "sweetalert2";
 export function registerDepartmentEvents(table) {
 
     // ==========================================================
-    // Preview Employee Evaluation
-    // ==========================================================
-
-    document.addEventListener("click", (e) => {
-
-        const previewButton =
-            e.target.closest(".btn-department-result-preview");
-
-        if (!previewButton) {
-            return;
-        }
-
-        const userId =
-            previewButton.dataset.userId;
-
-        const periodId =
-            window.departmentEvaluationPeriodId;
-
-        if (!userId || !periodId) {
-            console.error(
-                "Missing evaluation period ID or user ID."
-            );
-
-            return;
-        }
-
-        const url =
-            `/department-evaluation-results/${periodId}` +
-            `/user/${encodeURIComponent(userId)}/review`;
-
-        window.location.href = url;
-    });
-
-
-    // ==========================================================
     // Remarks Modal
     // ==========================================================
 
