@@ -13,16 +13,16 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
 
             {{-- Header --}}
-            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
 
                 <div>
                     <h1 class="text-2xl font-bold text-gray-800">
                         កែប្រែសមិទ្ធកម្មការងារ
                     </h1>
 
-                    <p class="mt-1 text-sm text-gray-500">
+                    {{-- <p class="mt-1 text-sm text-gray-500">
                         កែប្រែទិន្នន័យសមិទ្ធកម្មការងារ និងគណនាពិន្ទុឡើងវិញ
-                    </p>
+                    </p> --}}
                 </div>
 
                 <a
@@ -34,7 +34,27 @@
                     <i data-lucide="arrow-left" class="w-4 h-4"></i>
                     ត្រឡប់ក្រោយ
                 </a>
+
             </div>
+
+
+            {{-- Closed period notice --}}
+            <div class="mb-5 rounded-2xl border border-amber-200 bg-amber-50 px-5 py-4">
+                <div class="flex items-start gap-3">
+                    <i data-lucide="triangle-alert" class="w-5 h-5 text-amber-600 mt-0.5"></i>
+
+                    <div>
+                        <p class="text-sm font-semibold text-amber-800">
+                            ការតម្លៃបានបិទហើយ
+                        </p>
+                        <p class="mt-1 text-xs text-amber-700">
+                            ការកែប្រែនេះនឹងធ្វើឱ្យពិន្ទុសមិទ្ធកម្ម និងពិន្ទុវាយតម្លៃសរុបរបស់មន្ត្រីត្រូវបានគណនាឡើងវិញដោយស្វ័យប្រវត្តិ។
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+
             {{-- Employee information --}}
             <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden mb-5">
 
@@ -83,7 +103,7 @@
             {{-- Work performance form --}}
             <form
                 method="POST"
-                action="{{ route('department-evaluation-results.work-performance.update', [
+                action="{{ route('report.work-performance.update', [
                     'evaluationPeriod' => $evaluationPeriod->evaluation_period_id,
                     'user' => $employee->user_id,
                 ]) }}"
@@ -114,9 +134,9 @@
                                         សមិទ្ធកម្មការងារ
                                     </h2>
 
-                                    <p class="mt-1 text-sm text-gray-500">
+                                    {{-- <p class="mt-1 text-sm text-gray-500">
                                         កែប្រែសកម្មភាព និងសូចនាករសមិទ្ធកម្មការងាររបស់មន្ត្រី
-                                    </p>
+                                    </p> --}}
                                 </div>
 
                                 {{-- Same Add button as Create Work Performance --}}
@@ -155,27 +175,27 @@
                                 <thead>
                                     <tr class="bg-gray-50">
 
-                                        <th class="border px-4 py-3 text-center font-medium text-gray-600 w-16">
+                                        <th class="border border-gray-200 px-4 py-3 text-center font-medium text-gray-600 w-16">
                                             ល.រ
                                         </th>
 
-                                        <th class="border px-4 py-3 text-left font-medium text-gray-600 min-w-[250px]">
+                                        <th class="border border-gray-200 px-4 py-3 text-left font-medium text-gray-600 min-w-[250px]">
                                             សកម្មភាពការងារ
                                         </th>
 
-                                        <th class="border px-4 py-3 text-left font-medium text-gray-600 min-w-[250px]">
+                                        <th class="border border-gray-200 px-4 py-3 text-left font-medium text-gray-600 min-w-[250px]">
                                             សូចនាករសមិទ្ធកម្ម
                                         </th>
 
-                                        <th class="border px-4 py-3 text-center font-medium text-gray-600 w-40">
+                                        <th class="border border-gray-200 px-4 py-3 text-center font-medium text-gray-600 w-40">
                                             លទ្ធផលសមិទ្ធកម្ម (%)
                                         </th>
 
-                                        <th class="border px-4 py-3 text-center font-medium text-gray-600 w-32">
+                                        <th class="border border-gray-200 px-4 py-3 text-center font-medium text-gray-600 w-32">
                                             ពិន្ទុ
                                         </th>
 
-                                        <th class="border px-4 py-3 text-center font-medium text-gray-600 w-20">
+                                        <th class="border border-gray-200 px-4 py-3 text-center font-medium text-gray-600 w-20">
                                             សកម្មភាព
                                         </th>
 
@@ -195,12 +215,12 @@
                                             >
 
                                             {{-- Number --}}
-                                            <td class="border text-center row-number font-medium">
+                                            <td class="border border-gray-300 text-center row-number font-medium">
                                                 {{ $index + 1 }}
                                             </td>
 
                                             {{-- Activity --}}
-                                            <td class="border p-2">
+                                            <td class="border border-gray-300 p-2">
                                                 <textarea
                                                     name="performances[{{ $index }}][activity]"
                                                     rows="2"
@@ -210,7 +230,7 @@
                                             </td>
 
                                             {{-- Indicator --}}
-                                            <td class="border p-2">
+                                            <td class="border border-gray-300 p-2">
                                                 <textarea
                                                     name="performances[{{ $index }}][indicator]"
                                                     rows="2"
@@ -220,7 +240,7 @@
                                             </td>
 
                                             {{-- Achievement --}}
-                                            <td class="border p-2">
+                                            <td class="border border-gray-300 p-2">
                                                 <input
                                                     type="number"
                                                     name="performances[{{ $index }}][achievement_percent]"
@@ -234,7 +254,7 @@
                                             </td>
 
                                             {{-- Score --}}
-                                            <td class="border p-2">
+                                            <td class="border border-gray-300 p-2">
                                                 <input
                                                     type="text"
                                                     name="performances[{{ $index }}][score]"
@@ -246,13 +266,8 @@
                                             </td>
 
                                             {{-- Action --}}
-                                            <td class="border text-center">
-                                                <button
-                                                    type="button"
-                                                    class="delete-row text-red-600 hover:text-red-700 cursor-pointer"
-                                                >
-                                                    <i data-lucide="trash-2" class="w-5 h-5 mx-auto"></i>
-                                                </button>
+                                            {{-- Retrieved records cannot be deleted. --}}
+                                            <td class="border border-gray-300 text-center">
                                             </td>
 
                                         </tr>
@@ -262,12 +277,12 @@
                                         <tr>
 
                                             {{-- Number --}}
-                                            <td class="border text-center row-number font-medium">
+                                            <td class="border border-gray-300 text-center row-number font-medium">
                                                 1
                                             </td>
 
                                             {{-- Activity --}}
-                                            <td class="border p-2">
+                                            <td class="border border-gray-300 p-2">
                                                 <textarea
                                                     name="performances[0][activity]"
                                                     rows="2"
@@ -277,7 +292,7 @@
                                             </td>
 
                                             {{-- Indicator --}}
-                                            <td class="border p-2">
+                                            <td class="border border-gray-300 p-2">
                                                 <textarea
                                                     name="performances[0][indicator]"
                                                     rows="2"
@@ -287,7 +302,7 @@
                                             </td>
 
                                             {{-- Achievement --}}
-                                            <td class="border p-2">
+                                            <td class="border border-gray-300 p-2">
                                                 <input
                                                     type="number"
                                                     name="performances[0][achievement_percent]"
@@ -300,7 +315,7 @@
                                             </td>
 
                                             {{-- Score --}}
-                                            <td class="border p-2">
+                                            <td class="border border-gray-300 p-2">
                                                 <input
                                                     type="text"
                                                     name="performances[0][score]"
@@ -312,7 +327,7 @@
                                             </td>
 
                                             {{-- Action --}}
-                                            <td class="border text-center">
+                                            <td class="border border-gray-300 text-center">
                                                 <button
                                                     type="button"
                                                     class="delete-row text-red-600 hover:text-red-700 cursor-pointer"
@@ -335,21 +350,10 @@
 
                             <div class="text-sm text-gray-500">
                                 <span class="font-semibold text-gray-700">ចំណាំ:</span>
-                                ពិន្ទុនឹងត្រូវបានគណនាឡើងវិញតាមចំនួនសកម្មភាព ហើយពិន្ទុសមិទ្ធកម្ម /60 និងពិន្ទុសរុប /100 នឹងត្រូវបាន update ដោយស្វ័យប្រវត្តិ។
+                                ពិន្ទុនឹងត្រូវបានគណនាឡើងវិញតាមចំនួនសកម្មភាពដោយស្វ័យប្រវត្តិ។
                             </div>
 
                             <div class="flex items-center gap-3 shrink-0">
-
-                                <a
-                                    href="{{ route('department-evaluation-results.review', [
-                                        'evaluationPeriod' => $evaluationPeriod->evaluation_period_id,
-                                        'user' => $employee->user_id,
-                                    ]) }}"
-                                    class="inline-flex items-center justify-center px-4 py-2.5 rounded-xl border border-gray-200 bg-white text-gray-700 text-sm font-semibold hover:bg-gray-50 transition"
-                                >
-                                    បោះបង់
-                                </a>
-
                                 <button
                                     type="submit"
                                     class="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-blue-600 text-white text-sm font-semibold hover:bg-blue-700 transition"

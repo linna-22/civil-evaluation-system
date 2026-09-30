@@ -117,7 +117,7 @@
                         'evaluations.history',
                         'evaluations.attendance.*',
                         'users.profile',
-                        'department-evaluation-results.*',
+                        'report.*',
                         'evaluations.behavior.*',
                     ];
 
@@ -143,18 +143,12 @@
 
                     $allowedRoutes = [
                         'dashboard',
-
-                        // New evaluation result modules
                         'evaluation-results.*',
                         'evaluation-results.work-performance.*',
                         'evaluation-results.attendance.*',
                         'evaluation-results.behavior.*',
                         'evaluation-results.overall.*',
-
-                        // Report sidebar
-                        'my-evaluation-results.*',
-                        'department-evaluation-results.*',
-
+                        'report.*',
                         'users.profile',
                     ];
 
@@ -324,4 +318,4 @@
 
     </div>
 
-</aside>    
+</aside>

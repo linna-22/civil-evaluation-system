@@ -139,5 +139,5 @@
         window.departmentEvaluationPeriodId =
             @json($evaluationPeriod->evaluation_period_id);
     </script>
-    @vite(['resources/js/pages/department-evaluation-results/index.js'])
+    @vite(['resources/js/pages/report/index.js'])
 @endsection

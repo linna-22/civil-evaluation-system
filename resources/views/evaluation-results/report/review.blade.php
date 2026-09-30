@@ -32,8 +32,8 @@
                 </div>
 
                 <a href="{{ route('evaluation-results.overall.show', [
-                    'evaluationPeriod' => $evaluationPeriod->evaluation_period_id,
-                ]) }}"
+                        'evaluationPeriod' => $evaluationPeriod->evaluation_period_id,
+                    ]) }}"
                     class="inline-flex items-center justify-center gap-2
                        px-4 py-2.5
                        rounded-xl
@@ -47,11 +47,13 @@
 
                     ត្រឡប់ក្រោយ
                 </a>
+
             </div>
 
+
             {{-- ==========================================================
-                EMPLOYEE INFORMATION
-            =========================================================== --}}
+            EMPLOYEE INFORMATION
+        =========================================================== --}}
 
             <div class="bg-white rounded-2xl border border-gray-100
                     shadow-sm overflow-hidden mb-5">
@@ -271,10 +273,10 @@
                                 <div class="flex items-center gap-2">
 
                                     {{-- Edit Work Performance --}}
-                                    <a href="{{ route('department-evaluation-results.work-performance.edit', [
-                                        'evaluationPeriod' => $evaluationPeriod->evaluation_period_id,
-                                        'user' => $employee->user_id,
-                                    ]) }}"
+                                    <a href="{{ route('report.work-performance.edit', [
+                                            'evaluationPeriod' => $evaluationPeriod->evaluation_period_id,
+                                            'user' => $employee->user_id,
+                                        ]) }}"
                                         class="inline-flex items-center gap-1.5
                    px-3 py-1.5
                    rounded-lg
@@ -341,7 +343,7 @@
                                 <div class="flex items-center gap-2">
 
                                     {{-- Edit Attendance --}}
-                                    <a href="{{ route('department-evaluation-results.attendance.edit', [
+                                    <a href="{{ route('report.attendance.edit', [
                                         'evaluationPeriod' => $evaluationPeriod->evaluation_period_id,
                                         'user' => $employee->user_id,
                                     ]) }}"
@@ -410,10 +412,10 @@
                                 <div class="flex items-center gap-2">
 
                                     {{-- Edit Behavior --}}
-                                    <a href="{{ route('department-evaluation-results.behavior-review', [
-                                        'evaluationPeriod' => $evaluationPeriod->evaluation_period_id,
-                                        'user' => $employee->user_id,
-                                    ]) }}"
+                                    <a href="{{ route('report.behavior-review', [
+                                            'evaluationPeriod' => $evaluationPeriod->evaluation_period_id,
+                                            'user' => $employee->user_id,
+                                        ]) }}"
                                         class="inline-flex items-center gap-1.5
                    px-3 py-1.5
                    rounded-lg

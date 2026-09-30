@@ -73,19 +73,19 @@ if (body && window.evaluationOutcome) {
         let actionIcon = "eye";
 
         if (type === "work-performance") {
-            actionUrl = `/department-evaluation-results/${periodId}/user/${userId}/work-performance/edit`;
+            actionUrl = `/report/${periodId}/user/${userId}/work-performance/edit`;
             actionText = "កែប្រែ";
             actionIcon = "pencil";
         } else if (type === "attendance") {
-            actionUrl = `/department-evaluation-results/${periodId}/user/${userId}/attendance/edit`;
+            actionUrl = `/report/${periodId}/user/${userId}/attendance/edit`;
             actionText = "កែប្រែ";
             actionIcon = "pencil";
         } else if (type === "behavior") {
-            actionUrl = `/department-evaluation-results/${periodId}/user/${userId}/behavior/review`;
+            actionUrl = `/report/${periodId}/user/${userId}/behavior/review`;
             actionText = "ពិនិត្យ/កែប្រែ";
             actionIcon = "pencil";
         } else if (type === "overall") {
-            actionUrl = `/department-evaluation-results/${periodId}/user/${userId}/review`;
+            actionUrl = `/report/${periodId}/user/${userId}/review`;
         }
 
         const score = type === "work-performance"
@@ -287,7 +287,7 @@ if (body && window.evaluationOutcome) {
 
             try {
                 const response = await fetch(
-                    `/department-evaluation-results/remarks/${id}`,
+                    `/report/remarks/${id}`,
                     {
                         method: "PATCH",
                         headers: {

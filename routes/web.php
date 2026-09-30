@@ -199,9 +199,9 @@ Route::middleware('auth')->group(function () {
                 ->name('overall.data');
         });
 
-    // Department evaluation result
-    Route::prefix('department-evaluation-results')
-        ->name('department-evaluation-results.')
+    // Evaluation report
+    Route::prefix('report')
+        ->name('report.')
         ->group(function () {
             Route::get('/', [DepartmentEvaluationResultController::class, 'index'])->name('index');
             Route::get('/{evaluationPeriod}/data', [DepartmentEvaluationResultController::class, 'data'])->name('data');

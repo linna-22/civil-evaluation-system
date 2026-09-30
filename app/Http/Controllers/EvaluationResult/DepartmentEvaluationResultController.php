@@ -56,7 +56,7 @@
             $periods = $service->getClosedPeriods();
 
             return view(
-                'evaluation-results.department.index',
+                'evaluation-results.report.index',
                 compact('periods')
             );
         }
@@ -83,7 +83,7 @@
                 ->orderBy('office_name_kh')
                 ->get();
             return view(
-                'evaluation-results.department.show',
+                'evaluation-results.report.show',
                 compact('evaluationPeriod', 'offices')
             );
         }
@@ -114,7 +114,7 @@
             }
 
             return view(
-                'evaluation-results.department.review',
+                'evaluation-results.report.review',
                 compact(
                     'evaluationPeriod',
                     'result',
@@ -145,7 +145,7 @@
             );
 
             return view(
-                'evaluation-results.department.behavior.review',
+                'evaluation-results.report.behavior.review',
                 compact(
                     'evaluationPeriod',
                     'user',
@@ -207,7 +207,7 @@
 
             return redirect()
                 ->route(
-                    'department-evaluation-results.behavior-review',
+                    'report.behavior-review',
                     [
                         'evaluationPeriod' => $evaluationPeriod->evaluation_period_id,
                         'user' => $user->user_id,
@@ -243,7 +243,7 @@
             }
 
             return view(
-                'evaluation-results.department.work-performance.edit',
+                'evaluation-results.report.work-performance.edit',
                 compact(
                     'evaluationPeriod',
                     'evaluation',
@@ -279,7 +279,7 @@
             }
 
             return view(
-                'evaluation-results.department.attendance.edit',
+                'evaluation-results.report.attendance.edit',
                 compact(
                     'evaluationPeriod',
                     'evaluation',
@@ -330,7 +330,7 @@
 
             return redirect()
                 ->route(
-                    'department-evaluation-results.review',
+                    'report.review',
                     [
                         'evaluationPeriod' => $evaluationPeriod->evaluation_period_id,
                         'user' => $user->user_id,
@@ -373,7 +373,7 @@
 
             return redirect()
                 ->route(
-                    'department-evaluation-results.review',
+                    'report.review',
                     [
                         'evaluationPeriod' => $evaluationPeriod->evaluation_period_id,
                         'user' => $user->user_id,
@@ -420,7 +420,7 @@
             }
 
             return view(
-                'evaluation-results.department.print',
+                'evaluation-results.report.print',
                 compact(
                     'evaluationPeriod',
                     'result',
@@ -470,7 +470,7 @@
                 abort(404, 'No evaluation results found.');
             }
             return view(
-                'evaluation-results.department.print-all',
+                'evaluation-results.report.print-all',
                 compact(
                     'evaluationPeriod',
                     'results',

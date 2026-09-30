@@ -375,7 +375,7 @@ export function registerDepartmentEvents(table) {
 
                 const response =
                     await fetch(
-                        `/department-evaluation-results/remarks/${id}`,
+                        `/report/remarks/${id}`,
                         {
                             method: "PATCH",
 

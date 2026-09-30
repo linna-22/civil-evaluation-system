@@ -11,7 +11,9 @@ return [
 
         'items' => [
 
+            // =================================================
             // Dashboard
+            // =================================================
             [
                 'icon' => 'layout-dashboard',
                 'title' => 'ផ្ទាំងគ្រប់គ្រង',
@@ -29,7 +31,9 @@ return [
                 ],
             ],
 
+            // =================================================
             // Evaluation
+            // =================================================
             [
                 'icon' => 'clipboard-check',
                 'title' => 'ការវាយតម្លៃ',
@@ -43,6 +47,7 @@ return [
                         'route' => 'evaluation-periods.*',
                         'url' => 'evaluation-periods.index',
                     ],
+
                     [
                         'title' => 'វាយតម្លៃសមិទ្ធកម្មការងារ',
                         'route' => 'evaluations.work-performance.*',
@@ -63,62 +68,90 @@ return [
 
                 ],
             ],
+
+            // =================================================
+            // Evaluation Results
+            // =================================================
             [
                 'icon' => 'chart-no-axes-combined',
-                'title' => 'លទ្ធផលវាយតម្លៃ',
+                'title' => 'ពិនិត្យការវាយតម្លៃ',
                 'route' => 'evaluation-results.*',
                 'url' => '#',
 
                 'children' => [
 
+                    // Work Performance
                     [
                         'title' => 'សមិទ្ធកម្មការងារ',
                         'route' => 'evaluation-results.work-performance.*',
+
                         'active_routes' => [
-                            'department-evaluation-results.work-performance.edit',
+                            'report.work-performance.edit',
                         ],
+
                         'url' => 'evaluation-results.work-performance.index',
                     ],
+
+                    // Attendance
                     [
                         'title' => 'វត្តមាន',
                         'route' => 'evaluation-results.attendance.*',
+
                         'active_routes' => [
-                            'department-evaluation-results.attendance.edit',
+                            'report.attendance.edit',
                         ],
+
                         'url' => 'evaluation-results.attendance.index',
                     ],
+
+                    // Behavior
                     [
                         'title' => 'ឥរិយាបថ',
                         'route' => 'evaluation-results.behavior.*',
+
                         'active_routes' => [
-                            'department-evaluation-results.behavior-review',
+                            'report.behavior-review',
                         ],
+
                         'url' => 'evaluation-results.behavior.index',
                     ],
+
+                    // Overall
                     [
-                        'title' => 'លទ្ធផលវាយតម្លៃរួម',
+                        'title' => 'បង្ហាញការវាយតម្លៃរួម',
                         'route' => 'evaluation-results.overall.*',
+
                         'active_routes' => [
-                            'department-evaluation-results.review',
+                            'report.review',
                         ],
+
                         'url' => 'evaluation-results.overall.index',
                     ],
 
                 ],
             ],
 
+            // =================================================
+            // Reports
+            // =================================================
             [
                 'icon' => 'file-text',
                 'title' => 'របាយការណ៍',
-                'route' => 'reports.*',
+
+                // Parent report namespace
+                'route' => 'report.*',
+
                 'url' => '#',
 
                 'children' => [
 
                     [
                         'title' => 'លទ្ធផលការវាយតម្លៃរបស់មន្ត្រី',
-                        'route' => 'department-evaluation-results.*',
-                        'url' => 'department-evaluation-results.index',
+
+                        // Report namespace
+                        'route' => 'report.*',
+
+                        'url' => 'report.index',
                     ],
 
                 ],

@@ -154,7 +154,7 @@
                                     @endif
                                     {{-- View Result Button --}}
                                     @if ($period->status === 'closed')
-                                        <a href="{{ route('department-evaluation-results.show', $period->evaluation_period_id) }}"
+                                        <a href="{{ route('report.show', $period->evaluation_period_id) }}"
                                             class="inline-flex items-center gap-2
                                                     px-4 py-2
                                                     rounded-xl

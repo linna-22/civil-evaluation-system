@@ -97,9 +97,8 @@ export function renderDepartmentResultRow(result, no) {
                                shadow-lg
                                overflow-hidden"
                     >
-                        
                         <a
-                            href="/department-evaluation-results/${window.departmentEvaluationPeriodId}/user/${user?.user_id}/print"
+                            href="/report/${window.departmentEvaluationPeriodId}/user/${user?.user_id}/print"
                             target="_blank"
                             class="flex items-center gap-3
                                    px-4 py-3
@@ -115,7 +114,7 @@ export function renderDepartmentResultRow(result, no) {
                             <span>ទាញយក PDF</span>
                         </a>
                         <a
-                            href="/department-evaluation-results/${window.departmentEvaluationPeriodId}/user/${user?.user_id}/word"
+                            href="/report/${window.departmentEvaluationPeriodId}/user/${user?.user_id}/word"
                             class="flex items-center gap-3
                                    px-4 py-3
                                    text-sm text-gray-700

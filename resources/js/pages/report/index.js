@@ -9,7 +9,7 @@ if (tableBody) {
     const periodId = window.departmentEvaluationPeriodId;
 
     const table = new DataTable({
-        url: `/department-evaluation-results/${periodId}/data`,
+        url: `/report/${periodId}/data`,
         body: "#department-result-table-body",
         pagination: "#department-result-pagination",
         search: "#department-result-search",
@@ -89,7 +89,7 @@ if (tableBody) {
             params.set("office_id", officeId);
         }
         const url =
-            `/department-evaluation-results/${periodId}/download/pdf` +
+            `/report/${periodId}/download/pdf` +
             (params.toString() ? `?${params.toString()}` : "");
 
         window.open(url, "_blank");
@@ -107,7 +107,7 @@ if (tableBody) {
             params.set("office_id", officeId);
         }
         const url =
-            `/department-evaluation-results/${periodId}/download/word` +
+            `/report/${periodId}/download/word` +
             (params.toString() ? `?${params.toString()}` : "");
 
         window.location.href = url;
