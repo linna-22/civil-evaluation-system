@@ -1,12 +1,23 @@
 export function renderDepartmentResultRow(result, no) {
 
-     console.log("DEPARTMENT RESULT:", result);
-    console.log("OVERTIME:", result.overtime_hours);
+    // console.log("DEPARTMENT RESULT:", result);
+    // console.log("OVERTIME:", result.overtime_hours);
     const user =
         result.evaluation_period_user?.user;
 
     const hasRemark =
         result.remarks && result.remarks.trim() !== "";
+    const formatScore = (value) => {
+        const number = Number(value ?? 0);
+
+        if (!Number.isFinite(number)) {
+            return "0";
+        }
+
+        return Number.isInteger(number)
+            ? String(number)
+            : number.toFixed(2).replace(/0+$/, "").replace(/\.$/, "");
+    };
 
     return `
         <tr class="border-b border-gray-100 hover:bg-gray-50 transition">
@@ -21,49 +32,48 @@ export function renderDepartmentResultRow(result, no) {
 
             <td class="px-6 py-4">
                 ${user?.gender === 'male'
-                    ? 'ប្រុស'
-                    : user?.gender === 'female'
-                        ? 'ស្រី'
-                        : 'មិនមាន'
-                }
+            ? 'ប្រុស'
+            : user?.gender === 'female'
+                ? 'ស្រី'
+                : 'មិនមាន'
+        }
             </td>
 
             <td class="px-6 py-4 text-center">
                 ${user?.position ?? "មិនមាន"}
             </td>
             <td class="px-6 py-4 text-center">
-                ${result.work_performance_score ?? "0.00"}
+                ${formatScore(result.work_performance_score)} / 60
             </td>
 
             <td class="px-6 py-4 text-center">
                 <div class="flex flex-col items-center gap-1">
                     <span class="font-medium text-gray-800">
-                        ${result.attendance_score ?? "0.00"}
+                        ${formatScore(result.attendance_score)} / 20
                     </span>
 
-                    <span class="text-xs text-gray-500">
-                        ម៉ោងលើស: ${
-                            Number(result.overtime_hours ?? 0)
-                                .toLocaleString("en-US", {
-                                    maximumFractionDigits: 2,
-                                })
+                    <span class="text-xs text-blue-500">
+                        ម៉ោងលើស: ${Number(result.overtime_hours ?? 0)
+                            .toLocaleString("en-US", {
+                                maximumFractionDigits: 2,
+                            })
                         } ម៉ោង
                     </span>
                 </div>
             </td>
 
             <td class="px-6 py-4 text-center">
-                ${result.behavior_score ?? "0.00"}
+                ${formatScore(result.behavior_score)} / 20
             </td>
 
             <td class="px-6 py-4 text-center font-bold">
-                ${result.total_score ?? "0.00"}
+                ${formatScore(result.total_score)} / 100
             </td>
             <td class="px-6 py-4">
                 ${hasRemark
-                    ? `<span class="text-sm text-gray-700">${result.remarks}</span>`
-                    : ""
-                }
+            ? `<span class="text-sm text-gray-700">${result.remarks}</span>`
+            : ""
+        }
             </td>
             <td class="px-6 py-5 text-center">
 

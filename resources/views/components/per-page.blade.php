@@ -4,13 +4,21 @@
 ])
 
 <div class="flex items-center gap-2">
-    <span class="text-sm text-gray-700">
+    <span class="text-sm text-gray-700 whitespace-nowrap">
         បង្ហាញទិន្នន័យ
     </span>
 
     <select
         id="{{ $id }}"
-        class="h-9 rounded-2xl border border-blue-300 px-2 bg-white">
+        class="h-9 rounded-2xl
+               border border-blue-300
+               px-2
+               bg-white
+               text-sm
+               outline-none
+               focus:ring-1
+               focus:ring-blue-600
+               cursor-pointer">
 
         <option value="5" @selected($value == 5)>5</option>
         <option value="10" @selected($value == 10)>10</option>

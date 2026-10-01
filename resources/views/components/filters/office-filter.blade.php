@@ -5,18 +5,17 @@
     'placeholder' => 'ការិយាល័យទាំងអស់',
 ])
 
-<div class="relative">
+<div class="relative w-full">
 
     <select
         id="{{ $id }}"
         name="{{ $name }}"
-        class="w-70
-               h-11
+        class="w-full
+               h-10
                px-4
                pr-10
                rounded-2xl
-               border
-               border-gray-200
+               border border-gray-200
                bg-white
                text-sm
                text-gray-700
@@ -44,7 +43,6 @@
 
     </select>
 
-    {{-- Dropdown icon --}}
     <i
         data-lucide="chevron-down"
         class="absolute

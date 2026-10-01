@@ -131,7 +131,7 @@
                                     class="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-blue-600 text-white text-sm font-semibold hover:bg-blue-700 transition"
                                 >
                                     <i data-lucide="eye" class="w-4 h-4"></i>
-                                    មើល
+                                    ពិនិត្យ
                                     <i data-lucide="arrow-right" class="w-4 h-4"></i>
                                 </a>
                             </div>

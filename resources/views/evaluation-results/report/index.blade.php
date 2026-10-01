@@ -111,50 +111,27 @@
 
                                     {{-- Status --}}
 
-                                    @if ($period->status === 'closed')
+                                    <span
+                                        class="inline-flex
+                                           items-center justify-center
+                                           gap-2
+                                           px-3 py-2
+                                           rounded-lg
+                                           bg-green-50
+                                           border border-green-100
+                                           text-green-700
+                                           text-sm font-medium">
+
                                         <span
-                                            class="inline-flex
-                                               items-center justify-center
-                                               gap-2
-                                               px-3 py-2
-                                               rounded-lg
-                                               bg-red-50
-                                               border border-red-100
-                                               text-red-700
-                                               text-sm font-medium">
+                                            class="w-2 h-2
+                                               rounded-full
+                                               bg-green-500"></span>
 
-                                            <span
-                                                class="w-2 h-2
-                                                   rounded-full
-                                                   bg-red-500"></span>
+                                        ការវាយតម្លៃបានបញ្ចប់
 
-                                            ការវាយតម្លៃបានបិទ
-
-                                        </span>
-                                    @else
-                                        <span
-                                            class="inline-flex
-                                               items-center justify-center
-                                               gap-2
-                                               px-3 py-2
-                                               rounded-lg
-                                               bg-blue-50
-                                               border border-blue-100
-                                               text-[#287cfb]
-                                               text-sm font-medium">
-
-                                            <span
-                                                class="w-2 h-2
-                                                   rounded-full
-                                                   bg-[#287cfb]"></span>
-
-                                            កំពុងវាយតម្លៃ
-
-                                        </span>
-                                    @endif
+                                    </span>
                                     {{-- View Result Button --}}
-                                    @if ($period->status === 'closed')
-                                        <a href="{{ route('report.show', $period->evaluation_period_id) }}"
+                                    <a href="{{ route('report.show', $period->evaluation_period_id) }}"
                                             class="inline-flex items-center gap-2
                                                     px-4 py-2
                                                     rounded-xl
@@ -163,13 +140,12 @@
                                                     text-sm font-semibold
                                                     hover:bg-blue-700
                                                     transition">
-                                            មើលលទ្ធផលវាយតម្លៃ
+                                            ពិនិត្យ និងទាញយករបាយការណ៍
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                     d="M9 5l7 7-7 7" />
                                             </svg>
                                         </a>
-                                    @endif
                                 </div>
                             </div>
                         </div>
