@@ -3,7 +3,6 @@ import { renderDepartmentResultRow } from "./row-renderer";
 import { registerDepartmentEvents } from "./event";
 
 const tableBody = document.querySelector("#department-result-table-body");
-
 if (tableBody) {
 
     const periodId = window.departmentEvaluationPeriodId;

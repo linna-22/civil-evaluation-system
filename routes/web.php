@@ -197,6 +197,9 @@ Route::middleware('auth')->group(function () {
                 ->name('overall.show');
             Route::get('/overall/{evaluationPeriod}/data', [DepartmentEvaluationOutcomeController::class, 'overallData'])
                 ->name('overall.data');
+
+            Route::post('/{type}/{evaluationPeriod}/finalize', [DepartmentEvaluationOutcomeController::class, 'finalize'])
+                ->name('finalize');
         });
 
     // Evaluation report

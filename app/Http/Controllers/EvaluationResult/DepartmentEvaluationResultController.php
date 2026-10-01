@@ -23,6 +23,18 @@
             EvaluationPeriod $evaluationPeriod,
             DepartmentEvaluationResultService $service
         ) {
+            if (!in_array(auth()->user()->role, [
+                'department_admin',
+                'super_admin',
+            ], true)) {
+                abort(403);
+            }
+
+            $service->assertReportAvailable(
+                auth()->user(),
+                $evaluationPeriod
+            );
+
             $results = $service->getDepartmentResults(
                 auth()->user(),
                 $evaluationPeriod,
@@ -38,7 +50,7 @@
 
 
         /**
-         * Display all closed evaluation periods.
+         * Display finalized evaluation periods.
          */
         public function index(
             DepartmentEvaluationResultService $service
@@ -53,7 +65,7 @@
                 abort(403);
             }
 
-            $periods = $service->getClosedPeriods();
+            $periods = $service->getFinalizedPeriods(auth()->user());
 
             return view(
                 'evaluation-results.report.index',
@@ -77,6 +89,11 @@
                 abort(403);
             }
             $departmentAdmin = auth()->user();
+
+            $service->assertReportAvailable(
+                $departmentAdmin,
+                $evaluationPeriod
+            );
 
             $offices = Office::query()
                 ->where('department_id', $departmentAdmin->department_id)

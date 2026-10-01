@@ -20,7 +20,7 @@
         </div>
     </div>
     <div class="mt-5 flex justify-end">
-        <a href="{{ route('department-evaluation-results.attendance.edit',['evaluationPeriod'=>$evaluationPeriod->evaluation_period_id,'user'=>$employee->user_id]) }}" class="px-4 py-2 rounded-lg bg-emerald-600 text-white">កែប្រែ</a>
+        <a href="{{ route('report.attendance.edit',['evaluationPeriod'=>$evaluationPeriod->evaluation_period_id,'user'=>$employee->user_id]) }}" class="px-4 py-2 rounded-lg bg-emerald-600 text-white">កែប្រែ</a>
     </div>
 </div>
 @endsection
