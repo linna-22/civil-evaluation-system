@@ -80,6 +80,15 @@ class EvaluationPeriod extends Model
             'evaluation_period_id'
         );
     }
+
+    public function finalizedDepartments(): HasMany
+    {
+        return $this->hasMany(
+            EvaluationPeriodDepartment::class,
+            'evaluation_period_id',
+            'evaluation_period_id'
+        )->where('review_status', 'finalized');
+    }
     /**
      * Data-entry assignments.
      */

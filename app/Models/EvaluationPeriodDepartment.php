@@ -11,9 +11,16 @@ class EvaluationPeriodDepartment extends Model
 
     protected $primaryKey = 'evaluation_period_department_id';
 
+    protected $casts = [
+        'finalized_at' => 'datetime',
+    ];
+
     protected $fillable = [
         'evaluation_period_id',
         'department_id',
+        'review_status',
+        'finalized_by',
+        'finalized_at',
     ];
 
     /**
@@ -26,6 +33,23 @@ class EvaluationPeriodDepartment extends Model
             'evaluation_period_id',
             'evaluation_period_id'
         );
+    }
+
+    /**
+     * User who finalized this department's evaluation results.
+     */
+    public function finalizer(): BelongsTo
+    {
+        return $this->belongsTo(
+            User::class,
+            'finalized_by',
+            'user_id'
+        );
+    }
+
+    public function isFinalized(): bool
+    {
+        return $this->review_status === 'finalized';
     }
 
     /**

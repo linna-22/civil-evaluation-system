@@ -7,26 +7,166 @@ use App\Models\Evaluation;
 use App\Models\EvaluationSummary;
 use App\Models\EvaluationWorkPerformance;
 use App\Models\EvaluationAttendance;
+use App\Models\EvaluationPeriodDepartment;
+use App\Models\EvaluationPeriodUser;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 
 class DepartmentEvaluationResultService
 {
     /**
      * Get all closed evaluation periods.
      */
-    public function getClosedPeriods(): Collection
+    public function getFinalizedPeriods(User $admin): Collection
     {
-        return EvaluationPeriod::query()
-            ->where('status', 'closed')
+        $query = EvaluationPeriod::query()
+            ->whereHas('departments', function ($departmentQuery) use ($admin) {
+                $departmentQuery->where('review_status', 'finalized');
+
+                if ($admin->role === 'department_admin') {
+                    $departmentQuery->where('department_id', $admin->department_id);
+                }
+            })
             ->orderByDesc('year')
-            ->orderByDesc('month')
-            ->get();
+            ->orderByDesc('month');
+
+        return $query->get();
     }
 
+    /**
+     * Get the participating department record for the current Department Admin.
+     */
+    public function getDepartmentPeriod(
+        User $departmentAdmin,
+        EvaluationPeriod $evaluationPeriod
+    ): EvaluationPeriodDepartment {
+        if ($departmentAdmin->role !== 'department_admin') {
+            abort(403, 'Unauthorized.');
+        }
+
+        $departmentPeriod = $evaluationPeriod->departments()
+            ->where('department_id', $departmentAdmin->department_id)
+            ->first();
+
+        if (!$departmentPeriod) {
+            abort(403, 'នាយកដ្ឋានរបស់អ្នកមិនបានចូលរួមក្នុងវគ្គវាយតម្លៃនេះទេ។');
+        }
+
+        return $departmentPeriod;
+    }
+
+    /**
+     * Finalize one department's results for a closed evaluation period.
+     */
+    public function finalizeDepartment(
+        User $departmentAdmin,
+        EvaluationPeriod $evaluationPeriod
+    ): EvaluationPeriodDepartment {
+        return DB::transaction(function () use ($departmentAdmin, $evaluationPeriod) {
+            if ($evaluationPeriod->status !== 'closed') {
+                throw ValidationException::withMessages([
+                    'evaluation_period' => 'សូមបិទវគ្គវាយតម្លៃជាមុនសិន មុនពេលបញ្ចប់លទ្ធផល។',
+                ]);
+            }
+
+            $departmentPeriod = $this->getDepartmentPeriod(
+                $departmentAdmin,
+                $evaluationPeriod
+            );
+
+            if ($departmentPeriod->review_status === 'finalized') {
+                throw ValidationException::withMessages([
+                    'evaluation_period' => 'លទ្ធផលរបស់នាយកដ្ឋាននេះបានបញ្ចប់រួចហើយ។',
+                ]);
+            }
+
+            $participantQuery = EvaluationPeriodUser::query()
+                ->where('evaluation_period_id', $evaluationPeriod->evaluation_period_id)
+                ->whereHas('user', function ($query) use ($departmentAdmin) {
+                    $query->where('department_id', $departmentAdmin->department_id)
+                        ->whereNotIn('role', [
+                            'super_admin',
+                            'evaluation_admin',
+                            'department_admin',
+                        ]);
+                });
+
+            $participantCount = (clone $participantQuery)->count();
+
+            if ($participantCount === 0) {
+                throw ValidationException::withMessages([
+                    'evaluation_period' => 'នាយកដ្ឋាននេះមិនមានមន្ត្រីដែលចូលរួមវាយតម្លៃទេ។',
+                ]);
+            }
+
+            $summaryCount = EvaluationSummary::query()
+                ->whereHas('evaluationPeriodUser', function ($query) use ($participantQuery) {
+                    $query->whereIn('evaluation_period_user_id', $participantQuery->pluck('evaluation_period_user_id'));
+                })
+                ->count();
+
+            if ($summaryCount < $participantCount) {
+                throw ValidationException::withMessages([
+                    'evaluation_period' => 'មិនទាន់មានលទ្ធផលវាយតម្លៃគ្រប់មន្ត្រីទាំងអស់សម្រាប់នាយកដ្ឋាននេះទេ។',
+                ]);
+            }
+
+            $departmentPeriod->update([
+                'review_status' => 'finalized',
+                'finalized_by' => $departmentAdmin->user_id,
+                'finalized_at' => now(),
+            ]);
+
+            return $departmentPeriod->refresh();
+        });
+    }
+
+    /**
+     * Prevent Department Admin edits after their department has been finalized.
+     */
+    private function assertDepartmentCanEdit(
+        User $departmentAdmin,
+        EvaluationPeriod $evaluationPeriod
+    ): EvaluationPeriodDepartment {
+        if ($evaluationPeriod->status !== 'closed') {
+            abort(403, 'ការកែប្រែអាចធ្វើបានតែបន្ទាប់ពីបិទវគ្គវាយតម្លៃប៉ុណ្ណោះ។');
+        }
+
+        $departmentPeriod = $this->getDepartmentPeriod(
+            $departmentAdmin,
+            $evaluationPeriod
+        );
+
+        if ($departmentPeriod->review_status === 'finalized') {
+            abort(403, 'លទ្ធផលរបស់នាយកដ្ឋាននេះបានបញ្ចប់រួចហើយ និងមិនអាចកែប្រែបានទៀតទេ។');
+        }
+
+        return $departmentPeriod;
+    }
+
+
+    /**
+     * Ensure an official report exists for the requested department/period.
+     */
+    public function assertReportAvailable(
+        User $admin,
+        EvaluationPeriod $evaluationPeriod
+    ): void {
+        $query = $evaluationPeriod->departments()
+            ->where('review_status', 'finalized');
+
+        if ($admin->role === 'department_admin') {
+            $query->where('department_id', $admin->department_id);
+        }
+
+        if (!$query->exists()) {
+            abort(404, 'របាយការណ៍របស់នាយកដ្ឋាននេះមិនទាន់ត្រូវបានបញ្ចប់ទេ។');
+        }
+    }
 
     /**
      * Get evaluation results for users
@@ -57,16 +197,24 @@ class DepartmentEvaluationResultService
                             'user',
                             function ($userQuery) use ($admin) {
 
-                                $userQuery
-                                    ->where(
+                                if ($admin->role === 'department_admin') {
+                                    $userQuery->where(
                                         'department_id',
                                         $admin->department_id
-                                    )
-                                    ->whereNotIn('role', [
-                                        'super_admin',
-                                        'evaluation_admin',
-                                        'department_admin',
-                                    ]);
+                                    );
+                                } else {
+                                    $finalizedDepartmentIds = $evaluationPeriod->departments()
+                                        ->where('review_status', 'finalized')
+                                        ->pluck('department_id');
+
+                                    $userQuery->whereIn('department_id', $finalizedDepartmentIds);
+                                }
+
+                                $userQuery->whereNotIn('role', [
+                                    'super_admin',
+                                    'evaluation_admin',
+                                    'department_admin',
+                                ]);
                             }
                         );
                 }
@@ -295,9 +443,7 @@ class DepartmentEvaluationResultService
         User $user
     ): Collection {
 
-        if ($evaluationPeriod->status !== 'closed') {
-            abort(403, 'ការកែប្រែអាចធ្វើបានតែបន្ទាប់ពីបិទវគ្គវាយតម្លៃប៉ុណ្ណោះ។');
-        }
+        $this->assertDepartmentCanEdit($departmentAdmin, $evaluationPeriod);
 
         if ($user->department_id !== $departmentAdmin->department_id) {
             abort(403, 'Unauthorized.');
@@ -343,9 +489,7 @@ class DepartmentEvaluationResultService
         array $scores
     ): int {
 
-        if ($evaluationPeriod->status !== 'closed') {
-            abort(403, 'ការកែប្រែអាចធ្វើបានតែបន្ទាប់ពីបិទវគ្គវាយតម្លៃប៉ុណ្ណោះ។');
-        }
+        $this->assertDepartmentCanEdit($departmentAdmin, $evaluationPeriod);
 
         if ($user->department_id !== $departmentAdmin->department_id) {
             abort(403, 'Unauthorized.');
@@ -433,9 +577,7 @@ class DepartmentEvaluationResultService
         User $user
     ): ?Evaluation {
 
-        if ($evaluationPeriod->status !== 'closed') {
-            abort(403, 'ការកែប្រែអាចធ្វើបានតែបន្ទាប់ពីបិទវគ្គវាយតម្លៃប៉ុណ្ណោះ។');
-        }
+        $this->assertDepartmentCanEdit($departmentAdmin, $evaluationPeriod);
 
         if ($user->department_id !== $departmentAdmin->department_id) {
             abort(403, 'Unauthorized.');
@@ -593,9 +735,7 @@ class DepartmentEvaluationResultService
         User $user
     ): ?Evaluation {
 
-        if ($evaluationPeriod->status !== 'closed') {
-            abort(403, 'ការកែប្រែអាចធ្វើបានតែបន្ទាប់ពីបិទវគ្គវាយតម្លៃប៉ុណ្ណោះ។');
-        }
+        $this->assertDepartmentCanEdit($departmentAdmin, $evaluationPeriod);
 
         if ($user->department_id !== $departmentAdmin->department_id) {
             abort(403, 'Unauthorized.');
@@ -884,6 +1024,10 @@ class DepartmentEvaluationResultService
         if ($employee->department_id !== $user->department_id) {
             abort(403, 'Unauthorized.');
         }
+
+        $evaluationPeriod = $evaluationPeriodUser->evaluationPeriod;
+
+        $this->assertDepartmentCanEdit($user, $evaluationPeriod);
 
         // Only normal users can appear in department results.
         // Leaders are also allowed.
