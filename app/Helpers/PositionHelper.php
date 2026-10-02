@@ -6,6 +6,6 @@ class PositionHelper
 {
     public static function label(?string $position): string
     {
-        return config('position.options.' . $position, 'មិនមាន');
+        return config('positions.options.' . $position, 'មិនមាន');
     }
 }

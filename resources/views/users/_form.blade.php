@@ -56,7 +56,7 @@
     {{-- Row 4 --}}
     <div class="grid grid-cols-3 gap-5">
 
-        <x-forms.select label="តួនាទី" name="position" :options="config('position.options')" :selected="old('position', $user->position ?? '')" required />
+        <x-forms.select label="តួនាទី" name="position" :options="config('positions.options')" :selected="old('position', $user->position ?? '')" required />
 
         <x-input label="អត្តលេខ" name="id_code" :value="old('id_code', $user->id_code ?? '')" placeholder="បញ្ចូលអត្តលេខ" />
 
