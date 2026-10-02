@@ -40,7 +40,7 @@ export function renderDepartmentResultRow(result, no) {
             </td>
 
             <td class="px-6 py-4 text-center">
-                ${user?.position ?? "មិនមាន"}
+                ${window.positionOptions?.[user?.position] ?? "មិនមាន"}
             </td>
             <td class="px-6 py-4 text-center">
                 ${formatScore(result.work_performance_score)} / 60

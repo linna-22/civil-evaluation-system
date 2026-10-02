@@ -147,7 +147,7 @@
                     </td>
 
                     <td>
-                        {{ $result->evaluationPeriodUser?->user?->position ?? 'មិនមាន' }}
+                        {{ \App\Helpers\PositionHelper::label($result->evaluationPeriodUser?->user?->position) }}
                     </td>
 
                     <td>

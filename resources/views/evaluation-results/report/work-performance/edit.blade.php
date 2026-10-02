@@ -84,7 +84,7 @@
                         <div>
                             <p class="text-xs text-gray-500 mb-1">មុខតំណែង</p>
                             <p class="font-semibold text-gray-800">
-                                {{ $employee->position ?? 'មិនមាន' }}
+                                {{ \App\Helpers\PositionHelper::label($employee?->position) }}
                             </p>
                         </div>
 

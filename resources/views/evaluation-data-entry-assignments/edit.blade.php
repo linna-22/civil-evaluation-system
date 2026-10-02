@@ -376,14 +376,14 @@
 
                                     <option
                                         value="{{ $user->user_id }}"
-                                        data-position="{{ $user->position }}"
+                                        data-position="{{ \App\Helpers\PositionHelper::label($user->position) }}"
                                         @selected(
                                             optional($departmentAssignment)->user_id == $user->user_id
                                         )
                                     >
                                         {{ $user->name_kh }}
                                         @if ($user->position)
-                                            — {{ $user->position }}
+                                            — {{ \App\Helpers\PositionHelper::label($user->position) }}
                                         @endif
                                     </option>
 
@@ -539,14 +539,14 @@
 
                                                             <option
                                                                 value="{{ $user->user_id }}"
-                                                                data-position="{{ $user->position }}"
+                                                                data-position="{{ \App\Helpers\PositionHelper::label($user->position) }}"
                                                                 @selected(
                                                                     optional($officeAssignment)->user_id == $user->user_id
                                                                 )
                                                             >
                                                                 {{ $user->name_kh }}
                                                                 @if ($user->position)
-                                                                    — {{ $user->position }}
+                                                                    — {{ \App\Helpers\PositionHelper::label($user->position) }}
                                                                 @endif
                                                             </option>
 

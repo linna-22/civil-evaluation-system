@@ -89,7 +89,7 @@ export function renderBehaviorRow(peer, index) {
             </td>
 
             <td class="px-6 py-4 text-gray-600">
-                ${peer.position ?? "-"}
+                ${window.positionOptions?.[peer?.position] ?? "-"}
             </td>
 
             <td class="px-6 py-4">

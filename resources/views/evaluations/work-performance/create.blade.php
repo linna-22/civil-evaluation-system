@@ -55,7 +55,7 @@
                     <span
                         id="currentUserPosition"
                     >
-                        {{ $currentUser->position }}
+                        {{ \App\Helpers\PositionHelper::label($currentUser?->position) }}
                     </span>
 
                 @endif

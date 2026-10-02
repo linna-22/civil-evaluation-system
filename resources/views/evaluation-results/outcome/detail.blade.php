@@ -87,7 +87,7 @@
                                     <button type="submit" id="finalize-evaluation-button"
                                         class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-green-600 text-white text-sm font-semibold hover:bg-green-700 transition">
                                         <i data-lucide="check-check" class="w-4 h-4"></i>
-                                        បញ្ចប់លទ្ធផល
+                                        បានពិនិត្យនិងឯកភាព
                                     </button>
                                 </form>
                             @endif

@@ -144,7 +144,7 @@ if (body && window.evaluationOutcome) {
                 <td class="px-6 py-2">${escapeHtml(user?.id_code ?? "—")}</td>
                 <td class="px-6 py-2 font-semibold text-gray-800">${escapeHtml(name)}</td>
                 <td class="px-4 py-2">${gender}</td>
-                <td class="px-4 py-2">${escapeHtml(user?.position ?? "—")}</td>
+                <td class="px-4 py-2">${escapeHtml(window.positionOptions?.[user?.position] ?? "—")}</td>
                 ${overallScores}
                 ${renderRemarkButton(result, user)}
                 <td class="px-6 py-2 text-center">

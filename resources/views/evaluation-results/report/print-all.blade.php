@@ -174,7 +174,7 @@
                         </td>
                         {{-- Position --}}
                         <td>
-                            {{ $result->evaluationPeriodUser?->user?->position ?? 'មិនមាន' }}
+                            {{ \App\Helpers\PositionHelper::label($result->evaluationPeriodUser?->user?->position) }}
                         </td>
                         <td>
                         {{ rtrim(rtrim(number_format($result->work_performance_score ?? 0, 2, '.', ''), '0'), '.') }}/60

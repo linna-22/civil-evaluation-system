@@ -53,6 +53,8 @@ class UserRequest extends FormRequest
             ],
             'position' => [
                 'required',
+                'string',
+                'in:' . implode(',', array_keys(config('position.options', []))),
             ],
             'password' => [
                 'required',
@@ -161,7 +163,7 @@ class UserRequest extends FormRequest
             // ==========================================
 
             'position.required' =>
-                'សូមបញ្ចូលតួនាទី',
+                'សូមជ្រើសរើសតួនាទី',
 
             'role.required' =>
                 'សូមជ្រើសរើស Role អ្នកប្រើប្រាស់',

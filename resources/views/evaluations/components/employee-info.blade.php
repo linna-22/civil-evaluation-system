@@ -37,7 +37,7 @@
             <label class="block text-sm font-medium text-gray-700 mb-2">
                 មុខតំណែង
             </label>
-            <span>{{ auth()->user()->position ?? '' }}</span>
+            <span>{{ \App\Helpers\PositionHelper::label(auth()->user()?->position) }}</span>
         </div>
 
         {{-- Month --}}

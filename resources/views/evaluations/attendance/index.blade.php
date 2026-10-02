@@ -244,7 +244,7 @@
                                     {{-- Position --}}
                                     <td class="px-6 py-4 text-gray-600">
 
-                                        {{ $employee->position }}
+                                        {{ \App\Helpers\PositionHelper::label($employee->position) }}
 
                                     </td>
 

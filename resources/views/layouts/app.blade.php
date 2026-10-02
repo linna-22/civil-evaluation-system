@@ -15,6 +15,10 @@
 
     <link rel="icon" href="{{ asset('images/circle_logo.png') }}">
 
+    <script>
+        window.positionOptions = @json(config('position.options', []));
+    </script>
+
     @vite([
         'resources/css/app.css',
         'resources/js/app.js'

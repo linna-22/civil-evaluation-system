@@ -3,6 +3,7 @@
 namespace App\Exports;
 
 use App\Helpers\KhmerHelper;
+use App\Helpers\PositionHelper;
 use Illuminate\Support\Collection;
 use PhpOffice\PhpWord\IOFactory;
 use PhpOffice\PhpWord\PhpWord;
@@ -275,7 +276,7 @@ class DepartmentEvaluationWordBulkExport
 
                 $employee?->name_kh ?? 'មិនមាន',
 
-                $employee?->position ?? 'មិនមាន',
+                PositionHelper::label($employee?->position),
 
                 number_format(
                     $result->work_performance_score ?? 0,
