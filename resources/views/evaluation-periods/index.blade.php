@@ -7,13 +7,22 @@
     <div class="space-y-6">
 
         {{-- Page Header --}}
-        <x-page-header title="កំណត់ការវាយតម្លៃ" description="គ្រប់គ្រងព័ត៌មានការវាយតម្លៃ">
+        <x-page-header
+            title="កំណត់ការវាយតម្លៃ"
+            description="គ្រប់គ្រងព័ត៌មានការវាយតម្លៃ"
+        >
 
             <x-slot:actions>
 
-                <x-action-btn href="{{ route('evaluation-periods.create') }}" icon="plus">
-                    បង្កើតការវាយតម្លៃ
-                </x-action-btn>
+                {{-- Only show Create button when there is no open period --}}
+                @if (!$hasOpenPeriod)
+                    <x-action-btn
+                        href="{{ route('evaluation-periods.create') }}"
+                        icon="plus"
+                    >
+                        បង្កើតការវាយតម្លៃ
+                    </x-action-btn>
+                @endif
 
             </x-slot:actions>
 
@@ -41,6 +50,7 @@
                         <th class="px-6 py-3 text-left w-20">
                             ល.រ
                         </th>
+
                         <th class="px-6 py-3 text-left">
                             ឈ្មោះការវាយតម្លៃ (ភាសាខ្មែរ)
                         </th>
@@ -48,9 +58,11 @@
                         <th class="px-6 py-3 text-left">
                             ឈ្មោះការវាយតម្លៃ (ភាសាអង់គ្លេស)
                         </th>
+
                         <th class="px-6 py-3 text-left">
                             កាលបរិច្ឆេទវាយតម្លៃ
                         </th>
+
                         <th class="px-6 py-3 text-left">
                             ស្ថានភាព
                         </th>

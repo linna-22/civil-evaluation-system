@@ -370,11 +370,15 @@ class EvaluationPeriodService
     public function store(array $data): EvaluationPeriod
     {
         return DB::transaction(function () use ($data) {
+            // Only one evaluation period may be OPEN at a time.
+            if (EvaluationPeriod::query()->where('status', 'open')->exists()) {
+                throw ValidationException::withMessages([
+                    'evaluation_period' =>
+                        'មិនអាចបង្កើតវគ្គវាយតម្លៃថ្មីបានទេ ព្រោះមានវគ្គវាយតម្លៃមួយកំពុងបើក។ សូមបិទវគ្គបច្ចុប្បន្នជាមុនសិន។',
+                ]);
+            }
 
-            // ==========================================
-            // Prevent duplicate month / year
-            // ==========================================
-
+            // Prevent duplicate evaluation month/year.
             $exists = EvaluationPeriod::query()
                 ->where('month', $data['month'])
                 ->where('year', $data['year'])
@@ -387,9 +391,18 @@ class EvaluationPeriodService
                 ]);
             }
 
-            // ==========================================
-            // Create Evaluation Period
-            // ==========================================
+            // Prevent overlapping evaluation windows.
+            $overlap = EvaluationPeriod::query()
+                ->whereDate('start_date', '<=', $data['end_date'])
+                ->whereDate('end_date', '>=', $data['start_date'])
+                ->exists();
+
+            if ($overlap) {
+                throw ValidationException::withMessages([
+                    'start_date' =>
+                        'រយៈពេលវាយតម្លៃនេះមានការត្រួតស៊ីគ្នាជាមួយវគ្គវាយតម្លៃដែលមានស្រាប់។',
+                ]);
+            }
 
             $evaluationPeriod = EvaluationPeriod::create([
                 'name_kh' => $data['name_kh'],
@@ -403,12 +416,8 @@ class EvaluationPeriodService
                 'open_at' => now(),
             ]);
 
-            // ==========================================
-            // Save Participating Departments
-            // ==========================================
-
             $departmentIds = collect($data['department_ids'])
-                ->map(fn($id) => (int) $id)
+                ->map(fn ($id) => (int) $id)
                 ->unique()
                 ->values();
 
@@ -417,11 +426,6 @@ class EvaluationPeriodService
                     'department_id' => $departmentId,
                 ]);
             }
-
-            // ==========================================
-            // Get Active Users From Participating
-            // Departments
-            // ==========================================
 
             $activeUsers = User::query()
                 ->where('status', 'active')
@@ -432,32 +436,21 @@ class EvaluationPeriodService
                 ])
                 ->get(['user_id']);
 
-            // ==========================================
-            // Add Users To Evaluation Period
-            // ==========================================
-
             if ($activeUsers->isNotEmpty()) {
-
                 $now = now();
 
                 $participants = $activeUsers
                     ->map(function ($user) use ($evaluationPeriod, $now) {
                         return [
-                            'evaluation_period_id'
-                            => $evaluationPeriod->evaluation_period_id,
-
-                            'user_id'
-                            => $user->user_id,
-
+                            'evaluation_period_id' => $evaluationPeriod->evaluation_period_id,
+                            'user_id' => $user->user_id,
                             'created_at' => $now,
                             'updated_at' => $now,
                         ];
                     })
                     ->toArray();
 
-                EvaluationPeriodUser::insertOrIgnore(
-                    $participants
-                );
+                EvaluationPeriodUser::insertOrIgnore($participants);
             }
 
             return $evaluationPeriod->refresh();
@@ -470,47 +463,133 @@ class EvaluationPeriodService
     public function update(EvaluationPeriod $evaluationPeriod, array $data): EvaluationPeriod
     {
         return DB::transaction(function () use ($evaluationPeriod, $data) {
-            // ==========================================
-            // Closed Period Protection
-            // ==========================================
-
             if ($evaluationPeriod->status === 'closed') {
-
                 throw ValidationException::withMessages([
                     'evaluation_period' =>
                         'វគ្គវាយតម្លៃដែលបានបិទ មិនអាចកែប្រែបានទេ។',
                 ]);
-
             }
 
+            // There should never be another OPEN period. This also protects
+            // legacy/inconsistent data before allowing an update.
+            $anotherOpenPeriod = EvaluationPeriod::query()
+                ->where('status', 'open')
+                ->where('evaluation_period_id', '!=', $evaluationPeriod->evaluation_period_id)
+                ->exists();
 
-            // ==========================================
-            // Check Duplicate Month / Year
-            // ==========================================
+            if ($anotherOpenPeriod) {
+                throw ValidationException::withMessages([
+                    'evaluation_period' =>
+                        'មិនអាចកែប្រែវគ្គនេះបានទេ ព្រោះមានវគ្គវាយតម្លៃផ្សេងទៀតកំពុងបើក។',
+                ]);
+            }
 
             $exists = EvaluationPeriod::query()
                 ->where('month', $data['month'])
                 ->where('year', $data['year'])
-                ->where(
-                    'evaluation_period_id',
-                    '!=',
-                    $evaluationPeriod->evaluation_period_id
-                )
+                ->where('evaluation_period_id', '!=', $evaluationPeriod->evaluation_period_id)
                 ->exists();
 
             if ($exists) {
-
                 throw ValidationException::withMessages([
                     'month' =>
                         'វគ្គវាយតម្លៃសម្រាប់ខែ និងឆ្នាំនេះមានរួចហើយ។',
                 ]);
-
             }
 
+            // Prevent overlapping evaluation windows.
+            $overlap = EvaluationPeriod::query()
+                ->where('evaluation_period_id', '!=', $evaluationPeriod->evaluation_period_id)
+                ->whereDate('start_date', '<=', $data['end_date'])
+                ->whereDate('end_date', '>=', $data['start_date'])
+                ->exists();
 
-            // ==========================================
-            // Update Evaluation Period
-            // ==========================================
+            if ($overlap) {
+                throw ValidationException::withMessages([
+                    'start_date' =>
+                        'រយៈពេលវាយតម្លៃនេះមានការត្រួតស៊ីគ្នាជាមួយវគ្គវាយតម្លៃដែលមានស្រាប់។',
+                ]);
+            }
+
+            $newDepartmentIds = collect($data['department_ids'])
+                ->map(fn ($id) => (int) $id)
+                ->unique()
+                ->values()
+                ->all();
+
+            $existingDepartmentIds = $evaluationPeriod->departments()
+                ->pluck('department_id')
+                ->map(fn ($id) => (int) $id)
+                ->sort()
+                ->values()
+                ->all();
+
+            $sortedNewDepartmentIds = collect($newDepartmentIds)
+                ->sort()
+                ->values()
+                ->all();
+
+            $departmentsChanged = $existingDepartmentIds !== $sortedNewDepartmentIds;
+
+            if ($departmentsChanged) {
+                $hasEvaluationData = Evaluation::query()
+                    ->where('evaluation_period_id', $evaluationPeriod->evaluation_period_id)
+                    ->exists();
+
+                $hasSummaryData = EvaluationSummary::query()
+                    ->whereHas('evaluationPeriodUser', function ($query) use ($evaluationPeriod) {
+                        $query->where('evaluation_period_id', $evaluationPeriod->evaluation_period_id);
+                    })
+                    ->exists();
+
+                $hasAssignments = EvaluationDataEntryAssignment::query()
+                    ->where('evaluation_period_id', $evaluationPeriod->evaluation_period_id)
+                    ->exists();
+
+                if ($hasEvaluationData || $hasSummaryData || $hasAssignments) {
+                    throw ValidationException::withMessages([
+                        'department_ids' =>
+                            'មិនអាចប្តូរនាយកដ្ឋានដែលចូលរួមបានទេ បន្ទាប់ពីមានទិន្នន័យវាយតម្លៃ ឬការកំណត់អ្នកបញ្ចូលទិន្នន័យ។',
+                    ]);
+                }
+
+                $evaluationPeriod->departments()->delete();
+
+                foreach ($newDepartmentIds as $departmentId) {
+                    $evaluationPeriod->departments()->create([
+                        'department_id' => $departmentId,
+                    ]);
+                }
+
+                // Only rebuild participants when there is no evaluation data
+                // or data-entry assignment yet, so no existing result can be
+                // accidentally deleted.
+                $evaluationPeriod->periodUsers()->delete();
+
+                $activeUsers = User::query()
+                    ->where('status', 'active')
+                    ->whereIn('department_id', $newDepartmentIds)
+                    ->whereNotIn('role', [
+                        'super_admin',
+                        'evaluation_admin',
+                    ])
+                    ->pluck('user_id');
+
+                if ($activeUsers->isNotEmpty()) {
+                    $now = now();
+
+                    $participants = $activeUsers
+                        ->map(fn ($userId) => [
+                            'evaluation_period_id' => $evaluationPeriod->evaluation_period_id,
+                            'user_id' => $userId,
+                            'created_at' => $now,
+                            'updated_at' => $now,
+                        ])
+                        ->toArray();
+
+                    EvaluationPeriodUser::insertOrIgnore($participants);
+                }
+            }
 
             $evaluationPeriod->update([
                 'name_kh' => $data['name_kh'],
@@ -520,62 +599,8 @@ class EvaluationPeriodService
                 'start_date' => $data['start_date'],
                 'end_date' => $data['end_date'],
             ]);
-            // ==========================================
-            // Sync Participating Departments
-            // ==========================================
-
-            $departmentIds = collect($data['department_ids'])
-                ->map(fn($id) => (int) $id)
-                ->unique()
-                ->values()
-                ->all();
-
-            $evaluationPeriod->departments()->delete();
-
-            foreach ($departmentIds as $departmentId) {
-                $evaluationPeriod->departments()->create([
-                    'department_id' => $departmentId,
-                ]);
-            }
-
-            // ==========================================
-            // Sync Evaluation Period Users
-            // ==========================================
-
-            $activeUsers = User::query()
-                ->where('status', 'active')
-                ->whereIn('department_id', $departmentIds)
-                ->whereNotIn('role', [
-                    'super_admin',
-                    'evaluation_admin',
-                ])
-                ->pluck('user_id');
-
-            $evaluationPeriod->periodUsers()->delete();
-
-            if ($activeUsers->isNotEmpty()) {
-
-                $now = now();
-
-                $participants = $activeUsers
-                    ->map(function ($userId) use ($evaluationPeriod, $now) {
-                        return [
-                            'evaluation_period_id'
-                            => $evaluationPeriod->evaluation_period_id,
-
-                            'user_id' => $userId,
-
-                            'created_at' => $now,
-                            'updated_at' => $now,
-                        ];
-                    })
-                    ->toArray();
-
-                EvaluationPeriodUser::insertOrIgnore($participants);
-            }
 
             return $evaluationPeriod->refresh();
-
         });
     }
 
