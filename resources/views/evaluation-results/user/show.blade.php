@@ -147,7 +147,7 @@
 
                                     <p class="font-semibold text-slate-800">
 
-                                        {{ config('positions.options.' . (auth()->user()->position ?? ''), 'មិនមាន') }}
+                                        {{ \App\Helpers\PositionHelper::label(auth()->user()?->position) }}
                                     </p>
 
                                 </div>

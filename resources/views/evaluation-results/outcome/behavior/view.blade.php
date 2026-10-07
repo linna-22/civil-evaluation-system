@@ -21,7 +21,7 @@
                     <p class="font-bold text-gray-800">{{ $evaluation->evaluator?->name_kh ?? 'មិនមាន' }}</p>
                     <p class="text-sm text-gray-500">ពិន្ទុសរុប: {{ number_format($evaluation->behavior?->total_score ?? 0,0) }}/20</p>
                 </div>
-                <a href="{{ route('report.behavior-review',['evaluationPeriod'=>$evaluationPeriod->evaluation_period_id,'user'=>$employee->user_id]) }}" class="px-4 py-2 rounded-lg bg-purple-600 text-white">កែប្រែ</a>
+                <a href="{{ route('evaluation-results.behavior.review',['evaluationPeriod'=>$evaluationPeriod->evaluation_period_id,'user'=>$employee->user_id]) }}" class="px-4 py-2 rounded-lg bg-purple-600 text-white">កែប្រែ</a>
             </div>
         @empty
             <div class="bg-white rounded-2xl border p-10 text-center text-gray-500">មិនមានលទ្ធផលឥរិយាបថ</div>

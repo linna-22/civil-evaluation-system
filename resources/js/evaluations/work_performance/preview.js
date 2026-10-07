@@ -316,7 +316,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         whitespace-nowrap
                     "
                 >
-                    ${user.position || "-"}
+                    ${window.positionOptions?.[user?.position] ?? "-"}
                 </td>
 
 

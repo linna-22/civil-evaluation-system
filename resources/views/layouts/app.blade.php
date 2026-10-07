@@ -15,24 +15,22 @@
 
     <link rel="icon" href="{{ asset('images/circle_logo.png') }}">
 
-    @vite([
-        'resources/css/app.css',
-        'resources/js/app.js'
-    ])
+    <script>
+        window.positionOptions = @json(config('positions.options', []));
+    </script>
+
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 
 </head>
 
 
-<body
-    class="
+<body class="
         h-screen
         overflow-hidden
         bg-[#EDF2F7]
         font-body
     "
-    data-success="{{ session('success') }}"
-    data-error="{{ session('error') }}"
->
+    data-success="{{ session('success') }}" data-error="{{ session('error') }}">
 
 
     {{-- =====================================================
@@ -64,8 +62,7 @@
             Mobile Sidebar Overlay
         ================================================== --}}
 
-        <div
-            id="sidebarOverlay"
+        <div id="sidebarOverlay"
             class="
                 fixed
                 inset-0
@@ -73,8 +70,8 @@
                 z-40
                 hidden
                 lg:hidden
-            "
-        ></div>
+            ">
+        </div>
 
 
         {{-- =================================================
@@ -87,8 +84,7 @@
                 min-w-0
                 overflow-y-auto
                 p-5
-            "
-        >
+            ">
 
             @yield('content')
 

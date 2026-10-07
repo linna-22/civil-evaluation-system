@@ -90,7 +90,6 @@
                     $allowedRoutes = [
                         'dashboard',
                         'users.profile',
-                        'evaluations.behavior.*',
                         'evaluations.evaluations.create',
                         'logout',
                     ];
@@ -188,6 +187,8 @@
                 $allowedRoutes[] = 'evaluations.work-performance.*';
 
                 $allowedRoutes[] = 'evaluations.attendance.*';
+
+                $allowedRoutes[] = 'evaluations.behavior.*';
 
                 $allowedRoutes = array_values(
                     array_unique($allowedRoutes)

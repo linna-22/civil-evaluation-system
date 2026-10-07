@@ -154,7 +154,7 @@ class UpdateUserRequest extends FormRequest
             // ==========================================
 
             'position.required' =>
-                'សូមបញ្ចូលតួនាទី',
+                'សូមជ្រើសរើសតួនាទី',
 
             'role.required' =>
                 'សូមជ្រើសរើស Role',

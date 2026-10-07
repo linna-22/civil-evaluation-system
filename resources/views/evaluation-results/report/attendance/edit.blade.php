@@ -31,9 +31,9 @@
                         កែប្រែវត្តមាន
                     </h1>
 
-                    <p class="mt-1 text-sm text-gray-500">
+                    {{-- <p class="mt-1 text-sm text-gray-500">
                         កែប្រែព័ត៌មានវត្តមាន និងគណនាពិន្ទុឡើងវិញ
-                    </p>
+                    </p> --}}
                 </div>
 
                 <a
@@ -49,7 +49,7 @@
             </div>
 
             {{-- Closed period notice --}}
-            <div class="mb-5 rounded-2xl border border-amber-200 bg-amber-50 px-5 py-4">
+            {{-- <div class="mb-5 rounded-2xl border border-amber-200 bg-amber-50 px-5 py-4">
                 <div class="flex items-start gap-3">
                     <i data-lucide="triangle-alert" class="w-5 h-5 text-amber-600 mt-0.5"></i>
                     <div>
@@ -61,7 +61,7 @@
                         </p>
                     </div>
                 </div>
-            </div>
+            </div> --}}
 
             {{-- Employee information --}}
             <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden mb-5">
@@ -92,7 +92,7 @@
                         <div>
                             <p class="text-xs text-gray-500 mb-1">មុខតំណែង</p>
                             <p class="font-semibold text-gray-800">
-                                {{ $employee->position ?? 'មិនមាន' }}
+                                {{ \App\Helpers\PositionHelper::label($employee?->position) }}
                             </p>
                         </div>
 
@@ -110,7 +110,7 @@
             {{-- Attendance form --}}
             <form
                 method="POST"
-                action="{{ route('report.attendance.update', [
+                action="{{ route('evaluation-results.attendance.update', [
                     'evaluationPeriod' => $evaluationPeriod->evaluation_period_id,
                     'user' => $employee->user_id,
                 ]) }}"

@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         // Position
         if (currentUserPosition) {
-            currentUserPosition.textContent = currentUser.position || "-";
+            currentUserPosition.textContent = window.positionOptions?.[currentUser?.position] ?? "-";
         }
         // Current Position
         if (currentPosition) {

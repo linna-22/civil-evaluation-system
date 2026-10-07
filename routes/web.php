@@ -198,6 +198,33 @@ Route::middleware('auth')->group(function () {
             Route::get('/overall/{evaluationPeriod}/data', [DepartmentEvaluationOutcomeController::class, 'overallData'])
                 ->name('overall.data');
 
+            // Department admin review/edit routes stay under Evaluation Results.
+            // These are separate from the standalone Report module so the sidebar
+            // correctly remains on Evaluation Results while editing a result.
+            Route::get('/{evaluationPeriod}/user/{user}/review', [DepartmentEvaluationResultController::class, 'review'])
+                ->name('overall.review');
+
+            Route::get('/{evaluationPeriod}/user/{user}/behavior/review', [DepartmentEvaluationResultController::class, 'behaviorReview'])
+                ->name('behavior.review');
+
+            Route::patch('/{evaluationPeriod}/user/{user}/behavior/{evaluation}', [DepartmentEvaluationResultController::class, 'updateBehavior'])
+                ->name('behavior.update');
+
+            Route::get('/{evaluationPeriod}/user/{user}/work-performance/edit', [DepartmentEvaluationResultController::class, 'editWorkPerformance'])
+                ->name('work-performance.edit');
+
+            Route::patch('/{evaluationPeriod}/user/{user}/work-performance', [DepartmentEvaluationResultController::class, 'updateWorkPerformance'])
+                ->name('work-performance.update');
+
+            Route::get('/{evaluationPeriod}/user/{user}/attendance/edit', [DepartmentEvaluationResultController::class, 'editAttendance'])
+                ->name('attendance.edit');
+
+            Route::patch('/{evaluationPeriod}/user/{user}/attendance', [DepartmentEvaluationResultController::class, 'updateAttendance'])
+                ->name('attendance.update');
+
+            Route::patch('/remarks/{evaluationSummary}', [DepartmentEvaluationResultController::class, 'updateRemark'])
+                ->name('remarks.update');
+
             Route::post('/{type}/{evaluationPeriod}/finalize', [DepartmentEvaluationOutcomeController::class, 'finalize'])
                 ->name('finalize');
         });
@@ -209,14 +236,14 @@ Route::middleware('auth')->group(function () {
             Route::get('/', [DepartmentEvaluationResultController::class, 'index'])->name('index');
             Route::get('/{evaluationPeriod}/data', [DepartmentEvaluationResultController::class, 'data'])->name('data');
             Route::get('/{evaluationPeriod}', [DepartmentEvaluationResultController::class, 'show'])->name('show');
-            Route::get('/{evaluationPeriod}/user/{user}/review', [DepartmentEvaluationResultController::class, 'review'])->name('review');
-            Route::get('/{evaluationPeriod}/user/{user}/behavior/review', [DepartmentEvaluationResultController::class, 'behaviorReview'])->name('behavior-review');
-            Route::patch('/{evaluationPeriod}/user/{user}/behavior/{evaluation}', [DepartmentEvaluationResultController::class, 'updateBehavior'])->name('behavior.update');
-            Route::get('/{evaluationPeriod}/user/{user}/work-performance/edit', [DepartmentEvaluationResultController::class, 'editWorkPerformance'])->name('work-performance.edit');
-            Route::patch('/{evaluationPeriod}/user/{user}/work-performance', [DepartmentEvaluationResultController::class, 'updateWorkPerformance'])->name('work-performance.update');
-            Route::get('/{evaluationPeriod}/user/{user}/attendance/edit', [DepartmentEvaluationResultController::class, 'editAttendance'])->name('attendance.edit');
-            Route::patch('/{evaluationPeriod}/user/{user}/attendance', [DepartmentEvaluationResultController::class, 'updateAttendance'])->name('attendance.update');
-            Route::patch('/remarks/{evaluationSummary}', [DepartmentEvaluationResultController::class, 'updateRemark'])->name('remarks.update');
+            // Route::get('/{evaluationPeriod}/user/{user}/review', [DepartmentEvaluationResultController::class, 'review'])->name('review');
+            // Route::get('/{evaluationPeriod}/user/{user}/behavior/review', [DepartmentEvaluationResultController::class, 'behaviorReview'])->name('behavior-review');
+            // Route::patch('/{evaluationPeriod}/user/{user}/behavior/{evaluation}', [DepartmentEvaluationResultController::class, 'updateBehavior'])->name('behavior.update');
+            // Route::get('/{evaluationPeriod}/user/{user}/work-performance/edit', [DepartmentEvaluationResultController::class, 'editWorkPerformance'])->name('work-performance.edit');
+            // Route::patch('/{evaluationPeriod}/user/{user}/work-performance', [DepartmentEvaluationResultController::class, 'updateWorkPerformance'])->name('work-performance.update');
+            // Route::get('/{evaluationPeriod}/user/{user}/attendance/edit', [DepartmentEvaluationResultController::class, 'editAttendance'])->name('attendance.edit');
+            // Route::patch('/{evaluationPeriod}/user/{user}/attendance', [DepartmentEvaluationResultController::class, 'updateAttendance'])->name('attendance.update');
+            // Route::patch('/remarks/{evaluationSummary}', [DepartmentEvaluationResultController::class, 'updateRemark'])->name('remarks.update');
             Route::get('/{evaluationPeriod}/user/{user}/print', [DepartmentEvaluationResultController::class, 'print'])->name('print');
             Route::get('/{evaluationPeriod}/user/{user}/word', [DepartmentEvaluationResultController::class, 'downloadWord'])->name('word.download');
             Route::get('/{evaluationPeriod}/download/pdf', [DepartmentEvaluationResultController::class, 'downloadPdf'])->name('download.pdf');

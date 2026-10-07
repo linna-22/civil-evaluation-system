@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const currentUser = users[currentIndex];
         currentUserName.textContent = currentUser.name_kh || "-";
-        currentUserPosition.textContent = currentUser.position || "-";
+        currentUserPosition.textContent = window.positionOptions?.[currentUser?.position] ?? "-";
         currentPosition.textContent = `មន្ត្រីទី${currentIndex + 1} នៃមន្ត្រីសរុប ${users.length}នាក់`;
 
         // =================================================

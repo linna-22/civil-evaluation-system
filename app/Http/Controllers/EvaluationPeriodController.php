@@ -16,7 +16,15 @@ class EvaluationPeriodController extends Controller
      */
     public function index()
     {
-        return view('evaluation-periods.index');
+        // Check whether there is already an open evaluation period.
+        $hasOpenPeriod = EvaluationPeriod::query()
+            ->where('status', 'open')
+            ->exists();
+
+        return view(
+            'evaluation-periods.index',
+            compact('hasOpenPeriod')
+        );
     }
 
     /**

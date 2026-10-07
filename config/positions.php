@@ -3,6 +3,9 @@
 return [
 
     'options' => [
+        'director' => 'អគ្គនាយក',
+        'deputy_director' => 'អគ្គនាយករង',
+        'administrator' => 'Administrator',
         'department_head' => 'ប្រធាននាយកដ្ឋាន',
         'deputy_department_head' => 'អនុប្រធាននាយកដ្ឋាន',
         'office_head' => 'ប្រធានការិយាល័យ',

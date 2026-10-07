@@ -84,19 +84,19 @@ if (body && window.evaluationOutcome) {
 
         if (!isFinalized) {
             if (type === "work-performance") {
-                actionUrl = `/report/${periodId}/user/${userId}/work-performance/edit`;
+                actionUrl = `/evaluation-results/${periodId}/user/${userId}/work-performance/edit`;
                 actionText = "កែប្រែ";
                 actionIcon = "pencil";
             } else if (type === "attendance") {
-                actionUrl = `/report/${periodId}/user/${userId}/attendance/edit`;
+                actionUrl = `/evaluation-results/${periodId}/user/${userId}/attendance/edit`;
                 actionText = "កែប្រែ";
                 actionIcon = "pencil";
             } else if (type === "behavior") {
-                actionUrl = `/report/${periodId}/user/${userId}/behavior/review`;
+                actionUrl = `/evaluation-results/${periodId}/user/${userId}/behavior/review`;
                 actionText = "ពិនិត្យ/កែប្រែ";
                 actionIcon = "pencil";
             } else if (type === "overall") {
-                actionUrl = `/report/${periodId}/user/${userId}/review`;
+                actionUrl = `/evaluation-results/${periodId}/user/${userId}/review`;
             }
         }
 
@@ -144,7 +144,7 @@ if (body && window.evaluationOutcome) {
                 <td class="px-6 py-2">${escapeHtml(user?.id_code ?? "—")}</td>
                 <td class="px-6 py-2 font-semibold text-gray-800">${escapeHtml(name)}</td>
                 <td class="px-4 py-2">${gender}</td>
-                <td class="px-4 py-2">${escapeHtml(user?.position ?? "—")}</td>
+                <td class="px-4 py-2">${escapeHtml(window.positionOptions?.[user?.position] ?? "—")}</td>
                 ${overallScores}
                 ${renderRemarkButton(result, user)}
                 <td class="px-6 py-2 text-center">
@@ -338,13 +338,7 @@ if (body && window.evaluationOutcome) {
                 title: "បញ្ជាក់លទ្ធផលវាយតម្លៃ",
                 html: `
                     <div class="evaluation-finalize-content">
-                        <div class="evaluation-finalize-icon">
-                            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                                <path d="M12 3v18"></path>
-                                <path d="M5 12h14"></path>
-                            </svg>
-                        </div>
-
+                       
                         <p class="evaluation-finalize-description">
                             សូមពិនិត្យលទ្ធផលសមិទ្ធកម្ម វត្តមាន និងឥរិយាបថឱ្យបានរួចរាល់ មុនពេលបញ្ជាក់។
                         </p>
@@ -359,7 +353,7 @@ if (body && window.evaluationOutcome) {
                             <div>
                                 <p class="evaluation-finalize-notice-title">បន្ទាប់ពីបញ្ជាក់</p>
                                 <p class="evaluation-finalize-notice-text">
-                                    លទ្ធផលរបស់នាយកដ្ឋាននឹងត្រូវបានចាក់សោ ហើយមិនអាចកែប្រែបានទៀតទេ។
+                                    លទ្ធផលមិនអាចកែប្រែបានទៀតទេ។
                                 </p>
                             </div>
                         </div>
@@ -539,7 +533,7 @@ if (body && window.evaluationOutcome) {
 
             try {
                 const response = await fetch(
-                    `/report/remarks/${id}`,
+                    `/evaluation-results/remarks/${id}`,
                     {
                         method: "PATCH",
                         headers: {

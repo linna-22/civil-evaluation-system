@@ -95,7 +95,7 @@
 
                     <td class="text-center">
 
-                        {{ $evaluation->user->position }}
+                        {{ \App\Helpers\PositionHelper::label($evaluation->user?->position) }}
 
                     </td>
 

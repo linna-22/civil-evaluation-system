@@ -3,6 +3,7 @@
 namespace App\Exports;
 
 use App\Helpers\KhmerHelper;
+use App\Helpers\PositionHelper;
 use PhpOffice\PhpWord\IOFactory;
 use PhpOffice\PhpWord\PhpWord;
 use PhpOffice\PhpWord\SimpleType\Jc;
@@ -309,7 +310,7 @@ class DepartmentEvaluationWordExport
         $values = [
             KhmerHelper::number(1),
             $employee?->name_kh ?? 'មិនមាន',
-            $employee?->position ?? 'មិនមាន',
+            PositionHelper::label($employee?->position),
             number_format(
                 $this->result->work_performance_score ?? 0,
                 2

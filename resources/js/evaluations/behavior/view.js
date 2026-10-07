@@ -84,7 +84,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         </div>
 
                         <div class="text-xs text-gray-400 mt-1">
-                            ${peer?.position ?? ''}
+                            ${window.positionOptions?.[peer?.position] ?? ''}
                         </div>
 
                     </td>

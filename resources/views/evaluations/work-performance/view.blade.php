@@ -187,7 +187,7 @@
                                 </td>
                                 {{-- Position --}}
                                 <td class="px-6 py-4 text-gray-600">
-                                    {{ $evaluation->evaluatee->position ?? '-' }}
+                                    {{ \App\Helpers\PositionHelper::label($evaluation->evaluatee?->position) }}
                                 </td>
                                 {{-- Activity Count --}}
                                 <td class="px-6 py-4 text-center text-gray-600">

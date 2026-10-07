@@ -39,7 +39,7 @@
                 {{ auth()->user()->name_kh }}
             </p>
             <p class="text-blue-100 text-sm truncate max-w-[180px]">
-                {{ config('positions.options.' . (auth()->user()->position ?? ''), 'Administrator') }}
+                {{ \App\Helpers\PositionHelper::label(auth()->user()?->position) }}
             </p>
 
         </div>

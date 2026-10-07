@@ -531,7 +531,7 @@ document.addEventListener('DOMContentLoaded', function () {
             peer.name_en ?? '';
 
         peerPosition.textContent =
-            peer.position ?? '';
+            window.positionOptions?.[peer?.position] ?? '';
 
         peerAvatar.textContent =
             peer.name_kh ?

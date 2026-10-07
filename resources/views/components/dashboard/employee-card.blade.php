@@ -14,7 +14,7 @@
 
         <p class="mt-1 text-gray-500">
 
-            {{ $user->position }}
+            {{ \App\Helpers\PositionHelper::label($user->position) }}
 
         </p>
 

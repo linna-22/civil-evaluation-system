@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Helpers\KhmerHelper;
+use App\Helpers\PositionHelper;
 use PhpOffice\PhpWord\TemplateProcessor;
 
 class WordExportService
@@ -58,9 +59,9 @@ class WordExportService
                 $evaluation->user->department->department_name_kh ?? '-'
             );
 
-            $template->setValue(
+           $template->setValue(
                 "position#{$row}",
-                $evaluation->user->position
+                PositionHelper::label($evaluation->user?->position)
             );
 
             $template->setValue(
