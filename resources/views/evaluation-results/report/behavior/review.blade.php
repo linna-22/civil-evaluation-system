@@ -44,7 +44,7 @@
             </div>
 
             {{-- Closed period notice --}}
-            <div class="mb-5 rounded-2xl border border-amber-200 bg-amber-50 px-5 py-4">
+            {{-- <div class="mb-5 rounded-2xl border border-amber-200 bg-amber-50 px-5 py-4">
                 <div class="flex items-start gap-3">
                     <i data-lucide="triangle-alert" class="w-5 h-5 text-amber-600 mt-0.5"></i>
                     <div>
@@ -56,7 +56,7 @@
                         </p>
                     </div>
                 </div>
-            </div>
+            </div> --}}
 
             {{-- Employee information --}}
             <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden mb-6">
@@ -113,9 +113,9 @@
                     <h2 class="text-lg font-bold text-gray-800">
                         អ្នកវាយតម្លៃ
                     </h2>
-                    <p class="mt-1 text-sm text-gray-500">
+                    {{-- <p class="mt-1 text-sm text-gray-500">
                         បង្ហាញតែការវាយតម្លៃឥរិយាបថដែលបានដាក់ស្នើរួច
-                    </p>
+                    </p> --}}
                 </div>
 
                 <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-purple-50 text-purple-700 text-sm font-semibold">
@@ -204,7 +204,7 @@
                                         type="button"
                                         class="behavior-edit-btn inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-purple-600 text-white text-sm font-semibold hover:bg-purple-700 transition"
                                         data-evaluation-id="{{ $evaluation->evaluation_id }}"
-                                        data-update-url="{{ route('report.behavior.update', [
+                                        data-update-url="{{ route('evaluation-results.behavior.update', [
                                             'evaluationPeriod' => $evaluationPeriod->evaluation_period_id,
                                             'user' => $employee->user_id,
                                             'evaluation' => $evaluation->evaluation_id,
@@ -233,7 +233,7 @@
 
         </div>
 
-    <div data-behavior-review-url="{{ route('report.behavior-review', ['evaluationPeriod' => $evaluationPeriod->evaluation_period_id, 'user' => $employee->user_id]) }}" class="hidden"></div>
+    <div data-behavior-review-url="{{ route('evaluation-results.behavior.review', ['evaluationPeriod' => $evaluationPeriod->evaluation_period_id, 'user' => $employee->user_id]) }}" class="hidden"></div>
 
     {{-- Success modal --}}
     <div

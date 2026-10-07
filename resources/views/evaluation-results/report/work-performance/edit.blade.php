@@ -39,7 +39,7 @@
 
 
             {{-- Closed period notice --}}
-            <div class="mb-5 rounded-2xl border border-amber-200 bg-amber-50 px-5 py-4">
+            {{-- <div class="mb-5 rounded-2xl border border-amber-200 bg-amber-50 px-5 py-4">
                 <div class="flex items-start gap-3">
                     <i data-lucide="triangle-alert" class="w-5 h-5 text-amber-600 mt-0.5"></i>
 
@@ -52,7 +52,7 @@
                         </p>
                     </div>
                 </div>
-            </div>
+            </div> --}}
 
 
             {{-- Employee information --}}
@@ -103,7 +103,7 @@
             {{-- Work performance form --}}
             <form
                 method="POST"
-                action="{{ route('report.work-performance.update', [
+                action="{{ route('evaluation-results.work-performance.update', [
                     'evaluationPeriod' => $evaluationPeriod->evaluation_period_id,
                     'user' => $employee->user_id,
                 ]) }}"

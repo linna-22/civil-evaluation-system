@@ -32,8 +32,8 @@
                 </div>
 
                 <a href="{{ route('evaluation-results.overall.show', [
-                        'evaluationPeriod' => $evaluationPeriod->evaluation_period_id,
-                    ]) }}"
+                    'evaluationPeriod' => $evaluationPeriod->evaluation_period_id,
+                ]) }}"
                     class="inline-flex items-center justify-center gap-2
                        px-4 py-2.5
                        rounded-xl
@@ -273,28 +273,26 @@
                                 <div class="flex items-center gap-2">
 
                                     {{-- Edit Work Performance --}}
-                                    <a href="{{ route('report.work-performance.edit', [
-                                            'evaluationPeriod' => $evaluationPeriod->evaluation_period_id,
-                                            'user' => $employee->user_id,
-                                        ]) }}"
+                                    {{-- <a href="{{ route('evaluation-results.work-performance.edit', [
+                                        'evaluationPeriod' => $evaluationPeriod->evaluation_period_id,
+                                        'user' => $employee->user_id,
+                                    ]) }}"
                                         class="inline-flex items-center gap-1.5
-                   px-3 py-1.5
-                   rounded-lg
-                   bg-white
-                   border border-blue-200
-                   text-blue-600
-                   text-xs font-semibold
-                   hover:bg-blue-50
-                   transition">
+                                                px-3 py-1.5
+                                                rounded-lg
+                                                bg-white
+                                                border border-blue-200
+                                                text-blue-600
+                                                text-xs font-semibold
+                                                hover:bg-blue-50
+                                                transition">
                                         <i data-lucide="pencil" class="w-3.5 h-3.5"></i>
                                         កែប្រែ
-                                    </a>
+                                    </a> --}}
 
                                     <div
-                                        class="w-10 h-10 rounded-xl
-                   bg-white
-                   flex items-center justify-center">
-
+                                        class="w-10 h-10 rounded-xl bg-white
+                                                flex items-center justify-center">
                                         <i data-lucide="briefcase-business" class="w-5 h-5 text-blue-600">
                                         </i>
 
@@ -343,22 +341,22 @@
                                 <div class="flex items-center gap-2">
 
                                     {{-- Edit Attendance --}}
-                                    <a href="{{ route('report.attendance.edit', [
+                                    {{-- <a href="{{ route('evaluation-results.attendance.edit', [
                                         'evaluationPeriod' => $evaluationPeriod->evaluation_period_id,
                                         'user' => $employee->user_id,
                                     ]) }}"
                                         class="inline-flex items-center gap-1.5
-                   px-3 py-1.5
-                   rounded-lg
-                   bg-white
-                   border border-emerald-200
-                   text-emerald-600
-                   text-xs font-semibold
-                   hover:bg-emerald-50
-                   transition">
+                                            px-3 py-1.5
+                                            rounded-lg
+                                            bg-white
+                                            border border-emerald-200
+                                            text-emerald-600
+                                            text-xs font-semibold
+                                            hover:bg-emerald-50
+                                            transition">
                                         <i data-lucide="pencil" class="w-3.5 h-3.5"></i>
                                         កែប្រែ
-                                    </a>
+                                    </a> --}}
 
                                     <div
                                         class="w-10 h-10 rounded-xl
@@ -412,10 +410,10 @@
                                 <div class="flex items-center gap-2">
 
                                     {{-- Edit Behavior --}}
-                                    <a href="{{ route('report.behavior-review', [
-                                            'evaluationPeriod' => $evaluationPeriod->evaluation_period_id,
-                                            'user' => $employee->user_id,
-                                        ]) }}"
+                                    {{-- <a href="{{ route('evaluation-results.behavior.review', [
+                                        'evaluationPeriod' => $evaluationPeriod->evaluation_period_id,
+                                        'user' => $employee->user_id,
+                                    ]) }}"
                                         class="inline-flex items-center gap-1.5
                    px-3 py-1.5
                    rounded-lg
@@ -427,7 +425,7 @@
                    transition">
                                         <i data-lucide="pencil" class="w-3.5 h-3.5"></i>
                                         កែប្រែ
-                                    </a>
+                                    </a> --}}
 
                                     <div
                                         class="w-10 h-10 rounded-xl

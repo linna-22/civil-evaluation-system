@@ -53,8 +53,6 @@ class UpdateUserRequest extends FormRequest
             ],
             'position' => [
                 'required',
-                'string',
-                'in:' . implode(',', array_keys(config('position.options', []))),
             ],
             'role' => [
                 'required',

@@ -195,7 +195,7 @@
     {{-- Page Header --}}
     <x-page-header
         title="កំណត់អ្នកបញ្ចូលទិន្នន័យ"
-        description="កំណត់អ្នកទទួលខុសត្រូវម្នាក់សម្រាប់នាយកដ្ឋាន និងម្នាក់សម្រាប់ការិយាល័យនីមួយៗ។"
+        description=""
     >
         <x-slot:actions>
             <x-action-btn
@@ -203,7 +203,7 @@
                 variant="secondary"
                 icon="arrow-left"
             >
-                ត្រឡប់
+                ត្រឡប់ក្រោយ
             </x-action-btn>
         </x-slot:actions>
     </x-page-header>
@@ -261,11 +261,11 @@
                         {{ $evaluationPeriod->name_kh }}
                     </h2>
 
-                    <p class="text-sm text-gray-500 mt-1">
+                    {{-- <p class="text-sm text-gray-500 mt-1">
                         {{ $evaluationPeriod->name_en }}
                         · ខែ {{ $evaluationPeriod->month }}
                         ឆ្នាំ {{ $evaluationPeriod->year }}
-                    </p>
+                    </p> --}}
                 </div>
 
                 <span class="px-3 py-1 rounded-full text-sm bg-green-100 text-green-700">

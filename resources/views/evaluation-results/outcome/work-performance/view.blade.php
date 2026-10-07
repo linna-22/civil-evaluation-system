@@ -27,7 +27,7 @@
         </table>
     </div>
     <div class="mt-5 flex justify-end">
-        <a href="{{ route('report.work-performance.edit',['evaluationPeriod'=>$evaluationPeriod->evaluation_period_id,'user'=>$employee->user_id]) }}" class="px-4 py-2 rounded-lg bg-blue-600 text-white">កែប្រែ</a>
+        <a href="{{ route('evaluation-results.work-performance.edit',['evaluationPeriod'=>$evaluationPeriod->evaluation_period_id,'user'=>$employee->user_id]) }}" class="px-4 py-2 rounded-lg bg-blue-600 text-white">កែប្រែ</a>
     </div>
 </div>
 @endsection

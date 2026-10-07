@@ -53,8 +53,6 @@ class UserRequest extends FormRequest
             ],
             'position' => [
                 'required',
-                'string',
-                'in:' . implode(',', array_keys(config('position.options', []))),
             ],
             'password' => [
                 'required',

@@ -86,7 +86,7 @@ return [
                         'route' => 'evaluation-results.work-performance.*',
 
                         'active_routes' => [
-                            'report.work-performance.edit',
+                            'evaluation-results.work-performance.edit',
                         ],
 
                         'url' => 'evaluation-results.work-performance.index',
@@ -98,7 +98,7 @@ return [
                         'route' => 'evaluation-results.attendance.*',
 
                         'active_routes' => [
-                            'report.attendance.edit',
+                            'evaluation-results.attendance.edit',
                         ],
 
                         'url' => 'evaluation-results.attendance.index',
@@ -110,7 +110,7 @@ return [
                         'route' => 'evaluation-results.behavior.*',
 
                         'active_routes' => [
-                            'report.behavior-review',
+                            'evaluation-results.behavior.review',
                         ],
 
                         'url' => 'evaluation-results.behavior.index',
@@ -122,7 +122,7 @@ return [
                         'route' => 'evaluation-results.overall.*',
 
                         'active_routes' => [
-                            'report.review',
+                            'evaluation-results.overall.review',
                         ],
 
                         'url' => 'evaluation-results.overall.index',

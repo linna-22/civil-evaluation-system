@@ -28,6 +28,7 @@ export default defineConfig({
                 'resources/js/evaluations/behavior/index.js',
                 'resources/js/evaluations/behavior/review.js',
                 'resources/js/evaluations/attendance/edit.js',
+                'resources/js/pages/evaluation-results/outcome.js',
 
             ],
             refresh: true,

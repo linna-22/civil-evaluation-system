@@ -77,7 +77,7 @@
                             <span
                                 class="inline-flex items-center gap-2 px-3 py-2 rounded-xl bg-amber-50 border border-amber-100 text-amber-700 text-sm font-semibold">
                                 <i data-lucide="clock-3" class="w-4 h-4"></i>
-                                កំពុងពិនិត្យ
+                                រងចាំការត្រួតពិនិត្យ
                             </span>
 
                             @if ($type === 'overall' && $evaluationPeriod->status === 'closed')
