@@ -45,6 +45,7 @@ Route::middleware('auth')->group(function () {
             Route::get('/data', [OrganizationController::class, 'data'])->name('data');
             Route::get('/create', [OrganizationController::class, 'create'])->name('create');
             Route::post('/', [OrganizationController::class, 'store'])->name('store');
+            Route::post('/import', [OrganizationController::class, 'import'])->name('import');
             Route::get('/{organization}/edit', [OrganizationController::class, 'edit'])->name('edit');
             Route::put('/{organization}', [OrganizationController::class, 'update'])->name('update');
         });

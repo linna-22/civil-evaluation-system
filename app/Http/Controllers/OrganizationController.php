@@ -6,6 +6,8 @@ use App\Http\Requests\OrganizationRequest;
 use App\Models\Organization;
 use App\Services\OrganizationService;
 use Illuminate\Http\Request;
+use App\Imports\OrganizationsImport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class OrganizationController extends Controller
 {
@@ -70,4 +72,28 @@ class OrganizationController extends Controller
                 'អង្គភាពត្រូវបានកែប្រែដោយជោគជ័យ'
             );
     }
+
+    public function import(Request $request)
+    {
+        $request->validate([
+            'file' => [
+                'required',
+                'file',
+                'mimes:xlsx,xls,csv',
+                'max:10240',
+            ],
+        ]);
+
+        $import = new OrganizationsImport();
+
+        Excel::import($import, $request->file('file'));
+
+        return redirect()
+            ->route('organizations.index')
+            ->with(
+                'success',
+                "បាននាំចូលទិន្នន័យអង្គភាពចំនួន {$import->importedCount} ដោយជោគជ័យ។"
+            );
+    }
+
 }
