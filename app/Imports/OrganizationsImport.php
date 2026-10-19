@@ -55,23 +55,31 @@ class OrganizationsImport implements ToCollection, WithHeadingRow
                 ? trim((string) $data['org_name_en'])
                 : null;
 
-            $validator = Validator::make($data, [
-                'org_code' => [
-                    'required',
-                    'string',
-                    'regex:/^\d{10}$/',
+            $validator = Validator::make(
+                $data,
+                [
+                    'org_code' => [
+                        'required',
+                        'string',
+                        'max:20',
+                        'regex:/^org[0-9]{4}$/',
+                    ],
+                    'org_name_kh' => [
+                        'required',
+                        'string',
+                        'max:150',
+                    ],
+                    'org_name_en' => [
+                        'nullable',
+                        'string',
+                        'max:150',
+                    ],
                 ],
-                'org_name_kh' => [
-                    'required',
-                    'string',
-                    'max:150',
-                ],
-                'org_name_en' => [
-                    'nullable',
-                    'string',
-                    'max:150',
-                ],
-            ]);
+                [
+                    'org_code.regex' => 'The organization code must contain exactly 10 digits.',
+                    'org_code.max' => 'The organization code must not exceed 20 characters.',
+                ]
+            );
 
             if ($validator->fails()) {
                 foreach ($validator->errors()->all() as $message) {
@@ -107,7 +115,7 @@ class OrganizationsImport implements ToCollection, WithHeadingRow
         }
 
         // Do not import anything if the Excel file contains invalid rows.
-        if (! empty($errors)) {
+        if (!empty($errors)) {
             throw ValidationException::withMessages([
                 'file' => $errors,
             ]);
@@ -117,10 +125,10 @@ class OrganizationsImport implements ToCollection, WithHeadingRow
         $existingCodes = DB::table('organizations')
             ->whereIn('org_code', array_keys($seenCodes))
             ->pluck('org_code')
-            ->map(fn ($code) => (string) $code)
+            ->map(fn($code) => (string) $code)
             ->all();
 
-        if (! empty($existingCodes)) {
+        if (!empty($existingCodes)) {
             throw ValidationException::withMessages([
                 'file' => [
                     'These organization codes already exist in the database: '
