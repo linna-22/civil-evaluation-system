@@ -60,6 +60,7 @@ Route::middleware('auth')->group(function () {
             Route::get('/by-organization/{organization}', [DepartmentController::class, 'byOrganization'])->name('byOrganization');
             Route::get('/create', [DepartmentController::class, 'create'])->name('create');
             Route::post('/', [DepartmentController::class, 'store'])->name('store');
+            Route::post('/import', [DepartmentController::class, 'import'])->name('import');
             Route::get('/{department}/edit', [DepartmentController::class, 'edit'])->name('edit');
             Route::put('/{department}', [DepartmentController::class, 'update'])->name('update');
             // Route::delete('/{department}', [DepartmentController::class, 'destroy'])->name('destroy');

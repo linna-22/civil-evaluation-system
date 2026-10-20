@@ -8,6 +8,8 @@ use App\Models\Organization;
 use App\Services\DepartmentService;
 use App\Services\OrganizationService;
 use Illuminate\Http\Request;
+use App\Imports\DepartmentsImport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class DepartmentController extends Controller
 {
@@ -77,7 +79,7 @@ class DepartmentController extends Controller
                 'នាយកដ្ឋានត្រូវបានកែប្រែដោយជោគជ័យ'
             );
     }
-    public function byOrganization(Organization $organization, DepartmentService $service) 
+    public function byOrganization(Organization $organization, DepartmentService $service)
     {
         return response()->json(
             $service->getByOrganization($organization->organization_id)
@@ -91,5 +93,29 @@ class DepartmentController extends Controller
     //         'message' => 'នាយកដ្ឋានត្រូវបានលុបដោយជោគជ័យ',
     //     ]);
     // }
+
+    public function import(Request $request)
+    {
+        $request->validate([
+            'file' => [
+                'required',
+                'file',
+                'mimes:xlsx,xls,csv',
+                'max:10240',
+            ],
+        ]);
+
+        $import = new DepartmentsImport();
+
+        Excel::import($import, $request->file('file'));
+
+        return redirect()
+            ->route('departments.index')
+            ->with(
+                'success',
+                "បាននាំចូលទិន្នន័យនាយកដ្ឋានចំនួន {$import->importedCount} ដោយជោគជ័យ។"
+            );
+    }
+
 
 }
