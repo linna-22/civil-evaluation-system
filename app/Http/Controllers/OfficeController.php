@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\OfficeRequest;
+use App\Imports\OfficesImport;
+use Maatwebsite\Excel\Facades\Excel;
 use App\Models\Office;
 use App\Services\DepartmentService;
 use App\Services\OfficeService;
@@ -67,6 +69,31 @@ class OfficeController extends Controller
             'message' => 'ការិយាល័យត្រូវបានលុបដោយជោគជ័យ',
         ]);
     }
+
+    public function import(Request $request)
+    {
+        $request->validate([
+            'file' => [
+                'required',
+                'file',
+                'mimes:xlsx,xls,csv',
+                'max:10240',
+            ],
+        ]);
+
+        $import = new OfficesImport();
+
+        Excel::import($import, $request->file('file'));
+
+        return redirect()
+            ->route('offices.index')
+            ->with(
+                'success',
+                "បាននាំចូលទិន្នន័យការិយាល័យចំនួន {$import->importedCount} ដោយជោគជ័យ។"
+            );
+    }
+
+
     public function getByDepartment(
         $departmentId,
         OfficeService $officeService
