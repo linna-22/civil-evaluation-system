@@ -13,6 +13,7 @@ class Office extends Model
     protected $primaryKey = 'office_id';
 
     protected $fillable = [
+        'organization_id',
         'department_id',
         'office_name_kh',
         'office_name_en',
@@ -21,23 +22,21 @@ class Office extends Model
         'status',
         'created_by',
         'updated_by',
-        'deleted_by'
+        'deleted_by',
     ];
+
+    public function organization()
+    {
+        return $this->belongsTo(Organization::class, 'organization_id', 'organization_id');
+    }
 
     public function department()
     {
-        return $this->belongsTo(
-            Department::class,
-            'department_id',
-            'department_id'
-        );
+        return $this->belongsTo(Department::class, 'department_id', 'department_id');
     }
+
     public function users()
     {
-        return $this->hasMany(
-            User::class,
-            'office_id',
-            'office_id'
-        );
+        return $this->hasMany(User::class, 'office_id', 'office_id');
     }
 }

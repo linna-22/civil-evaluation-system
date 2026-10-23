@@ -60,6 +60,7 @@ Route::middleware('auth')->group(function () {
             Route::get('/by-organization/{organization}', [DepartmentController::class, 'byOrganization'])->name('byOrganization');
             Route::get('/create', [DepartmentController::class, 'create'])->name('create');
             Route::post('/', [DepartmentController::class, 'store'])->name('store');
+            Route::post('/import', [DepartmentController::class, 'import'])->name('import');
             Route::get('/{department}/edit', [DepartmentController::class, 'edit'])->name('edit');
             Route::put('/{department}', [DepartmentController::class, 'update'])->name('update');
             // Route::delete('/{department}', [DepartmentController::class, 'destroy'])->name('destroy');
@@ -74,6 +75,7 @@ Route::middleware('auth')->group(function () {
             Route::get('/by-department/{departmentId}', [OfficeController::class, 'getByDepartment']);
             Route::get('/create', [OfficeController::class, 'create'])->name('create');
             Route::post('/', [OfficeController::class, 'store'])->name('store');
+            Route::post('/import', [OfficeController::class, 'import'])->name('import');
             Route::get('/{office}/edit', [OfficeController::class, 'edit'])->name('edit');
             Route::put('/{office}', [OfficeController::class, 'update'])->name('update');
             Route::delete('/{office}', [OfficeController::class, 'destroy'])->name('destroy');
