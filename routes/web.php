@@ -75,6 +75,7 @@ Route::middleware('auth')->group(function () {
             Route::get('/by-department/{departmentId}', [OfficeController::class, 'getByDepartment']);
             Route::get('/create', [OfficeController::class, 'create'])->name('create');
             Route::post('/', [OfficeController::class, 'store'])->name('store');
+            Route::post('/import', [OfficeController::class, 'import'])->name('import');
             Route::get('/{office}/edit', [OfficeController::class, 'edit'])->name('edit');
             Route::put('/{office}', [OfficeController::class, 'update'])->name('update');
             Route::delete('/{office}', [OfficeController::class, 'destroy'])->name('destroy');
